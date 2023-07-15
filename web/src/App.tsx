@@ -1,7 +1,13 @@
 import "./App.css";
+import AppProvider from "./providers/appProvider";
+import RouterLink from "./router";
 
 function App() {
-  return <div className="App">hello seed</div>;
+  return (
+    <AppProvider>
+      <RouterLink />
+    </AppProvider>
+  );
 }
 
 export default App;
