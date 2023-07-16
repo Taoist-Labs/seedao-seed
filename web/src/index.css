@@ -12,6 +12,15 @@ code {
     monospace;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  list-style: none;
+}
+
 .mainContent {
   height: calc(100vh - 140px);
   min-height: 656px;
