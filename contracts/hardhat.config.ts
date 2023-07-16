@@ -23,6 +23,11 @@ const config: HardhatUserConfig = {
       accounts: [`${PRIVATE_KEY}`]
     }
   },
+  etherscan: {
+    apiKey: {
+      bscTestnet: '94QAM6RF43943N3VAAWHZBRYK7GHEPA2G4'
+    }
+  },
   abiExporter: {
     runOnCompile: true,
     pretty: false
