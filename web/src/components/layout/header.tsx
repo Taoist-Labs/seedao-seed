@@ -4,10 +4,24 @@ import LogoIcon from "assets/images/logo.png";
 import { useWeb3React } from "@web3-react/core";
 import { Button } from "@mui/material";
 import { addressToShow } from "utils/index";
+import LoginModal from "components/modals/loginModal";
+import React from "react";
+import { useAppContext, AppActionType } from "providers/appProvider";
 
 const LoginBox = ({ account }: { account?: string }) => {
+  const { dispatch } = useAppContext();
+
+  const showLoginModal = () => {
+    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+  };
+
   if (!account) {
-    return <Button>Connect Wallet</Button>;
+    return (
+      <React.Fragment>
+        <LoginModal />
+        <Button onClick={showLoginModal}>Connect Wallet</Button>
+      </React.Fragment>
+    );
   }
   return <LoginStyle>{addressToShow(account)}</LoginStyle>;
 };
