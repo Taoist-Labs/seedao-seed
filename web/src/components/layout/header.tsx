@@ -39,20 +39,21 @@ export default function Header() {
 }
 
 const HeaderStyle = styled.header`
-  height: 60px;
-  line-height: 60px;
+  height: 80px;
+  line-height: 80px;
   border-bottom: 1px solid #ddd;
   padding: 10px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
 `;
 
 const LogoLink = styled(Link)`
   img {
     height: 55px;
     position: relative;
-    top: 10px;
+    top: 15px;
   }
 `;
 

@@ -17,14 +17,16 @@ export default function RouterLink() {
   return (
     <Router>
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} index />
-        <Route path="/gallery" element={<GalleryPage />} />
-        <Route path="/license" element={<LicensePage />} />
-        <Route path="/user" element={<UserPage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <div className="mainContent">
+        <Routes>
+          <Route path="/" element={<Home />} index />
+          <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/license" element={<LicensePage />} />
+          <Route path="/user" element={<UserPage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
       <Footer />
       <LoadingModal />
     </Router>

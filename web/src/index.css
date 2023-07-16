@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.mainContent {
+  height: calc(100vh - 140px);
+  min-height: 656px;
+  overflow-y: auto;
+}
