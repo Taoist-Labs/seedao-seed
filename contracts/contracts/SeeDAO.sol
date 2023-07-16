@@ -214,19 +214,13 @@ contract SeeDAO is
     emit MinterChanged(oldMinter, minter_);
   }
 
-  /// @dev 修改 minter 地址为新的地址
-  function changeMinter(address newMinter) public onlyOwner {
-    address oldMinter = minter;
-    minter = newMinter;
-    emit MinterChanged(oldMinter, newMinter);
-  }
-
   /// @dev 设置积分 ERC20 token 合约地址
   function setPointsTokenAddress(address pointsToken_) external onlyOwner {
     pointsToken = pointsToken_;
   }
 
   /// @dev 设置积分兑换 NFT 的积分数量条件
+  /// 如：条件是需要 50_000 积分就传入整数 50_000
   function setPointsCondition(uint256 pointsCondi_) external onlyOwner {
     require(pointsToken != address(0), "Points token address is not set");
 
