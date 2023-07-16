@@ -24,6 +24,7 @@ const config: HardhatUserConfig = {
     }
   },
   abiExporter: {
+    runOnCompile: true,
     pretty: false
   }
 };
