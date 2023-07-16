@@ -9,7 +9,8 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
@@ -23,7 +24,8 @@ contract SeeDAO is
   OwnableUpgradeable,
   ERC721BurnableUpgradeable
 {
-  using MathUpgradeable for uint256;
+  using SafeMathUpgradeable for uint256;
+  using StringsUpgradeable for uint256;
 
   // TODO don't use Counter because of we need support batch mint with pre-defined token id
   using CountersUpgradeable for CountersUpgradeable.Counter;
@@ -31,8 +33,11 @@ contract SeeDAO is
 
   uint256 public price;
   uint256 public maxSupply;
-  address public pointsToken;
+
   string public baseURI;
+
+  address public pointsToken;
+  uint256 public pointsCondi;
 
   bool public onMint;
   bool public onClaim;
@@ -71,6 +76,9 @@ contract SeeDAO is
   }
 
   function initialize() public initializer {
+    maxSupply = 100_000;
+    minter = msg.sender;
+
     __ERC721_init("SeeDAO", "SEED");
     __ERC721Enumerable_init();
     __Pausable_init();
@@ -135,10 +143,10 @@ contract SeeDAO is
   /// nonReentrant 修饰器用于限制当前方法不能重入
   function claimWithPoints() external claimable noClaimed nonReentrant {
     uint256 points = IERC20Upgradeable(pointsToken).balanceOf(_msgSender());
-    uint pointsCondition = 50_000.mul(
-      10 ** IERC20MetadataUpgradeable(pointsToken).decimails()
+    require(
+      pointsCondi != 0 && points >= pointsCondi,
+      "You don't have enough points"
     );
-    require(points >= pointsCondition, "You don't have enough points");
     claimed[_msgSender()] = true;
 
     _mint(_msgSender());
@@ -163,7 +171,7 @@ contract SeeDAO is
   /// nonReentrant 修饰器用于限制当前方法不能重入
   function mint(uint256 amount) external payable mintable nonReentrant {
     uint256 payValue = amount.mul(price);
-    require(msg.value >= payValue, "You don't have enough money");
+    require(price != 0 && msg.value >= payValue, "Insufficient payment");
 
     for (uint256 i = 0; i < amount; i++) {
       _mint(_msgSender());
@@ -216,6 +224,15 @@ contract SeeDAO is
   /// @dev 设置积分 ERC20 token 合约地址
   function setPointsTokenAddress(address pointsToken_) external onlyOwner {
     pointsToken = pointsToken_;
+  }
+
+  /// @dev 设置积分兑换 NFT 的积分数量条件
+  function setPointsCondition(uint256 pointsCondi_) external onlyOwner {
+    require(pointsToken != address(0), "Points token address is not set");
+
+    pointsCondi = pointsCondi_.mul(
+      10 ** IERC20MetadataUpgradeable(pointsToken).decimals()
+    );
   }
 
   /// @dev 设置白名单的，调用时需要传入白名单 ID 和 Merkle Tree Root Hash
