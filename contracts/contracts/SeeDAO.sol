@@ -187,7 +187,7 @@ contract SeeDAO is
     bytes32[] calldata proof,
     address addr
   ) internal view returns (bool) {
-    bytes32 leaf = keccak256(abi.encodePacked(whiteListId, addr));
+    bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(addr))));
     return
       MerkleProofUpgradeable.verify(
         proof,

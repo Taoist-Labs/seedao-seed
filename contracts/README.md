@@ -1,3 +1,9 @@
+## Run tests
+
+```
+$ REPORT_GAS=true npx hardhat test
+```
+
 ## Deploy contracts
 
 ```
