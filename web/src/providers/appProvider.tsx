@@ -1,15 +1,18 @@
 import React, { useReducer, createContext, useContext } from "react";
+import { WalletType } from "wallet/wallet";
 
 interface IState {
   show_login_modal?: boolean;
   loading: boolean;
   themeMode: "light" | "dark";
+  wallet_type?: WalletType;
 }
 
 export enum AppActionType {
   SET_LOGIN_MODAL = "set_login_modal",
-  SET_LOADING = "SET_LOADING",
-  SET_THEME_MODE = "SET_THEME_MODE",
+  SET_LOADING = "set_loading",
+  SET_THEME_MODE = "set_theme_mode",
+  SET_WALLET_TYPE = "set_wallet_type",
 }
 
 interface IAction {
@@ -39,6 +42,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, loading: action.payload };
     case AppActionType.SET_THEME_MODE:
       return { ...state, themeMode: action.payload };
+    case AppActionType.SET_WALLET_TYPE:
+      return { ...state, wallet_type: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
