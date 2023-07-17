@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import FilterAttrItem from "./filterAttrItem";
 import NFTCard, { INFT } from "./nft";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface IAttrGroup {
   name: string;
@@ -65,6 +66,10 @@ export default function GalleryPage() {
     },
   ]);
 
+  const handleFilter = () => {
+    // TODO
+  };
+
   const onSelectValue = (id: number, value: string, selected: boolean) => {
     if (selected) {
       setSelectAttrs([
@@ -80,6 +85,16 @@ export default function GalleryPage() {
       );
     }
   };
+
+  const removeAttr = ({ id, value }: SelectAttr) => {
+    setSelectAttrs(
+      selectAttrs.filter((item) => item.value !== value || item.id !== id),
+    );
+  };
+
+  useEffect(() => {
+    handleFilter();
+  }, [selectAttrs]);
 
   return (
     <GalleryPageStyle>
@@ -99,6 +114,13 @@ export default function GalleryPage() {
       </GalleryLeft>
       <GalleryRight>
         <GalleryContent>
+          <FilterTags>
+            {selectAttrs.map((item, idx) => (
+              <Tag key={idx} onClick={() => removeAttr(item)}>
+                <span>{item.value}</span> <CloseIcon fontSize="small" />
+              </Tag>
+            ))}
+          </FilterTags>
           <NFTList container spacing={2}>
             {list.map((item, idx) => (
               <NFTCard key={idx} data={item} />
@@ -129,6 +151,7 @@ const GalleryContent = styled.div`
   width: 100%;
   height: 100%;
   padding-left: 20px;
+  padding-top: 20px;
   box-sizing: border-box;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -141,4 +164,22 @@ const NFTList = styled(Grid)``;
 
 const PaginationStyle = styled(Pagination)`
   margin-block: 10px;
+`;
+
+const FilterTags = styled.ul`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+const Tag = styled.li`
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  margin-block: 10px;
+  border-radius: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
 `;
