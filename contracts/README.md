@@ -1,3 +1,7 @@
+## prepare for development/deploy
+
+before development/deploy, you need to create a `.env` file in the root directory of the project, you can copy `.env.example` and rename it to `.env`, then fill in the corresponding parameters.
+
 ## Run tests
 
 ```
