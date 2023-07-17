@@ -41,6 +41,7 @@ contract SeeDAO is
   bool public onClaim;
 
   mapping(uint256 => bytes32) public whiteListRootHashes;
+  uint256[] public whiteListIds;
   mapping(address => bool) public claimed;
 
   address public minter;
@@ -262,6 +263,7 @@ contract SeeDAO is
     bytes32 rootHash
   ) external onlyOwner {
     whiteListRootHashes[whiteListId] = rootHash;
+    whiteListIds.push(whiteListId);
   }
 
   /// @dev 设置 NFT 价格，价格的精度与链 native token 的精度相同
