@@ -23,7 +23,7 @@ const LoginBox = ({ account }: { account?: string }) => {
       </React.Fragment>
     );
   }
-  return <LoginStyle>{addressToShow(account)}</LoginStyle>;
+  return <LoginStyle to="/user">{addressToShow(account)}</LoginStyle>;
 };
 
 export default function Header() {
@@ -57,4 +57,7 @@ const LogoLink = styled(Link)`
   }
 `;
 
-const LoginStyle = styled.div``;
+const LoginStyle = styled(Link)`
+  text-decoration: none;
+  color: unset;
+`;
