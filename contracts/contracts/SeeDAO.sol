@@ -27,9 +27,7 @@ contract SeeDAO is
   using SafeMathUpgradeable for uint256;
   using StringsUpgradeable for uint256;
 
-  // TODO don't use Counter because of we need support batch mint with pre-defined token id
-  using CountersUpgradeable for CountersUpgradeable.Counter;
-  CountersUpgradeable.Counter private _tokenIdCounter;
+  uint256 public tokenIndex;
 
   uint256 public price;
   uint256 public maxSupply;
@@ -155,11 +153,36 @@ contract SeeDAO is
   /// @dev 批量 mint NFT，必须是 minter 才能调用，调用时需要指定 NFT ID 及其接收地址，可用于批量空投
   /// onlyMinter 修饰器用于限制只有 minter 地址才能调用当前方法
   function batchMint(BatchMintInfo[] calldata mintInfos) external onlyMinter {
-    // TODO how to implement batch mint?
+    require(
+      tokenIndex + mintInfos.length <= maxSupply,
+      "Exceeds the maximum supply"
+    );
+
+    uint256 maxTokenId = tokenIndex > 0 ? tokenIndex - 1 : tokenIndex;
+    for (uint256 i = 0; i < mintInfos.length; i++) {
+      // reverts if the `mintInfos[i].tokenId` has been minted
+      require(
+        _ownerOf(mintInfos[i].tokenId) == address(0),
+        "Token already minted"
+      );
+
+      // set maxTokenId
+      if (mintInfos[i].tokenId > maxTokenId) {
+        maxTokenId = mintInfos[i].tokenId;
+      }
+
+      _safeMint(mintInfos[i].to, mintInfos[i].tokenId);
+    }
+
+    if (maxTokenId > tokenIndex) {
+      tokenIndex = maxTokenId + 1;
+    }
   }
 
   /// @dev 批量 mint NFT，必须是 minter 才能调用，调用时需要指定接收地址，可用于批量空投
   function batchMint2(address[] calldata to) external onlyMinter {
+    require(tokenIndex + to.length <= maxSupply, "Exceeds the maximum supply");
+
     for (uint256 i = 0; i < to.length; i++) {
       _mint(to[i]);
     }
@@ -170,6 +193,8 @@ contract SeeDAO is
   /// mintable 修饰器用于限制只有合约开启 mint 功能时才能调用当前方法
   /// nonReentrant 修饰器用于限制当前方法不能重入
   function mint(uint256 amount) external payable mintable nonReentrant {
+    require(tokenIndex + amount <= maxSupply, "Exceeds the maximum supply");
+
     uint256 payValue = amount.mul(price);
     require(price != 0 && msg.value >= payValue, "Insufficient payment");
 
@@ -198,17 +223,18 @@ contract SeeDAO is
 
   /// @dev mint NFT
   function _mint(address to) internal {
-    // TODO don't use Counter because of we need support batch mint with pre-defined token id
-    uint256 tokenId = _tokenIdCounter.current();
-    _tokenIdCounter.increment();
+    require(tokenIndex < maxSupply, "Exceeds the maximum supply");
+
+    uint256 tokenId = tokenIndex;
+    tokenIndex += 1;
     _safeMint(to, tokenId);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev 设置 minter 地址，minter 具有 mint 权限
-  function setMinter(address minter_) external onlyOwner {
+  /// @dev 修改 minter 地址，minter 具有 mint 权限
+  function changeMinter(address minter_) external onlyOwner {
     address oldMinter = minter;
     minter = minter_;
     emit MinterChanged(oldMinter, minter_);

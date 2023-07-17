@@ -27,11 +27,15 @@ describe("SeeDAO", function () {
     const [owner] = await ethers.getSigners();
 
     const MockERC20 = await ethers.getContractFactory("MockERC20");
-    const mockERC20 = (await MockERC20.deploy()) as unknown as MockERC20;
+    const mockERC20 = (await upgrades.deployProxy(
+      MockERC20
+    )) as unknown as MockERC20;
+    await mockERC20.waitForDeployment();
 
     return { mockERC20, owner };
   }
 
+  // generate merkle tree and leaf's proof
   async function generateMerkleTreeAndProof() {
     // correct tree
     const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
@@ -59,6 +63,36 @@ describe("SeeDAO", function () {
     return { rootHash, proofOfSecondAccount, proofOfFakeAccount };
   }
 
+  // generate batch mint infos
+  async function fakeBatchMintInfos() {
+    const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
+
+    // const mintInfos = [
+    //   new SeeDAONS.BatchMintInfoStruct(owner.address, ethers.getBigInt(100)),
+    //   new SeeDAONS.BatchMintInfoStruct(
+    //     secondAccount.address,
+    //     ethers.getBigInt(101)
+    //   ),
+    //   new SeeDAONS.BatchMintInfoStruct(
+    //     thirdAccount.address,
+    //     ethers.getBigInt(102)
+    //   ),
+    // ];
+
+    const mint2Infos = [
+      owner.address,
+      secondAccount.address,
+      thirdAccount.address,
+    ];
+
+    return { mint2Infos };
+  }
+
+  // convert number to bigInt
+  function bigInt(value: number, decimals: bigint) {
+    return ethers.getBigInt(BigInt(value) * BigInt(10) ** decimals);
+  }
+
   describe("Deployment", function () {
     it("Should set the right maxSupply", async function () {
       const { seeDAO } = await loadFixture(deploySeeDAOFixture);
@@ -82,7 +116,7 @@ describe("SeeDAO", function () {
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  describe("Function setMinter()", function () {
+  describe("Function changeMinter()", function () {
     describe("Validations", function () {
       it("Should revert when caller is not owner", async function () {
         const { seeDAO, secondAccount } = await loadFixture(
@@ -90,28 +124,28 @@ describe("SeeDAO", function () {
         );
 
         await expect(
-          seeDAO.connect(secondAccount).setMinter(secondAccount.address)
+          seeDAO.connect(secondAccount).changeMinter(secondAccount.address)
         ).to.be.revertedWith("Ownable: caller is not the owner");
       });
 
-      it("Should set minter success", async function () {
+      it("Should change minter success", async function () {
         const { seeDAO, owner, secondAccount } = await loadFixture(
           deploySeeDAOFixture
         );
 
         expect(await seeDAO.minter()).to.equal(owner.address);
-        await seeDAO.setMinter(secondAccount.address);
+        await seeDAO.changeMinter(secondAccount.address);
         expect(await seeDAO.minter()).to.equal(secondAccount.address);
       });
     });
 
     describe("Events", function () {
-      it("Should emit an event on setMinter", async function () {
+      it("Should emit an event on changeMinter", async function () {
         const { seeDAO, owner, secondAccount } = await loadFixture(
           deploySeeDAOFixture
         );
 
-        await expect(seeDAO.setMinter(secondAccount.address))
+        await expect(seeDAO.changeMinter(secondAccount.address))
           .to.emit(seeDAO, "MinterChanged")
           .withArgs(owner.address, secondAccount.address);
       });
@@ -169,10 +203,9 @@ describe("SeeDAO", function () {
 
       expect(await seeDAO.pointsCondi()).to.equal(zero);
       await seeDAO.setPointsCondition(Big5k);
-      const Big5kWithDecimals = ethers.getBigInt(
-        BigInt(5_000) * BigInt(10) ** BigInt(await mockERC20.decimals())
+      expect(await seeDAO.pointsCondi()).to.equal(
+        bigInt(5_000, await mockERC20.decimals())
       );
-      expect(await seeDAO.pointsCondi()).to.equal(Big5kWithDecimals);
     });
   });
 
@@ -287,6 +320,7 @@ describe("SeeDAO", function () {
           generateMerkleTreeAndProof
         );
 
+        // enable claim
         await seeDAO.unpauseClaim();
 
         await expect(
@@ -317,6 +351,14 @@ describe("SeeDAO", function () {
         expect(
           await seeDAO.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(1));
+        expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(1));
+        expect(await seeDAO.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(1)
+        );
+        expect(
+          await seeDAO.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
       });
 
       it("Should revert when has claimed", async function () {
@@ -342,7 +384,6 @@ describe("SeeDAO", function () {
         expect(
           await seeDAO.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
-        // TODO 还要验证 nft 余额
 
         // claim again should revert
         await expect(
@@ -379,5 +420,435 @@ describe("SeeDAO", function () {
         expect(await seeDAO.claimed(secondAccount.address)).to.equal(true);
       });
     });
+  });
+
+  describe("Function claimWithPoints", function () {
+    describe("Validations", function () {
+      it("Should revert when not claimable", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+
+        await expect(
+          seeDAO.connect(secondAccount).claimWithPoints()
+        ).to.be.revertedWith("Claim is not open");
+      });
+
+      it("Should revert when not set points token address", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+
+        // enable claim
+        await seeDAO.unpauseClaim();
+
+        await expect(
+          seeDAO.connect(secondAccount).claimWithPoints()
+        ).to.be.revertedWithoutReason();
+      });
+
+      it("Should revert when not have enough points", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mockERC20 } = await loadFixture(deployMockERC20Fixture);
+
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(0)
+        );
+
+        // enable claim
+        await seeDAO.unpauseClaim();
+        // set points token address
+        await seeDAO.setPointsTokenAddress(mockERC20);
+
+        // revert because of `pointsCondi == 0`
+        await expect(
+          seeDAO.connect(secondAccount).claimWithPoints()
+        ).to.be.revertedWith("You don't have enough points");
+
+        // set condition to 5k
+        await seeDAO.setPointsCondition(ethers.getBigInt(5_000));
+        // only mint 2k points
+        const bigInt2k = bigInt(2_000, await mockERC20.decimals());
+        await mockERC20.mint(secondAccount.address, bigInt2k);
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          bigInt2k
+        );
+
+        // revert because of `points < pointsCondi`
+        await expect(
+          seeDAO.connect(secondAccount).claimWithPoints()
+        ).to.be.revertedWith("You don't have enough points");
+      });
+
+      it("Should claim success", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mockERC20 } = await loadFixture(deployMockERC20Fixture);
+
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(0)
+        );
+
+        // enable claim
+        await seeDAO.unpauseClaim();
+        // set points token address and set condition to 5k
+        await seeDAO.setPointsTokenAddress(mockERC20);
+        await seeDAO.setPointsCondition(ethers.getBigInt(5_000));
+        // mint 5k points
+        const bigInt5k = bigInt(5_000, await mockERC20.decimals());
+        await mockERC20.mint(secondAccount.address, bigInt5k);
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          bigInt5k
+        );
+
+        // claim
+        expect(
+          await seeDAO.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(false);
+        await seeDAO.connect(secondAccount).claimWithPoints();
+        expect(
+          await seeDAO.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(true);
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(1));
+        expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(1));
+        expect(await seeDAO.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(1)
+        );
+        expect(
+          await seeDAO.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
+      });
+
+      it("Should revert when has claimed", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mockERC20 } = await loadFixture(deployMockERC20Fixture);
+
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(0)
+        );
+
+        // enable claim
+        await seeDAO.unpauseClaim();
+        // set points token address and set condition to 5k
+        await seeDAO.setPointsTokenAddress(mockERC20);
+        await seeDAO.setPointsCondition(ethers.getBigInt(5_000));
+        // mint 5k points
+        const bigInt5k = bigInt(5_000, await mockERC20.decimals());
+        await mockERC20.mint(secondAccount.address, bigInt5k);
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          bigInt5k
+        );
+
+        // claim
+        expect(
+          await seeDAO.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(false);
+        await seeDAO.connect(secondAccount).claimWithPoints();
+        expect(
+          await seeDAO.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(true);
+
+        // claim again should revert
+        await expect(
+          seeDAO.connect(secondAccount).claimWithPoints()
+        ).to.be.revertedWith("You have claimed");
+      });
+    });
+
+    describe("Events", function () {
+      it("Should emit an event on claimWithWhiteList", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mockERC20 } = await loadFixture(deployMockERC20Fixture);
+
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(0)
+        );
+
+        // enable claim
+        await seeDAO.unpauseClaim();
+        // set points token address and set condition to 5k
+        await seeDAO.setPointsTokenAddress(mockERC20);
+        await seeDAO.setPointsCondition(ethers.getBigInt(5_000));
+        // mint 5k points
+        const bigInt5k = bigInt(5_000, await mockERC20.decimals());
+        await mockERC20.mint(secondAccount.address, bigInt5k);
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(
+          bigInt5k
+        );
+
+        // claim
+        expect(await seeDAO.claimed(secondAccount.address)).to.equal(false);
+        await expect(seeDAO.connect(secondAccount).claimWithPoints())
+          .to.be.emit(seeDAO, "Transfer")
+          .withArgs(ethers.ZeroAddress, secondAccount.address, 0);
+        expect(await seeDAO.claimed(secondAccount.address)).to.equal(true);
+      });
+    });
+  });
+
+  describe("Function batchMint", function () {
+    describe("Validations", function () {
+      it("Should revert when caller is not minter", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+
+        await expect(
+          seeDAO.connect(secondAccount).batchMint(mintInfos)
+        ).to.be.revertedWith("Only minter can call this method");
+      });
+
+      it("Should revert when exceeds max supply", async function () {
+        const { seeDAO } = await loadFixture(deploySeeDAOFixture);
+        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+
+        // set max supply to 2
+        await seeDAO.setMaxSupply(ethers.getBigInt(2));
+
+        // will revert when batch mint 3
+        await expect(seeDAO.batchMint(mintInfos)).to.be.revertedWith(
+          "Exceeds the maximum supply"
+        );
+      });
+
+      it("Should mint success", async function () {
+        const { seeDAO, owner } = await loadFixture(deploySeeDAOFixture);
+        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(0));
+
+        // batch mint 3 nfts
+        await seeDAO.batchMint(mintInfos); // minted nft id: 0, 1, 2
+
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
+        expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
+
+        for (var i = 0; i < mintInfos.length; i++) {
+          expect(await seeDAO.balanceOf(mintInfos[i].to)).to.equal(
+            ethers.getBigInt(1)
+          );
+          expect(await seeDAO.tokenOfOwnerByIndex(mintInfos[i].to, 0)).to.equal(
+            mintInfos[i].tokenId
+          );
+        }
+      });
+
+      it("Should revert when mint a has minted nft", async function () {
+        const { seeDAO, owner } = await loadFixture(deploySeeDAOFixture);
+        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(0));
+
+        // batch mint 3 nfts
+        await seeDAO.batchMint(mintInfos); // minted nft id: 0, 1, 2
+
+        // --- --- --- duplicate code
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
+        expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
+
+        for (var i = 0; i < mintInfos.length; i++) {
+          expect(await seeDAO.balanceOf(mintInfos[i].to)).to.equal(
+            ethers.getBigInt(1)
+          );
+          expect(await seeDAO.tokenOfOwnerByIndex(mintInfos[i].to, 0)).to.equal(
+            mintInfos[i].tokenId
+          );
+        }
+        // --- --- ---
+
+        // batch mint 3 nfts again will revert
+        await expect(seeDAO.batchMint(mintInfos)).to.be.revertedWith(
+          "Token already minted"
+        );
+      });
+    });
+
+    // describe("Events", function () {
+    //   it("Should emit an event on batchMint", async function () {
+    //     });
+    // });
+  });
+
+  describe("Function batchMint2", function () {
+    describe("Validations", function () {
+      it("Should revert when caller is not minter", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mint2Infos } = await loadFixture(fakeBatchMintInfos);
+
+        await expect(
+          seeDAO.connect(secondAccount).batchMint2(mint2Infos)
+        ).to.be.revertedWith("Only minter can call this method");
+      });
+
+      it("Should revert when exceeds max supply", async function () {
+        const { seeDAO } = await loadFixture(deploySeeDAOFixture);
+        const { mint2Infos } = await loadFixture(fakeBatchMintInfos);
+
+        // set max supply to 2
+        await seeDAO.setMaxSupply(ethers.getBigInt(2));
+
+        // will revert when batch mint 3
+        await expect(seeDAO.batchMint2(mint2Infos)).to.be.revertedWith(
+          "Exceeds the maximum supply"
+        );
+      });
+
+      it("Should mint success", async function () {
+        const { seeDAO, owner } = await loadFixture(deploySeeDAOFixture);
+        const { mint2Infos } = await loadFixture(fakeBatchMintInfos);
+
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(0));
+
+        // batch mint 3 nfts
+        await seeDAO.batchMint2(mint2Infos); // minted nft id: 0, 1, 2
+
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
+        expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
+
+        for (var i = 0; i < mint2Infos.length; i++) {
+          expect(await seeDAO.balanceOf(mint2Infos[i])).to.equal(
+            ethers.getBigInt(1)
+          );
+          expect(await seeDAO.tokenOfOwnerByIndex(mint2Infos[i], 0)).to.equal(
+            ethers.getBigInt(i)
+          );
+        }
+      });
+    });
+
+    // describe("Events", function () {
+    //   it("Should emit an event on batchMint", async function () {
+    //     });
+    // });
+  });
+
+  describe("Function mint", function () {
+    describe("Validations", function () {
+      it("Should revert when not mintable", async function () {
+        const { seeDAO } = await loadFixture(deploySeeDAOFixture);
+
+        await expect(seeDAO.mint(ethers.getBigInt(1))).to.be.revertedWith(
+          "Mint is not open"
+        );
+      });
+
+      it("Should revert when exceeds max supply", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+
+        // enable mint
+        await seeDAO.unpauseMint();
+
+        // set price
+        await seeDAO.setPrice(ethers.parseEther("2"));
+
+        // set max supply to 2
+        await seeDAO.setMaxSupply(ethers.getBigInt(2));
+
+        // will revert when mint 3
+        await expect(
+          seeDAO
+            .connect(secondAccount)
+            .mint(ethers.getBigInt(3), { value: ethers.parseEther("6") })
+        ).to.be.revertedWith("Exceeds the maximum supply");
+      });
+
+      it("Should revert when not set price", async function () {
+        const { seeDAO } = await loadFixture(deploySeeDAOFixture);
+
+        // enable mint
+        await seeDAO.unpauseMint();
+
+        await expect(seeDAO.mint(ethers.getBigInt(1))).to.be.revertedWith(
+          "Insufficient payment"
+        );
+      });
+
+      it("Should revert when insufficient payment", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+
+        // enable mint
+        await seeDAO.unpauseMint();
+
+        // set price
+        await seeDAO.setPrice(ethers.parseEther("2"));
+
+        // revert because of zero payment
+        await expect(
+          seeDAO.connect(secondAccount).mint(ethers.getBigInt(1))
+        ).to.be.revertedWith("Insufficient payment");
+
+        // revert because of insufficient payment
+        await expect(
+          seeDAO
+            .connect(secondAccount)
+            .mint(ethers.getBigInt(1), { value: ethers.parseEther("1") })
+        ).to.be.revertedWith("Insufficient payment");
+      });
+
+      it("Should mint success", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+
+        // enable mint
+        await seeDAO.unpauseMint();
+
+        // set price
+        await seeDAO.setPrice(ethers.parseEther("2"));
+
+        await seeDAO
+          .connect(secondAccount)
+          .mint(ethers.getBigInt(1), { value: ethers.parseEther("2") }); // minted nft id: 0
+        //
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(1));
+        expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(1));
+        //
+        expect(await seeDAO.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(1)
+        );
+        expect(
+          await seeDAO.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
+
+        await seeDAO
+          .connect(secondAccount)
+          .mint(ethers.getBigInt(2), { value: ethers.parseEther("4.5") }); // minted nft id: 1, 2
+        //
+        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
+        expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
+        //
+        expect(await seeDAO.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(3)
+        );
+        expect(
+          await seeDAO.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
+        expect(
+          await seeDAO.tokenOfOwnerByIndex(secondAccount.address, 1)
+        ).to.equal(ethers.getBigInt(1));
+        expect(
+          await seeDAO.tokenOfOwnerByIndex(secondAccount.address, 2)
+        ).to.equal(ethers.getBigInt(2));
+      });
+    });
+
+    // describe("Events", function () {
+    //   it("Should emit an event on batchMint", async function () {
+    //     });
+    // });
   });
 });

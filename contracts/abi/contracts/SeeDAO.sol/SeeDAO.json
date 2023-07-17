@@ -310,6 +310,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "minter_",
+        "type": "address"
+      }
+    ],
+    "name": "changeMinter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "claimWithPoints",
     "outputs": [],
@@ -691,19 +704,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "minter_",
-        "type": "address"
-      }
-    ],
-    "name": "setMinter",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "pointsCondi_",
         "type": "uint256"
@@ -799,6 +799,19 @@
       }
     ],
     "name": "tokenByIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tokenIndex",
     "outputs": [
       {
         "internalType": "uint256",
