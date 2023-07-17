@@ -11,7 +11,7 @@ $ REPORT_GAS=true npx hardhat test
 ## Deploy contracts
 
 ```
-$ npx hardhat run --network bsctest scripts/deploy.ts
+$ PRIVATE_KEY=ac09...ff80 npx hardhat run --network bsctest scripts/deploy.ts
 current network: bsctest
 Deploying SeeDAO...
 SeeDAO deployed to 0xfD98A13f9B815C2842b3dDbe9633dD070361490A
@@ -20,7 +20,7 @@ SeeDAO deployed to 0xfD98A13f9B815C2842b3dDbe9633dD070361490A
 ## Upgrade contracts
 
 ```
-$ npx hardhat run --network bsctest scripts/upgrade.ts
+$ PRIVATE_KEY=ac09...ff80 npx hardhat run --network bsctest scripts/upgrade.ts
 current network: bsctest
 Upgrading SeeDAO...
 SeeDAO upgraded
