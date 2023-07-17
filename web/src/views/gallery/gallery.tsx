@@ -4,6 +4,7 @@ import FilterAttrItem from "./filterAttrItem";
 import NFTCard, { INFT } from "./nft";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import Box from "@mui/material/Box";
+import Pagination from "@mui/material/Pagination";
 
 interface IAttrGroup {
   name: string;
@@ -97,11 +98,14 @@ export default function GalleryPage() {
         ))}
       </GalleryLeft>
       <GalleryRight>
-        <NFTList container spacing={2}>
-          {list.map((item, idx) => (
-            <NFTCard key={idx} data={item} />
-          ))}
-        </NFTList>
+        <GalleryContent>
+          <NFTList container spacing={2}>
+            {list.map((item, idx) => (
+              <NFTCard key={idx} data={item} />
+            ))}
+          </NFTList>
+          <PaginationStyle count={list.length} color="primary" />
+        </GalleryContent>
       </GalleryRight>
     </GalleryPageStyle>
   );
@@ -119,11 +123,22 @@ const GalleryLeft = styled.div`
 `;
 const GalleryRight = styled(Box)`
   flex: 1;
-  padding-left: 20px;
 `;
 
-const NFTList = styled(Grid)`
+const GalleryContent = styled.div`
   width: 100%;
   height: 100%;
+  padding-left: 20px;
+  box-sizing: border-box;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+`;
+
+const NFTList = styled(Grid)``;
+
+const PaginationStyle = styled(Pagination)`
+  margin-block: 10px;
 `;
