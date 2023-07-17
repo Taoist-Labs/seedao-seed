@@ -67,17 +67,11 @@ describe("SeeDAO", function () {
   async function fakeBatchMintInfos() {
     const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
 
-    // const mintInfos = [
-    //   new SeeDAONS.BatchMintInfoStruct(owner.address, ethers.getBigInt(100)),
-    //   new SeeDAONS.BatchMintInfoStruct(
-    //     secondAccount.address,
-    //     ethers.getBigInt(101)
-    //   ),
-    //   new SeeDAONS.BatchMintInfoStruct(
-    //     thirdAccount.address,
-    //     ethers.getBigInt(102)
-    //   ),
-    // ];
+    const mintInfos = [
+      { to: owner.address, tokenId: ethers.getBigInt(100) },
+      { to: secondAccount.address, tokenId: ethers.getBigInt(101) },
+      { to: thirdAccount.address, tokenId: ethers.getBigInt(102) },
+    ];
 
     const mint2Infos = [
       owner.address,
@@ -85,7 +79,7 @@ describe("SeeDAO", function () {
       thirdAccount.address,
     ];
 
-    return { mint2Infos };
+    return { mintInfos, mint2Infos };
   }
 
   // convert number to bigInt
@@ -628,10 +622,12 @@ describe("SeeDAO", function () {
         // batch mint 3 nfts
         await seeDAO.batchMint(mintInfos); // minted nft id: 0, 1, 2
 
-        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
+        expect(await seeDAO.tokenIndex()).to.equal(
+          mintInfos[2].tokenId + ethers.getBigInt(1)
+        ); // 102+1
         expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
 
-        for (var i = 0; i < mintInfos.length; i++) {
+        for (let i = 0; i < mintInfos.length; i++) {
           expect(await seeDAO.balanceOf(mintInfos[i].to)).to.equal(
             ethers.getBigInt(1)
           );
@@ -651,10 +647,12 @@ describe("SeeDAO", function () {
         await seeDAO.batchMint(mintInfos); // minted nft id: 0, 1, 2
 
         // --- --- --- duplicate code
-        expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
+        expect(await seeDAO.tokenIndex()).to.equal(
+          mintInfos[2].tokenId + ethers.getBigInt(1)
+        ); // 102+1
         expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
 
-        for (var i = 0; i < mintInfos.length; i++) {
+        for (let i = 0; i < mintInfos.length; i++) {
           expect(await seeDAO.balanceOf(mintInfos[i].to)).to.equal(
             ethers.getBigInt(1)
           );
@@ -715,7 +713,7 @@ describe("SeeDAO", function () {
         expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
 
-        for (var i = 0; i < mint2Infos.length; i++) {
+        for (let i = 0; i < mint2Infos.length; i++) {
           expect(await seeDAO.balanceOf(mint2Infos[i])).to.equal(
             ethers.getBigInt(1)
           );
