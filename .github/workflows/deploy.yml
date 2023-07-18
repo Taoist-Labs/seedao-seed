@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
       
     steps:
      - name: Checkout
@@ -19,8 +22,6 @@ jobs:
        with:
          node-version: '16.17.0'
 
-     - name: Enter web directory
-       run: cd web
      - name: Insall dependencies
        run: npm install
      - name: Compile 
