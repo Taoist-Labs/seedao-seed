@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import FilterAttrItem from "./filterAttrItem";
-import NFTCard, { INFT } from "./nft";
+import NFTCard from "./nft";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import CloseIcon from "@mui/icons-material/Close";
+import SeedModal from "components/modals/seedModal";
+import { height } from "@mui/system";
 
 interface IAttrGroup {
   name: string;
@@ -39,32 +41,58 @@ export default function GalleryPage() {
         "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
       tokenId: "2000",
       name: "lala",
+      attrs: [
+        { name: "background", value: "#fff" },
+        { name: "color", value: "#fff" },
+        { name: "height", value: "90cm" },
+      ],
     },
     {
       image:
         "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
       tokenId: "2000",
       name: "lala",
+      attrs: [
+        { name: "background", value: "#fff" },
+        { name: "color", value: "#fff" },
+        { name: "height", value: "90cm" },
+      ],
     },
     {
       image:
         "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
       tokenId: "2000",
       name: "lala",
+      attrs: [
+        { name: "background", value: "#fff" },
+        { name: "color", value: "#fff" },
+        { name: "height", value: "90cm" },
+      ],
     },
     {
       image:
         "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
       tokenId: "2000",
       name: "lala",
+      attrs: [
+        { name: "background", value: "#fff" },
+        { name: "color", value: "#fff" },
+        { name: "height", value: "90cm" },
+      ],
     },
     {
       image:
         "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
       tokenId: "2000",
       name: "lala",
+      attrs: [
+        { name: "background", value: "#fff" },
+        { name: "color", value: "#fff" },
+        { name: "height", value: "90cm" },
+      ],
     },
   ]);
+  const [showSeed, setShowSeed] = useState<INFT>();
 
   const handleFilter = () => {
     // TODO
@@ -123,12 +151,19 @@ export default function GalleryPage() {
           </FilterTags>
           <NFTList container spacing={2}>
             {list.map((item, idx) => (
-              <NFTCard key={idx} data={item} />
+              <NFTCard
+                key={idx}
+                data={item}
+                onClick={() => setShowSeed(item)}
+              />
             ))}
           </NFTList>
           <PaginationStyle count={list.length} color="primary" />
         </GalleryContent>
       </GalleryRight>
+      {showSeed && (
+        <SeedModal seed={showSeed} handleClose={() => setShowSeed(undefined)} />
+      )}
     </GalleryPageStyle>
   );
 }

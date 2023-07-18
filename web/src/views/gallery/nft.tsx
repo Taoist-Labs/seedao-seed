@@ -2,19 +2,14 @@ import styled from "@emotion/styled";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 
-export interface INFT {
-  image: string;
-  tokenId: string;
-  name: string;
-}
-
 interface IProps {
   data: INFT;
+  onClick?: (data: INFT) => void;
 }
 
-export default function NFTCard({ data }: IProps) {
+export default function NFTCard({ data, onClick }: IProps) {
   return (
-    <NFTStyle xs={6} sm={3}>
+    <NFTStyle xs={6} sm={3} onClick={() => onClick && onClick(data)}>
       <img src={data.image} title={data.name} alt="" />
       <Intro>
         <Typography gutterBottom variant="h6" component="div">
