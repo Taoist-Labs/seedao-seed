@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import CloseIcon from "@mui/icons-material/Close";
 import SeedModal from "components/modals/seedModal";
-import { height } from "@mui/system";
 
 interface IAttrGroup {
   name: string;
