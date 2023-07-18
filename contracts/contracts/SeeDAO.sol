@@ -194,6 +194,7 @@ contract SeeDAO is
   /// mintable 修饰器用于限制只有合约开启 mint 功能时才能调用当前方法
   /// nonReentrant 修饰器用于限制当前方法不能重入
   function mint(uint256 amount) external payable mintable nonReentrant {
+    require(amount > 0, "Mint amount must bigger than zero");
     require(tokenIndex + amount <= maxSupply, "Exceeds the maximum supply");
 
     uint256 payValue = amount.mul(price);

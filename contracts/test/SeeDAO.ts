@@ -740,10 +740,20 @@ describe("SeeDAO", function () {
         );
       });
 
-      it("Should revert when exceeds max supply", async function () {
-        const { seeDAO, secondAccount } = await loadFixture(
-          deploySeeDAOFixture
+      it("Should revert when mint amount is zero", async function () {
+        const { seeDAO } = await loadFixture(deploySeeDAOFixture);
+
+        // enable mint
+        await seeDAO.unpauseMint();
+
+        // will revert when mint 0
+        await expect(seeDAO.mint(ethers.getBigInt(0))).to.be.revertedWith(
+          "Mint amount must bigger than zero"
         );
+      });
+
+      it("Should revert when exceeds max supply", async function () {
+        const { seeDAO } = await loadFixture(deploySeeDAOFixture);
 
         // enable mint
         await seeDAO.unpauseMint();
@@ -756,9 +766,7 @@ describe("SeeDAO", function () {
 
         // will revert when mint 3
         await expect(
-          seeDAO
-            .connect(secondAccount)
-            .mint(ethers.getBigInt(3), { value: ethers.parseEther("6") })
+          seeDAO.mint(ethers.getBigInt(3), { value: ethers.parseEther("6") })
         ).to.be.revertedWith("Exceeds the maximum supply");
       });
 
@@ -785,9 +793,9 @@ describe("SeeDAO", function () {
         await seeDAO.setPrice(ethers.parseEther("2"));
 
         // revert because of zero payment
-        await expect(
-          seeDAO.connect(secondAccount).mint(ethers.getBigInt(1))
-        ).to.be.revertedWith("Insufficient payment");
+        await expect(seeDAO.mint(ethers.getBigInt(1))).to.be.revertedWith(
+          "Insufficient payment"
+        );
 
         // revert because of insufficient payment
         await expect(
@@ -849,4 +857,6 @@ describe("SeeDAO", function () {
     //     });
     // });
   });
+
+  describe("Function tokenURI", function () {});
 });
