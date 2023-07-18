@@ -19,7 +19,7 @@ type SelectAttr = {
 };
 
 export default function GalleryPage() {
-  const [attrGroups, setAttrGroups] = useState<IAttrGroup[]>([
+  const [attrGroups] = useState<IAttrGroup[]>([
     {
       name: "background",
       values: ["1235", "456"],
@@ -34,7 +34,7 @@ export default function GalleryPage() {
     },
   ]);
   const [selectAttrs, setSelectAttrs] = useState<SelectAttr[]>([]);
-  const [list, setList] = useState<INFT[]>([
+  const [list] = useState<INFT[]>([
     {
       image:
         "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",

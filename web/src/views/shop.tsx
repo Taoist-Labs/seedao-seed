@@ -22,7 +22,7 @@ const GoodItem = () => {
 };
 
 export default function ShopPage() {
-  const [list, setList] = useState(new Array(10).fill(0));
+  const [list] = useState(new Array(10).fill(0));
   return (
     <ShopPageStyle>
       <ItemsList container spacing={4}>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { useAppContext, AppActionType } from "providers/appProvider";
@@ -70,6 +70,9 @@ export default function LoginModal() {
       handleFailed();
     }
   };
+  useEffect(() => {
+    // TODO
+  }, [loginStatus, chooseWallet]);
   return (
     <Modal
       open={!!show_login_modal}
