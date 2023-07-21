@@ -33,5 +33,6 @@ jobs:
        with:
           target_branch: gh-pages
           build_dir: ./web/build
+          fqdn: seed.seedao.tech
        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
