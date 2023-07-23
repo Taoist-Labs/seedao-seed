@@ -5,7 +5,10 @@ async function main() {
   console.log("Upgrading SeeDAO...");
 
   const SeeDAO = await ethers.getContractFactory("SeeDAO");
-  const seeDAO = await upgrades.upgradeProxy(deployed.contracts.SeeDAO, SeeDAO);
+  const seeDAO = await upgrades.upgradeProxy(
+    deployed.getSeeDAOContract(),
+    SeeDAO
+  );
   await seeDAO.waitForDeployment();
 
   console.log("SeeDAO upgraded");

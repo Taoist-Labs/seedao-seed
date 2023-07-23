@@ -2,12 +2,7 @@ import hre from "hardhat";
 import fs from "fs";
 import path from "path";
 
-const network = hre.network.name;
-console.log(`current network: ${network}`);
-
-const manifest = path.join(__dirname, network, "contracts.json");
-const data = readSync();
-
+// read json file
 function readSync() {
   try {
     const content = fs.readFileSync(manifest, "utf-8");
@@ -17,8 +12,9 @@ function readSync() {
   }
 }
 
+// write json file
 function saveSync() {
-  const content = JSON.stringify(data, null, 4);
+  const content = JSON.stringify(data, null, 2);
   try {
     fs.writeFileSync(manifest, content);
   } catch (err) {
@@ -26,20 +22,20 @@ function saveSync() {
   }
 }
 
-// interface Contracts {
-//   SeeDAO: string;
-// }
+const network = hre.network.name;
+console.log('current network: ', network);
 
-// interface DeployedContracts {
-//   contracts: Contracts;
-//   setContract: (name: string, addr: string) => void;
-// }
+const manifest = path.join(__dirname, network, "contracts.json");
+const data = readSync();
 
 const deployd = {
   contracts: data,
-  setContract: function (name: string, addr: string) {
-    this.contracts[name] = addr;
+  setSeeDAOContract: function (addr: string) {
+    this.contracts["SeeDAO"] = addr;
     saveSync();
+  },
+  getSeeDAOContract: function (): string {
+    return this.contracts["SeeDAO"];
   },
 };
 

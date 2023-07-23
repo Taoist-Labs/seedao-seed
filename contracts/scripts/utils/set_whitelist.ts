@@ -3,10 +3,8 @@ import deployed from "../deployed";
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 
 async function main() {
-  const seeDAO = await ethers.getContractAt(
-    "SeeDAO",
-    deployed.contracts.SeeDAO
-  );
+  const seeDAOAddress = deployed.getSeeDAOContract();
+  const seeDAO = await ethers.getContractAt("SeeDAO", seeDAOAddress);
 
   // 最新的白名单 id
   let latestWhitelist = 0;
@@ -20,9 +18,7 @@ async function main() {
   latestWhitelist = latestWhitelist > 0 ? latestWhitelist - 1 : 0;
   console.log(`Latest whitelist id is ${latestWhitelist}`);
 
-  console.log(
-    `Set withlist for SeeDAO contract at ${deployed.contracts.SeeDAO} ...`
-  );
+  console.log(`Set withlist for SeeDAO contract at ${seeDAOAddress} ...`);
 
   const whitelistId = latestWhitelist; // NOTE: this should be the latest whitelist id
   const whitelist = [

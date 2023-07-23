@@ -2,43 +2,41 @@ import { ethers, upgrades } from "hardhat";
 import deployed from "../deployed";
 
 async function main() {
-  const seeDAO = await ethers.getContractAt(
-    "SeeDAO",
-    deployed.contracts.SeeDAO
-  );
+  const seeDAOAddress = deployed.getSeeDAOContract();
+  const seeDAO = await ethers.getContractAt("SeeDAO", seeDAOAddress);
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   await seeDAO.pauseMint();
   console.log(
-    `Call pauseMint() to SeeDAO contract at ${deployed.contracts.SeeDAO} successfully!`
+    `Call pauseMint() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   await seeDAO.unpauseMint();
   console.log(
-    `Call unpauseMint() to SeeDAO contract at ${deployed.contracts.SeeDAO} successfully!`
+    `Call unpauseMint() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   await seeDAO.pauseClaim();
   console.log(
-    `Call pauseClaim() to SeeDAO contract at ${deployed.contracts.SeeDAO} successfully!`
+    `Call pauseClaim() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   await seeDAO.unpauseClaim();
   console.log(
-    `Call unpauseClaim() to SeeDAO contract at ${deployed.contracts.SeeDAO} successfully!`
+    `Call unpauseClaim() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   await seeDAO.pause();
   console.log(
-    `Call unpause() to SeeDAO contract at ${deployed.contracts.SeeDAO} successfully!`
+    `Call unpause() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   await seeDAO.unpauseMint();
   console.log(
-    `Call unpause() to SeeDAO contract at ${deployed.contracts.SeeDAO} successfully!`
+    `Call unpause() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 }
 

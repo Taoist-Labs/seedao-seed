@@ -8,7 +8,7 @@ async function main() {
   const seeDAO = await upgrades.deployProxy(SeeDAO);
   await seeDAO.waitForDeployment();
 
-  deployed.setContract("SeeDAO", seeDAO.target.toString());
+  deployed.setSeeDAOContract(seeDAO.target.toString());
   console.log(`SeeDAO deployed to ${seeDAO.target}`);
 }
 

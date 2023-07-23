@@ -10,3 +10,5 @@ cache
 artifacts
 
 publish-typechain
+
+.idea
