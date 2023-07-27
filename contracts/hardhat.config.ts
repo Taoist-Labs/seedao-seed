@@ -4,6 +4,7 @@ import "@openzeppelin/hardhat-upgrades";
 import "hardhat-abi-exporter";
 import "hardhat-deployed-records";
 import "hardhat-publish-typechain";
+import "dotenv/config"
 
 const PRIVATE_KEY =
   process.env.PRIVATE_KEY ||
