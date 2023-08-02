@@ -5,7 +5,7 @@ import {
   Routes,
 } from "react-router-dom";
 import Header from "./components/layout/header";
-import Home from "./views/home";
+import Home from "./views/home/home";
 import Footer from "./components/layout/footer";
 import LoadingModal from "./components/modals/loadingModal";
 import GalleryPage from "views/gallery/gallery";

@@ -88,14 +88,14 @@ export default function Header() {
 }
 
 const HeaderStyle = styled.header`
-  height: 80px;
-  line-height: 80px;
-  border-bottom: 1px solid #ddd;
-  padding: 10px 40px;
+  height: 102px;
+  line-height: 104px;
+  padding: 10px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
+  background-color: #fff;
 `;
 
 const LogoLink = styled(Link)`
