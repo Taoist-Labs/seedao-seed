@@ -150,7 +150,7 @@ def main():
 
     print(len(combinations))
 
-    merge_nft(combinations[:300])
+    merge_nft(combinations[:800])
 
     pass
 
