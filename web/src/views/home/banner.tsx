@@ -1,10 +1,16 @@
 import styled from "@emotion/styled";
 import BannerBg from "assets/images/home/banner.png";
+import BannerBg01 from "assets/images/home/banner1.jpeg";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-export default function Banner() {
+export default function Banner({ color }: { color: string }) {
+  const matches = useMediaQuery("(max-width:960px)");
   return (
-    <BannerStyle>
+    <BannerStyle color={color}>
       <BannerContent>
+        {matches && (
+          <img src={color === "#F9D9FB" ? BannerBg : BannerBg01} alt="" />
+        )}
         <BannerTitle>Seed Now, See the DAO</BannerTitle>
         <BannerText>
           <p>
@@ -43,11 +49,18 @@ const BannerStyle = styled.section`
   min-height: 664px;
   padding: 113px 0 0 80px;
   box-sizing: border-box;
-  background: #f9d9fb;
-  background-image: url(${BannerBg});
+  background: ${(props) => props.color};
+  background-image: ${(props) =>
+    props.color === "#F9D9FB" ? `url(${BannerBg})` : `url(${BannerBg01})`};
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right bottom;
+  @media (max-width: 960px) {
+    padding: 0;
+    background-image: unset;
+    height: unset;
+    padding-bottom: 40px;
+  }
 `;
 
 const BannerContent = styled.div`
@@ -55,12 +68,23 @@ const BannerContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 36px;
+
+  img {
+    width: 61%;
+  }
+  @media (max-width: 960px) {
+    align-items: center;
+  }
 `;
 
 const BannerTitle = styled.div`
   font-size: 56px;
   font-weight: 700;
   line-height: 80px;
+  @media (max-width: 960px) {
+    font-size: 48px;
+    line-height: 66px;
+  }
 `;
 
 const BannerText = styled.div`
@@ -68,6 +92,9 @@ const BannerText = styled.div`
   p {
     font-family: Inter;
     font-size: 20px;
+  }
+  @media (max-width: 960px) {
+    width: unset;
   }
 `;
 

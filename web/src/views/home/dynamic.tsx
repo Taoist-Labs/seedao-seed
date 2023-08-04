@@ -78,13 +78,13 @@ const DynamicNFTs = [
   },
 ];
 
-export default function DynamicNFT() {
+export default function DynamicNFT({ color }: { color: string }) {
   const openLevel = () => {
     // login
     // unlogin
   };
   return (
-    <DynamicNFTStyle>
+    <DynamicNFTStyle color={color}>
       <Title>Dynamic PFP of Seed NFT</Title>
       <Content>
         <p>
@@ -122,8 +122,8 @@ export default function DynamicNFT() {
 
 const DynamicNFTStyle = styled.section`
   padding: 80px 120px;
-  background: #f9d9fb;
-  @media (max-width: 640px) {
+  background: ${(props) => props.color};
+  @media (max-width: 960px) {
     padding: 60px 40px;
   }
 `;
@@ -161,7 +161,7 @@ const NFTCard = styled.ul`
   flex-direction: row;
   gap: 20px;
   justify-content: space-between;
-  @media (max-width: 640px) {
+  @media (max-width: 960px) {
     flex-direction: column;
   }
 `;
@@ -191,7 +191,7 @@ const NFTCardItem = styled.li`
   p span {
     font-size: 36px;
   }
-  @media (max-width: 640px) {
+  @media (max-width: 960px) {
     flex-direction: row;
     height: 137px;
     img {
@@ -213,7 +213,7 @@ const ViewButton = styled.div`
   font-size: 20px;
   font-weight: 700;
   cursor: pointer;
-  @media (max-width: 640px) {
+  @media (max-width: 960px) {
     width: 80%;
     height: 56px;
     line-height: 56px;

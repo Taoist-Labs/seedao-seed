@@ -69,7 +69,7 @@ export default function Utility() {
 
 const UtilitytStyle = styled.section`
   padding: 80px 120px;
-  @media (max-width: 640px) {
+  @media (max-width: 960px) {
     padding: 60px 40px;
   }
 `;
@@ -155,7 +155,7 @@ const JoinButton = styled.a`
   margin-bottom: 0;
   color: #000;
   text-decoration: none;
-  @media (max-width: 640px) {
+  @media (max-width: 960px) {
     width: 80%;
     margin-top: 0;
   }
