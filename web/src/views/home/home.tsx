@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Banner from "./banner";
 import Utility from "./utility";
-import Rules from "./rules";
+import Dynamic from "./dynamic";
 import FQA from "./FQA";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
     <HomePageStyle>
       <Banner />
       <Utility />
-      <Rules />
+      <Dynamic />
       <FQA />
     </HomePageStyle>
   );
