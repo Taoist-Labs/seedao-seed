@@ -47,7 +47,25 @@ const AvatarsBox = () => {
 };
 
 const InfoBox = () => {
-  return <InfoBoxStyle></InfoBoxStyle>;
+  return (
+    <InfoBoxStyle>
+      {[
+        { name: "ITEMS", value: "5K" },
+        { name: "VOLUME", value: "82K ETH" },
+        { name: "ITEMS", value: "5K" },
+        { name: "VOLUME", value: "82K ETH" },
+        { name: "ITEMS", value: "5K" },
+      ].map((item, idx) => (
+        <>
+          {/* {idx > 0 && <li className="line"></li>} */}
+          <li key={idx}>
+            <div className="value">{item.value}</div>
+            <div className="name">{item.name}</div>
+          </li>
+        </>
+      ))}
+    </InfoBoxStyle>
+  );
 };
 
 export default function How2() {
@@ -163,11 +181,40 @@ const AvatarsBoxStyle = styled.div`
   }
 `;
 
-const InfoBoxStyle = styled.div`
+const InfoBoxStyle = styled.ul`
   height: 104px;
   border-radius: 10px;
   border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  li {
+    padding-inline: 20px;
+    font-family: Inter;
+    text-align: center;
+    flex: 1;
+    .value {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .name {
+      font-size: 14px;
+      font-weight: 400;
+      margin-top: 8px;
+    }
+    &.line {
+      flex: unset;
+      width: 1px;
+      height: 50px;
+      background-color: #000;
+      padding: 0;
+    }
+  }
   @media (max-width: 960px) {
     margin-bottom: 56px;
+    gap: 10px;
+  }
+  @media (max-width: 750px) {
+    gap: 8px;
   }
 `;
