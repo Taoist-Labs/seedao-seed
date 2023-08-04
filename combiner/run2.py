@@ -233,7 +233,7 @@ def main():
 
     # backgrounds, bodys, eyes, starts, heads, rings, clothes
     combinations = gen_random_comb(
-        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 100)
+        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 3000)
 
     print(len(combinations))
     merge_nft(combinations)
