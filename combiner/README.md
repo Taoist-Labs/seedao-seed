@@ -8,8 +8,15 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+
 ```
+之前的版本
 python run.py
+```
+
+```
+新版本
+python run2.py
 ```
 
 
