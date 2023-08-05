@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import CloseIcon from "@mui/icons-material/Close";
 import SeedModal from "components/modals/seedModal";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface IAttrGroup {
   name: string;
@@ -14,6 +15,7 @@ interface IAttrGroup {
 }
 
 type SelectAttr = {
+  name: string;
   value: string;
   id: number;
 };
@@ -92,17 +94,24 @@ export default function GalleryPage() {
     },
   ]);
   const [showSeed, setShowSeed] = useState<INFT>();
+  const [keyword, setKeyword] = useState<string>("");
 
   const handleFilter = () => {
     // TODO
   };
 
-  const onSelectValue = (id: number, value: string, selected: boolean) => {
+  const onSelectValue = (
+    id: number,
+    name: string,
+    value: string,
+    selected: boolean,
+  ) => {
     if (selected) {
       setSelectAttrs([
         ...selectAttrs,
         {
           id,
+          name,
           value,
         },
       ]);
@@ -126,6 +135,15 @@ export default function GalleryPage() {
   return (
     <GalleryPageStyle>
       <GalleryLeft>
+        <LeftTitle>FILTER</LeftTitle>
+        <InputWrapper>
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Sort by serial..."
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+        </InputWrapper>
         {attrGroups.map((group, index) => (
           <FilterAttrItem
             key={index}
@@ -135,20 +153,29 @@ export default function GalleryPage() {
             selected={selectAttrs
               .filter((item) => item.id === index)
               .map((item) => item.value)}
-            onSelectValue={onSelectValue}
+            onSelectValue={(id, value, selected) =>
+              onSelectValue(id, group.name, value, selected)
+            }
           />
         ))}
       </GalleryLeft>
       <GalleryRight>
         <GalleryContent>
-          <FilterTags>
-            {selectAttrs.map((item, idx) => (
-              <Tag key={idx} onClick={() => removeAttr(item)}>
-                <span>{item.value}</span> <CloseIcon fontSize="small" />
-              </Tag>
-            ))}
-          </FilterTags>
-          <NFTList container spacing={2}>
+          <FilterTitle>
+            <span className="title">FILTERS</span>
+            <span className="num">{selectAttrs.length}</span>
+            <FilterTags>
+              {selectAttrs.map((item, idx) => (
+                <Tag key={idx} onClick={() => removeAttr(item)}>
+                  <span>
+                    {item.name}:{item.value}
+                  </span>
+                  <CloseIcon fontSize="small" />
+                </Tag>
+              ))}
+            </FilterTags>
+          </FilterTitle>
+          <NFTList container spacing={3}>
             {list.map((item, idx) => (
               <NFTCard
                 key={idx}
@@ -175,7 +202,9 @@ const GalleryPageStyle = styled.div`
 
 const GalleryLeft = styled.div`
   width: 270px;
-  border-right: 1px solid #ddd;
+  padding-inline: 30px;
+  padding-top: 49px;
+  box-shadow: 2px 0px 8px 2px rgba(0, 0, 0, 0.1);
 `;
 const GalleryRight = styled(Box)`
   flex: 1;
@@ -184,8 +213,8 @@ const GalleryRight = styled(Box)`
 const GalleryContent = styled.div`
   width: 100%;
   height: 100%;
-  padding-left: 20px;
-  padding-top: 20px;
+  padding-left: 45px;
+  padding-top: 45px;
   box-sizing: border-box;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -207,13 +236,68 @@ const FilterTags = styled.ul`
   gap: 10px;
 `;
 const Tag = styled.li`
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  margin-block: 10px;
+  padding-inline: 10px;
+  height: 24px;
+  line-height: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   display: flex;
   gap: 16px;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+`;
+
+const LeftTitle = styled.div`
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 64px;
+`;
+
+const InputWrapper = styled.div`
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 10px;
+  margin-block: 20px;
+  input {
+    border: none;
+    outline: none;
+    height: 100%;
+    line-height: 36px;
+    padding: 0;
+    background-color: transparent;
+    font-size: 20px;
+    &::placeholder {
+      color: #b5b5b5;
+    }
+  }
+`;
+
+const FilterTitle = styled.div`
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 40px;
+  .title {
+    font-size: 20px;
+    line-height: 30px;
+    opacity: 0.3;
+  }
+  .num {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: #d2ceca;
+    color: #fff;
+    text-align: center;
+    line-height: 24px;
+    font-weight: 700;
+    font-size: 14px;
+  }
 `;

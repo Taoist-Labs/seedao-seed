@@ -3,7 +3,6 @@ import styled from "@emotion/styled";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import SearchIcon from "@mui/icons-material/Search";
 import Divider from "@mui/material/Divider";
 import Checkbox from "components/common/checkbox";
 
@@ -56,7 +55,6 @@ export default function FilterAttrItem({
       {isOpen && (
         <>
           <InputWrapper>
-            <SearchIcon />
             <input
               type="text"
               placeholder="search"
@@ -83,7 +81,7 @@ export default function FilterAttrItem({
 }
 
 const FilterAttrItemStyle = styled.div`
-  padding-inline: 10px;
+  /* padding-inline: 10px; */
 `;
 
 const FilterAttrName = styled.div`
@@ -108,9 +106,9 @@ const FilterAttrValues = styled.ul`
 `;
 
 const InputWrapper = styled.div`
-  border: 1px solid #ddd;
+  border: 1px solid #bbb;
   border-radius: 5px;
-  height: 40px;
+  height: 36px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -119,8 +117,12 @@ const InputWrapper = styled.div`
     border: none;
     outline: none;
     height: 100%;
-    line-height: 40px;
+    line-height: 36px;
     padding: 0;
     background-color: transparent;
+    font-size: 20px;
+    &::placeholder {
+      color: #b5b5b5;
+    }
   }
 `;
