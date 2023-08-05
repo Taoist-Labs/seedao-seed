@@ -133,6 +133,10 @@ export default function GalleryPage() {
     handleFilter();
   }, [selectAttrs]);
 
+  useEffect(() => {
+    // TODO
+  }, [keyword]);
+
   return (
     <GalleryPageStyle>
       <GalleryLeft>
