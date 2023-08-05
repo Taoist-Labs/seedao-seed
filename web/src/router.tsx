@@ -10,7 +10,7 @@ import Footer from "./components/layout/footer";
 import LoadingModal from "./components/modals/loadingModal";
 import GalleryPage from "views/gallery/gallery";
 import LicensePage from "views/license";
-import UserPage from "views/user";
+import UserPage from "views/user/user";
 import ShopPage from "views/shop";
 
 export default function RouterLink() {
