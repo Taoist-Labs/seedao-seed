@@ -8,6 +8,7 @@ import Pagination from "@mui/material/Pagination";
 import CloseIcon from "@mui/icons-material/Close";
 import SeedModal from "components/modals/seedModal";
 import SearchIcon from "@mui/icons-material/Search";
+import ReplayIcon from "@mui/icons-material/Replay";
 
 interface IAttrGroup {
   name: string;
@@ -161,20 +162,26 @@ export default function GalleryPage() {
       </GalleryLeft>
       <GalleryRight>
         <GalleryContent>
-          <FilterTitle>
+          <FilterHead>
             <span className="title">FILTERS</span>
             <span className="num">{selectAttrs.length}</span>
             <FilterTags>
-              {selectAttrs.map((item, idx) => (
-                <Tag key={idx} onClick={() => removeAttr(item)}>
-                  <span>
-                    {item.name}:{item.value}
-                  </span>
-                  <CloseIcon fontSize="small" />
-                </Tag>
-              ))}
+              <ul className="tag-container">
+                {selectAttrs.map((item, idx) => (
+                  <Tag key={idx} onClick={() => removeAttr(item)}>
+                    <span>
+                      {item.name}:{item.value}
+                    </span>
+                    <CloseIcon fontSize="small" />
+                  </Tag>
+                ))}
+              </ul>
             </FilterTags>
-          </FilterTitle>
+            <FilterHeadRight>
+              <span className="result">123</span>
+              <ReplayIcon />
+            </FilterHeadRight>
+          </FilterHead>
           {list.length > 0 ? (
             <>
               <NFTList container spacing={3}>
@@ -238,11 +245,15 @@ const PaginationStyle = styled(Pagination)`
   margin-block: 10px;
 `;
 
-const FilterTags = styled.ul`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+const FilterTags = styled.div`
+  flex: 1;
+  .tag-container {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 `;
 const Tag = styled.li`
   padding-inline: 10px;
@@ -287,7 +298,7 @@ const InputWrapper = styled.div`
   }
 `;
 
-const FilterTitle = styled.div`
+const FilterHead = styled.div`
   display: flex;
   gap: 7px;
   align-items: center;
@@ -308,6 +319,17 @@ const FilterTitle = styled.div`
     line-height: 24px;
     font-weight: 700;
     font-size: 14px;
+  }
+`;
+
+const FilterHeadRight = styled.div`
+  display: flex;
+  align-items: center;
+  .result {
+    text-align: right;
+    font-size: 36px;
+    font-weight: 700;
+    margin-right: 20px;
   }
 `;
 

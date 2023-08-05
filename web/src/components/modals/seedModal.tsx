@@ -50,6 +50,9 @@ const ModalContainer = styled(Box)`
   gap: 30px;
   border-radius: 8px;
   background: #fbf5ef;
+  &:focus-visible {
+    outline: none;
+  }
 `;
 
 const ModalLeft = styled.div`
