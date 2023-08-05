@@ -5,10 +5,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SearchIcon from "@mui/icons-material/Search";
 import Divider from "@mui/material/Divider";
-
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import Checkbox from "components/common/checkbox";
 
 interface IProps {
   id: number;
@@ -67,19 +64,16 @@ export default function FilterAttrItem({
             />
           </InputWrapper>
           <FilterAttrValues>
-            <FormGroup>
-              {attrList.map((item, index) => (
-                <FormControlLabel
-                  key={index}
-                  control={<Checkbox />}
+            {attrList.map((item, index) => (
+              <li key={index}>
+                <Checkbox
                   checked={item.isSelected}
-                  onChange={(_, checked) =>
-                    onSelectValue(id, item.value, checked)
-                  }
-                  label={item.value}
-                />
-              ))}
-            </FormGroup>
+                  onChange={(checked) => onSelectValue(id, item.value, checked)}
+                >
+                  <span className="text">{item.value}</span>
+                </Checkbox>
+              </li>
+            ))}
           </FilterAttrValues>
           <Divider />
         </>
@@ -103,11 +97,13 @@ const FilterAttrName = styled.div`
 const FilterAttrValues = styled.ul`
   max-height: 200px;
   overflow-y: auto;
-  margin-block: 10px;
+  margin-block: 18px;
 
   li {
-    display: flex;
-    align-items: center;
+    margin-top: 20px;
+    &:first-child {
+      margin-top: 0;
+    }
   }
 `;
 
