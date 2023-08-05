@@ -24,7 +24,7 @@ export default function Banner({ color }: { color: string }) {
         </BannerText>
         <BannerButtonGroup>
           <ViewButton
-            onClick={() => window.open(`${window.origin}/gallery`, "_blank")}
+            onClick={() => window.open(`${window.origin}/#/gallery`, "_blank")}
           >
             View Gallery
           </ViewButton>
