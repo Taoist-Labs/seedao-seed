@@ -175,16 +175,25 @@ export default function GalleryPage() {
               ))}
             </FilterTags>
           </FilterTitle>
-          <NFTList container spacing={3}>
-            {list.map((item, idx) => (
-              <NFTCard
-                key={idx}
-                data={item}
-                onClick={() => setShowSeed(item)}
-              />
-            ))}
-          </NFTList>
-          <PaginationStyle count={list.length} color="primary" />
+          {list.length > 0 ? (
+            <>
+              <NFTList container spacing={3}>
+                {list.map((item, idx) => (
+                  <NFTCard
+                    key={idx}
+                    data={item}
+                    onClick={() => setShowSeed(item)}
+                  />
+                ))}
+              </NFTList>
+              <PaginationStyle count={list.length} color="primary" />
+            </>
+          ) : (
+            <EmptyBox>
+              <p>很抱歉，找不到符合您搜索条件的Seed NFT</p>
+              <ClearButton>清空筛选标签</ClearButton>
+            </EmptyBox>
+          )}
         </GalleryContent>
       </GalleryRight>
       {showSeed && (
@@ -300,4 +309,20 @@ const FilterTitle = styled.div`
     font-weight: 700;
     font-size: 14px;
   }
+`;
+
+const EmptyBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(80vh - 100px);
+`;
+
+const ClearButton = styled.span`
+  border-radius: 8px;
+  background: #c3f237;
+  padding: 10px;
+  font-size: 20px;
+  margin-top: 36px;
 `;

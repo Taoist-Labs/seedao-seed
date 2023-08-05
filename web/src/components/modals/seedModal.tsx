@@ -20,17 +20,15 @@ export default function SeedModal({ seed, handleClose }: IProps) {
           <img src={seed.image} alt="" />
         </ModalLeft>
         <ModalRight>
-          <Typography gutterBottom variant="h5" component="h5">
+          <div className="title">
             {seed.name}
             {seed.tokenId}
-          </Typography>
+          </div>
           <AttrBox>
             {seed.attrs.map((attr, idx) => (
               <li key={idx}>
-                <Typography variant="body2" component="p">
-                  {attr.name}
-                </Typography>
-                <Typography component="p">{attr.value}</Typography>
+                <p className="name">{attr.name}</p>
+                <p className="value">{attr.value}</p>
               </li>
             ))}
           </AttrBox>
@@ -47,10 +45,11 @@ const ModalContainer = styled(Box)`
   transform: translate(-50%, -50%);
   width: 80%;
   height: 70%;
-  background-color: #fff;
   padding: 50px 60px;
   display: flex;
   gap: 30px;
+  border-radius: 8px;
+  background: #fbf5ef;
 `;
 
 const ModalLeft = styled.div`
@@ -61,6 +60,11 @@ const ModalLeft = styled.div`
 `;
 const ModalRight = styled.div`
   flex: 1;
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
 `;
 
 const AttrBox = styled.ul`
@@ -68,13 +72,24 @@ const AttrBox = styled.ul`
   flex-wrap: wrap;
   li {
     width: calc(50% - 10px);
+    border-radius: 8px;
+    border: 1px solid #d8d8d8;
+    background: #fff;
+
     box-sizing: border-box;
     margin-inline: 5px;
-    background: #eee;
     margin-bottom: 10px;
     padding: 8px 20px;
     p {
       line-height: 28px;
+    }
+    .name {
+      font-size: 12px;
+      opacity: 0.5;
+    }
+    .value {
+      font-size: 16px;
+      font-weight: 600;
     }
   }
 `;
