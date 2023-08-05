@@ -11,6 +11,7 @@ import { useAppContext, AppActionType } from "providers/appProvider";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import GreenStarIcon from "assets/images/home/green_star.svg";
 
 const LoginBox = ({ account }: { account?: string }) => {
   const { dispatch } = useAppContext();
@@ -82,6 +83,12 @@ export default function Header() {
           ))}
         </Menu>
         <LoginBox account={account} />
+        <EnterButton
+          onClick={() => window.open("https://app.seedao.xyz/", "_blank")}
+        >
+          <img src={GreenStarIcon} alt="" />
+          <span>Enter App</span>
+        </EnterButton>
       </NavStyle>
     </HeaderStyle>
   );
@@ -122,5 +129,20 @@ const SelectBox = styled.div`
   width: 80px;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
+`;
+
+const EnterButton = styled.div`
+  height: 44px;
+  line-height: 44px;
+  border-radius: 4px;
+  background: #000;
+  padding-inline: 10px;
+  color: #a8e100;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 9px;
   cursor: pointer;
 `;
