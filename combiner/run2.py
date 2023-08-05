@@ -52,7 +52,8 @@ def load_7_cloth():
 def merge_img(params):
     save_name, combination = params
     # print(save_name, combination)
-    im = Image.new('RGBA', (5000, 5000))
+    # im = Image.new('RGBA', (5000, 5000))
+    im = Image.new('RGBA', (1024, 1024))
 
     # 图层顺序从上到下：
     # 7.cloth
@@ -124,8 +125,7 @@ def gen_random_comb(backgrounds, bodys, eyes, stars, heads, rings, clothes, dire
         random.shuffle(list_heads_man)
         list_heads = list_heads_girl + list_heads_man  # heads
 
-        list_rings = dup_list(heads, math.floor(0.15 * num)) + \
-            dup_list([{"", None}], num - math.floor(0.15 * num))
+        list_rings = dup_list(rings, math.floor(0.15 * num)) + dup_list([{"", None}], num - math.floor(0.15 * num))
         random.shuffle(list_rings)  # rings
 
         list_clothes_girls_1 = dup_list(
