@@ -4,7 +4,6 @@ import SeedCard from "./seedCard";
 export default function UserPage() {
   return (
     <UserPageStyle>
-      <PageLeft></PageLeft>
       <PageRight>
         <SeedCard />
       </PageRight>
@@ -17,13 +16,6 @@ const UserPageStyle = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-`;
-
-const PageLeft = styled.div`
-  width: 240px;
-  background: #fbf5ef;
-  box-shadow: 2px 0px 8px 2px rgba(0, 0, 0, 0.1);
-  height: calc(100vh - 102px);
 `;
 
 const PageRight = styled.div`

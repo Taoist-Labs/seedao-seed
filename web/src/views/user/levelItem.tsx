@@ -1,35 +1,67 @@
 import styled from "@emotion/styled";
 import GreyStarIcon from "assets/images/user/grey_star.svg";
-import RedStarIcon from "assets/images/user/red_star.svg";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import LevelStar from "components/svg/levelStar";
 
 interface IProps {
-  isCurrent: boolean;
-  level: number;
+  points: number;
+  data: {
+    level: number;
+    minPoints: number;
+    maxPointes: number;
+    color: string;
+  };
 }
 
-export default function LevelItem({ isCurrent, level }: IProps) {
+export default function LevelItem({ data, points }: IProps) {
+  const { t } = useTranslation();
+  const isCurrent = useMemo(() => {
+    return points >= data.minPoints && points <= data.maxPointes;
+  }, [points, data]);
+
+  const { leftPoints, percent } = useMemo(() => {
+    if (isCurrent) {
+      return {
+        leftPoints: data.maxPointes - points + 1,
+        percent: Math.floor(
+          ((points - data.minPoints) * 100) /
+            (data.maxPointes - data.minPoints),
+        ),
+      };
+    } else {
+      return {
+        leftPoints: 0,
+        percent: 0,
+      };
+    }
+  }, [isCurrent, points, data]);
+
   return isCurrent ? (
     <ActiveLevelStyle>
       <LeftPart>
-        <span>L{level}</span>
-        <img src={RedStarIcon} alt="" />
+        <span>L{data.level}</span>
+        <LevelStar color={data.color} />
       </LeftPart>
       <RightPart>
         <div className="top">
           <span className="num">
-            链上积分 <strong>0,000</strong> / 50,000
+            {t("user.levelProgress", {
+              points: leftPoints,
+              level: `L${data.level + 1}`,
+            })}
           </span>
-          <span className="percent">50%</span>
+          <span className="percent">{percent}%</span>
         </div>
-        <ProcessBar>
-          <div className="inner" style={{ width: "50%" }} />
+        <ProcessBar color={data.color} percent={percent}>
+          <div className="inner" />
         </ProcessBar>
       </RightPart>
     </ActiveLevelStyle>
   ) : (
     <LevelItemStyle>
       <LevelStyle>
-        <span>L{level}</span>
+        <span>L{data.level}</span>
         <img src={GreyStarIcon} alt="" />
       </LevelStyle>
     </LevelItemStyle>
@@ -63,7 +95,11 @@ const RightPart = styled.div`
     font-size: 16px;
   }
 `;
-const ProcessBar = styled.div`
+interface IProcessProps {
+  color: string;
+  percent: number;
+}
+const ProcessBar = styled.div<IProcessProps>`
   width: 293px;
   height: 30px;
   border-radius: 36px;
@@ -71,7 +107,8 @@ const ProcessBar = styled.div`
   overflow: hidden;
   .inner {
     height: 100%;
-    background-color: #f82427;
+    background-color: ${(props) => props.color};
+    width: ${(props) => props.percent + "%"};
   }
 `;
 const LevelStyle = styled.div`

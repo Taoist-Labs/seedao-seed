@@ -17,52 +17,62 @@ const LEVELS = [
   {
     level: 0,
     minPoints: 0,
-    maxPointes: 50000,
+    maxPointes: 4999,
+    color: "#FC6162",
   },
   {
     level: 1,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 5000,
+    maxPointes: 19999,
+    color: "#FC6162",
   },
   {
     level: 2,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 20000,
+    maxPointes: 99999,
+    color: "#5939D9",
   },
   {
     level: 3,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 100000,
+    maxPointes: 299999,
+    color: "#5939D9",
   },
   {
     level: 4,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 300000,
+    maxPointes: 999999,
+    color: "#6BE393",
   },
   {
     level: 5,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 1000000,
+    maxPointes: 2999999,
+    color: "#6BE393",
   },
   {
     level: 6,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 3000000,
+    maxPointes: 9999999,
+    color: "#EF36A9",
   },
   {
     level: 7,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 10000000,
+    maxPointes: 29999999,
+    color: "#EF36A9",
   },
   {
     level: 8,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 30000000,
+    maxPointes: 99999999,
+    color: "#10D4FF",
   },
   {
     level: 9,
-    minPoints: 0,
-    maxPointes: 50000,
+    minPoints: 100000000,
+    maxPointes: -1,
+    color: "#10D4FF",
   },
 ];
 
@@ -193,7 +203,7 @@ export default function SeedCard() {
     <Card>
       <CardTop>
         {LEVELS.map((item, i) => (
-          <LevelItem key={i} isCurrent={i === 5} level={item.level} />
+          <LevelItem key={i} data={item} points={Number(points)} />
         ))}
       </CardTop>
       <CardBottom>
