@@ -51,45 +51,47 @@ export default function Header() {
 
   return (
     <HeaderStyle>
-      <LogoLink to="/">
-        <img src={LogoIcon} alt="" />
-      </LogoLink>
-      <NavStyle>
-        <SelectBox
-          id="seed-select"
-          onClick={(event: React.MouseEvent<HTMLElement>) =>
-            setAnchorEl(event.currentTarget)
-          }
-        >
-          <span>Seed</span>
-          <ExpandMoreIcon />
-        </SelectBox>
-        <Menu
-          anchorEl={anchorEl}
-          open={openSelect}
-          onClose={() => setAnchorEl(null)}
-          MenuListProps={{
-            "aria-labelledby": "seed-select",
-          }}
-        >
-          {SEED_OPTIONS.map((option, idx) => (
-            <MenuItem
-              value={idx}
-              key={idx}
-              onClick={() => handleSelect(option.path)}
-            >
-              {option.label}
-            </MenuItem>
-          ))}
-        </Menu>
-        <LoginBox account={account} />
-        <EnterButton
-          onClick={() => window.open("https://app.seedao.xyz/", "_blank")}
-        >
-          <img src={GreenStarIcon} alt="" />
-          <span>Enter App</span>
-        </EnterButton>
-      </NavStyle>
+      <HeaderContainer>
+        <LogoLink to="/">
+          <img src={LogoIcon} alt="" />
+        </LogoLink>
+        <NavStyle>
+          <SelectBox
+            id="seed-select"
+            onClick={(event: React.MouseEvent<HTMLElement>) =>
+              setAnchorEl(event.currentTarget)
+            }
+          >
+            <span>Seed</span>
+            <ExpandMoreIcon />
+          </SelectBox>
+          <Menu
+            anchorEl={anchorEl}
+            open={openSelect}
+            onClose={() => setAnchorEl(null)}
+            MenuListProps={{
+              "aria-labelledby": "seed-select",
+            }}
+          >
+            {SEED_OPTIONS.map((option, idx) => (
+              <MenuItem
+                value={idx}
+                key={idx}
+                onClick={() => handleSelect(option.path)}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </Menu>
+          <LoginBox account={account} />
+          <EnterButton
+            onClick={() => window.open("https://app.seedao.xyz/", "_blank")}
+          >
+            <img src={GreenStarIcon} alt="" />
+            <span>Enter App</span>
+          </EnterButton>
+        </NavStyle>
+      </HeaderContainer>
     </HeaderStyle>
   );
 }
@@ -98,11 +100,17 @@ const HeaderStyle = styled.header`
   height: 102px;
   line-height: 104px;
   padding: 10px 30px;
+  box-sizing: border-box;
+  background-color: #fff;
+`;
+
+const HeaderContainer = styled.div`
+  max-width: 1440px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
-  background-color: #fff;
+  margin: 0 auto;
+  height: 100%;
 `;
 
 const LogoLink = styled(Link)`

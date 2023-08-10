@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Header from "./components/layout/header";
 import Home from "./views/home/home";
-import Footer from "./components/layout/footer";
+// import Footer from "./components/layout/footer";
 import LoadingModal from "./components/modals/loadingModal";
 import GalleryPage from "views/gallery/gallery";
 import LicensePage from "views/license";
@@ -27,7 +27,7 @@ export default function RouterLink() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
-      <Footer />
+      {/* <Footer /> */}
       <LoadingModal />
     </Router>
   );

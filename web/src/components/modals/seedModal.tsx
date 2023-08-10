@@ -43,6 +43,7 @@ const ModalContainer = styled(Box)`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 80%;
+  max-width: 1150px;
   height: 70%;
   padding: 50px 60px;
   display: flex;

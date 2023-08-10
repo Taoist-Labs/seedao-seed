@@ -25,4 +25,6 @@ ul li {
 .mainContent {
   min-height: calc(100vh - 140px);
   overflow-y: auto;
+  max-width: 1440px;
+  margin: 0 auto;
 }
