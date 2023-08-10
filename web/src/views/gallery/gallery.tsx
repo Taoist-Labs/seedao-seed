@@ -12,6 +12,14 @@ import GalleryFilterMenu, { IAttrGroup, SelectAttr } from "./filterMenu";
 import FilterSvg from "components/svg/filter";
 import RefreshSvg from "components/svg/refresh";
 
+import BackgroundIcon from "assets/images/attrs/background.svg";
+import BodyIcon from "assets/images/attrs/body.svg";
+import ClothIcon from "assets/images/attrs/cloth.svg";
+import EarIcon from "assets/images/attrs/ear.svg";
+import PolarisIcon from "assets/images/attrs/polarist.svg";
+import HairIcon from "assets/images/attrs/hair.svg";
+import SpecialIcon from "assets/images/attrs/special.svg";
+
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
   const { t } = useTranslation();
@@ -19,15 +27,38 @@ export default function GalleryPage() {
 
   const [attrGroups] = useState<IAttrGroup[]>([
     {
-      name: "background",
+      name: "Cloth",
+      icon: ClothIcon,
+      values: ["90cm", "456"],
+    },
+    {
+      name: "Polaris",
+      icon: PolarisIcon,
+      values: ["90cm", "456"],
+    },
+    {
+      name: "Haire",
+      icon: HairIcon,
+      values: ["90cm", "456"],
+    },
+    {
+      name: "Body",
+      values: ["#fff", "#aaa"],
+      icon: BodyIcon,
+    },
+    {
+      name: "Ear",
+      icon: EarIcon,
+      values: ["90cm", "456"],
+    },
+    {
+      name: "Background",
+      icon: BackgroundIcon,
       values: ["1235", "456"],
     },
     {
-      name: "color",
-      values: ["#fff", "#aaa"],
-    },
-    {
-      name: "height",
+      name: "Special",
+      icon: SpecialIcon,
       values: ["90cm", "456"],
     },
   ]);

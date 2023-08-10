@@ -11,6 +11,7 @@ interface IProps {
   name: string;
   values: string[];
   selected: string[];
+  icon: string;
   onSelectValue: (id: number, value: string, selected: boolean) => void;
 }
 
@@ -22,6 +23,7 @@ type AttrItem = {
 export default function FilterAttrItem({
   id,
   name,
+  icon,
   values,
   selected,
   onSelectValue,
@@ -47,9 +49,10 @@ export default function FilterAttrItem({
   return (
     <FilterAttrItemStyle>
       <FilterAttrName onClick={() => setIsOpen(!isOpen)}>
-        <Typography variant="h6" component="h6">
+        <div className="left">
+          <img src={icon} alt="" />
           {name}
-        </Typography>
+        </div>
         {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </FilterAttrName>
       {isOpen && (
@@ -69,6 +72,7 @@ export default function FilterAttrItem({
                   onChange={(checked) => onSelectValue(id, item.value, checked)}
                 >
                   <span className="text">{item.value}</span>
+                  <span className="num">(21)</span>
                 </Checkbox>
               </li>
             ))}
@@ -90,6 +94,23 @@ const FilterAttrName = styled.div`
   justify-content: space-between;
   cursor: pointer;
   padding-block: 10px;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    img {
+      width: 30px;
+    }
+    @media (max-width: 960px) {
+      img {
+        width: 50px;
+      }
+      font-size: 40px;
+    }
+  }
 `;
 
 const FilterAttrValues = styled.ul`
@@ -101,6 +122,22 @@ const FilterAttrValues = styled.ul`
     margin-top: 20px;
     &:first-child {
       margin-top: 0;
+    }
+    .text {
+      font-size: 20px;
+    }
+    .num {
+      color: #b5b5b5;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    @media (max-width: 960px) {
+      .text {
+        font-size: 36px;
+      }
+      .num {
+        font-size: 20px;
+      }
     }
   }
 `;

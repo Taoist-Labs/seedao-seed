@@ -8,6 +8,7 @@ import FilterAttrItem from "./filterAttrItem";
 export interface IAttrGroup {
   name: string;
   values: string[];
+  icon: string;
 }
 
 export type SelectAttr = {
@@ -47,31 +48,34 @@ export default function GalleryFilterMenu({
         FILTER
         {sm && <CloseButton onClick={handleClose} fontSize="large" />}
       </LeftTitle>
-      <InputWrapper>
-        <SearchIcon />
-        <input
-          value={serialKeyword}
-          type="text"
-          placeholder={t("gallery.serialPlaceHolder")}
-          onChange={(e) => onChangeSerialKeyword(e.target.value)}
-        />
-      </InputWrapper>
-      <FilterColumn hide={!!serialKeyword}>
-        {attrGroups.map((group, index) => (
-          <FilterAttrItem
-            key={index}
-            id={index}
-            name={group.name}
-            values={group.values}
-            selected={selectAttrs
-              .filter((item) => item.id === index)
-              .map((item) => item.value)}
-            onSelectValue={(id, value, selected) =>
-              onSelectValue(id, group.name, value, selected)
-            }
+      <div className="container">
+        <InputWrapper>
+          <SearchIcon />
+          <input
+            value={serialKeyword}
+            type="text"
+            placeholder={t("gallery.serialPlaceHolder")}
+            onChange={(e) => onChangeSerialKeyword(e.target.value)}
           />
-        ))}
-      </FilterColumn>
+        </InputWrapper>
+        <FilterColumn hide={!!serialKeyword}>
+          {attrGroups.map((group, index) => (
+            <FilterAttrItem
+              key={index}
+              id={index}
+              name={group.name}
+              icon={group.icon}
+              values={group.values}
+              selected={selectAttrs
+                .filter((item) => item.id === index)
+                .map((item) => item.value)}
+              onSelectValue={(id, value, selected) =>
+                onSelectValue(id, group.name, value, selected)
+              }
+            />
+          ))}
+        </FilterColumn>
+      </div>
     </GalleryLeft>
   );
 }
@@ -97,14 +101,24 @@ const SmLeftStyle = css`
 `;
 
 const GalleryLeft = styled.div<{ sm: boolean }>`
-  width: 270px;
-  min-height: calc(100vh - 102px);
+  width: 340px;
+  height: calc(100vh - 102px);
+  overflow-y: auto;
   padding-inline: 30px;
   padding-top: 49px;
   box-shadow: 2px 0px 8px 2px rgba(0, 0, 0, 0.1);
   background-color: #fbf5ef;
   box-sizing: border-box;
   ${(props) => props.sm && SmLeftStyle}
+  display: flex;
+  flex-direction: column;
+  .container {
+    flex: 1;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 const LeftTitle = styled.div`

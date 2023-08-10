@@ -25,8 +25,11 @@ const NFTStyle = styled(Grid)`
 
 const Intro = styled.div`
   text-align: center;
-  margin-top: 14px;
+  margin-top: 10px;
   color: #686666;
   font-size: 16px;
   font-weight: 500;
+  @media (max-width: 960px) {
+    font-size: 24px;
+  } ;
 `;
