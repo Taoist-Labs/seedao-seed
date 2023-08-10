@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useTranslation } from "react-i18next";
+import DiscordIcon from "assets/images/home/discord.svg";
+import TwitterIcon from "assets/images/home/twitter.svg";
+import OpenseaIcon from "assets/images/home/opensea.svg";
 
 const QuestionItem = ({ data }: { data: { name: string; answer: any } }) => {
   const [content, setContent] = useState("");
@@ -24,7 +27,7 @@ const QuestionItem = ({ data }: { data: { name: string; answer: any } }) => {
     <QuestionItemStyle>
       <div className="q" onClick={() => setShow(!show)}>
         <span className="name">{data.name}</span>
-        {show ? <RemoveIcon /> : <AddIcon />}
+        {show ? <RemoveIcon className="btn" /> : <AddIcon className="btn" />}
       </div>
       {show && (
         <div className="answer">
@@ -60,6 +63,17 @@ export default function FQA({ color }: { color: string }) {
         >
           {t("home.moreQuestions")}
         </a>
+        <SocialBox>
+          <a href="http://" target="_blank" rel="noopener noreferrer">
+            <img src={DiscordIcon} alt="" />
+          </a>
+          <a href="http://" target="_blank" rel="noopener noreferrer">
+            <img src={TwitterIcon} alt="" />
+          </a>
+          <a href="http://" target="_blank" rel="noopener noreferrer">
+            <img src={OpenseaIcon} alt="" />
+          </a>
+        </SocialBox>
       </CenterBox>
     </FQAStyle>
   );
@@ -72,6 +86,9 @@ const FQAStyle = styled.section`
   @media (max-width: 960px) {
     padding: 60px 40px;
   }
+  @media (max-width: 750px) {
+    padding: 60px 30px;
+  }
   .question-box {
     display: flex;
     flex-direction: column;
@@ -80,8 +97,7 @@ const FQAStyle = styled.section`
   .subject {
     font-size: 18px;
     font-weight: 700;
-    margin-top: 17px;
-    margin-bottom: 38px;
+    margin-block: 38px;
     text-align: center;
     color: #000;
   }
@@ -111,8 +127,8 @@ const QuestionItemStyle = styled.li`
 
   .q {
     cursor: pointer;
-    line-height: 50px;
     height: 50px;
+    line-height: 50px;
     padding-inline: 10px;
     border-bottom: 1px solid #000;
     display: flex;
@@ -123,10 +139,33 @@ const QuestionItemStyle = styled.li`
       font-size: 18px;
       line-height: 30px;
     }
+    .btn {
+      color: #000;
+    }
   }
   .answer {
     margin-top: 17px;
     padding: 10px;
     line-height: 30px;
+  }
+  @media (max-width: 750px) {
+    .q {
+      height: unset;
+      line-height: 30px;
+    }
+  }
+`;
+
+const SocialBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 17px;
+  margin-bottom: 80px;
+  height: 240px;
+  @media (max-width: 750px) {
+    margin-top: 64px;
+    height: unset;
   }
 `;
