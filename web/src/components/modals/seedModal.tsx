@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import { GALLERY_ATTRS } from "data/gallery";
 
 interface IProps {
   seed: INFT;
@@ -8,6 +9,10 @@ interface IProps {
 }
 
 export default function SeedModal({ seed, handleClose }: IProps) {
+  const findAttrValue = (attr: string) => {
+    return seed.attrs.find((item) => item.name === attr)?.value;
+  };
+
   return (
     <Modal
       open={!!seed}
@@ -20,14 +25,17 @@ export default function SeedModal({ seed, handleClose }: IProps) {
         </ModalLeft>
         <ModalRight>
           <div className="title">
-            {seed.name}
+            SEED NO.
             {seed.tokenId}
           </div>
           <AttrBox>
-            {seed.attrs.map((attr, idx) => (
+            {GALLERY_ATTRS.map((attr, idx) => (
               <li key={idx}>
-                <p className="name">{attr.name}</p>
-                <p className="value">{attr.value}</p>
+                <img src={attr.icon} alt="" />
+                <div>
+                  <p className="name">{attr.display}</p>
+                  <p className="value">{findAttrValue(attr.name)}</p>
+                </div>
               </li>
             ))}
           </AttrBox>
@@ -44,7 +52,6 @@ const ModalContainer = styled(Box)`
   transform: translate(-50%, -50%);
   width: 80%;
   max-width: 1150px;
-  height: 70%;
   padding: 50px 60px;
   display: flex;
   gap: 30px;
@@ -58,7 +65,8 @@ const ModalContainer = styled(Box)`
 const ModalLeft = styled.div`
   width: 45%;
   img {
-    width: 100%;
+    width: 500px;
+    max-width: 100%;
   }
 `;
 const ModalRight = styled.div`
@@ -83,16 +91,26 @@ const AttrBox = styled.ul`
     margin-inline: 5px;
     margin-bottom: 10px;
     padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    img {
+      width: 30px;
+    }
     p {
       line-height: 28px;
     }
     .name {
       font-size: 12px;
       opacity: 0.5;
+      line-height: 15px;
     }
     .value {
       font-size: 16px;
       font-weight: 600;
+      line-height: 19px;
+      margin-top: 4px;
     }
   }
 `;

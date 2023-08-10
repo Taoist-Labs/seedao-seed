@@ -6,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FilterAttrItem from "./filterAttrItem";
 
 export interface IAttrGroup {
+  display: string;
   name: string;
   values: string[];
   icon: string;

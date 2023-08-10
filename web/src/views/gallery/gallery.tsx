@@ -27,37 +27,44 @@ export default function GalleryPage() {
 
   const [attrGroups] = useState<IAttrGroup[]>([
     {
-      name: "Cloth",
+      display: "Cloth",
+      name: "cloth",
       icon: ClothIcon,
       values: ["90cm", "456"],
     },
     {
-      name: "Polaris",
+      display: "Polaris",
+      name: "polaris",
       icon: PolarisIcon,
       values: ["90cm", "456"],
     },
     {
-      name: "Haire",
+      display: "Haire",
+      name: "haire",
       icon: HairIcon,
       values: ["90cm", "456"],
     },
     {
-      name: "Body",
+      display: "Body",
+      name: "body",
       values: ["#fff", "#aaa"],
       icon: BodyIcon,
     },
     {
-      name: "Ear",
+      display: "Ear",
+      name: "ear",
       icon: EarIcon,
       values: ["90cm", "456"],
     },
     {
-      name: "Background",
+      display: "Background",
+      name: "background",
       icon: BackgroundIcon,
       values: ["1235", "456"],
     },
     {
-      name: "Special",
+      display: "Special",
+      name: "special",
       icon: SpecialIcon,
       values: ["90cm", "456"],
     },
