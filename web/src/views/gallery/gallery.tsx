@@ -226,11 +226,12 @@ const GalleryPageStyle = styled.div`
 
 const GalleryRight = styled(Box)`
   flex: 1;
+  overflow-x: auto;
 `;
 
 const GalleryContent = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 102px);
   padding-left: 45px;
   padding-top: 45px;
   box-sizing: border-box;
@@ -239,18 +240,25 @@ const GalleryContent = styled.div`
     width: 0;
     display: none;
   }
+  @media (max-width: 960px) {
+    padding: 40px 30px 0;
+  }
 `;
 
 const NFTList = styled(Grid)``;
 
 const FilterTags = styled.div`
   flex: 1;
+  overflow-x: auto;
   .tag-container {
     width: 100%;
     overflow-x: auto;
     display: flex;
     align-items: center;
     gap: 10px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 const Tag = styled.li`
@@ -267,6 +275,7 @@ const Tag = styled.li`
 `;
 
 const FilterHead = styled.div`
+  width: 100%;
   display: flex;
   gap: 7px;
   align-items: center;

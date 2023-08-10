@@ -93,6 +93,7 @@ const SmLeftStyle = css`
 
 const GalleryLeft = styled.div<{ sm: boolean }>`
   width: 270px;
+  min-height: calc(100vh - 102px);
   padding-inline: 30px;
   padding-top: 49px;
   box-shadow: 2px 0px 8px 2px rgba(0, 0, 0, 0.1);
