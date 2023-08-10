@@ -5,6 +5,7 @@ import DynamicIcon03 from "assets/images/home/dynamic_3.svg";
 import DynamicIcon04 from "assets/images/home/dynamic_4.svg";
 import DynamicIcon05 from "assets/images/home/dynamic_5.svg";
 import { useTranslation, Trans } from "react-i18next";
+import { CenterBox } from "style";
 
 const DynamicNFTs = [
   {
@@ -87,42 +88,44 @@ export default function DynamicNFT({ color }: { color: string }) {
   };
   return (
     <DynamicNFTStyle color={color}>
-      <Title>{t("home.dynamicTitle")}</Title>
-      <Content>
-        <p>
-          {`The Polaris star on the character's forehead in the Seed NFT will
+      <CenterBox>
+        <Title>{t("home.dynamicTitle")}</Title>
+        <Content>
+          <p>
+            {`The Polaris star on the character's forehead in the Seed NFT will
           dynamically change based on the points in the member's wallet,
           affecting all on-chain avatars. It reflects the current holder's level
           and updates when trading actions occur with a new owner.`}
-        </p>
-        <p className="second">
-          <Trans
-            i18nKey="home.dynamicPolaris"
-            components={{ span: <span>Polaris star colors</span> }}
-          >
-            {/* <span>Polaris star colors</span> for different points/Level: */}
-          </Trans>
-        </p>
-      </Content>
-      <NFTCard>
-        {DynamicNFTs.map((item, i) => (
-          <NFTCardItem key={i} color={item.color}>
-            <div className="content">
-              <p>
-                <span>{item.levels[0].title}</span> ({item.levels[0].points})
-              </p>
-              <div className="line"></div>
-              <p>
-                <span>{item.levels[1].title}</span> ({item.levels[1].points})
-              </p>
-            </div>
-            <div>
-              <img src={item.img} alt="" />
-            </div>
-          </NFTCardItem>
-        ))}
-      </NFTCard>
-      <ViewButton onClick={openLevel}>View My Level</ViewButton>
+          </p>
+          <p className="second">
+            <Trans
+              i18nKey="home.dynamicPolaris"
+              components={{ span: <span>Polaris star colors</span> }}
+            >
+              {/* <span>Polaris star colors</span> for different points/Level: */}
+            </Trans>
+          </p>
+        </Content>
+        <NFTCard>
+          {DynamicNFTs.map((item, i) => (
+            <NFTCardItem key={i} color={item.color}>
+              <div className="content">
+                <p>
+                  <span>{item.levels[0].title}</span> ({item.levels[0].points})
+                </p>
+                <div className="line"></div>
+                <p>
+                  <span>{item.levels[1].title}</span> ({item.levels[1].points})
+                </p>
+              </div>
+              <div>
+                <img src={item.img} alt="" />
+              </div>
+            </NFTCardItem>
+          ))}
+        </NFTCard>
+        <ViewButton onClick={openLevel}>View My Level</ViewButton>
+      </CenterBox>
     </DynamicNFTStyle>
   );
 }

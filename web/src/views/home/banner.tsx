@@ -3,6 +3,7 @@ import BannerBg from "assets/images/home/banner.png";
 import BannerBg01 from "assets/images/home/banner1.jpeg";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTranslation } from "react-i18next";
+import { CenterBox } from "style";
 
 export default function Banner({ color }: { color: string }) {
   const matches = useMediaQuery("(max-width:960px)");
@@ -59,7 +60,7 @@ const BannerStyle = styled.section`
   }
 `;
 
-const BannerContent = styled.div`
+const BannerContent = styled(CenterBox)`
   padding-inline: 24px;
   display: flex;
   flex-direction: column;

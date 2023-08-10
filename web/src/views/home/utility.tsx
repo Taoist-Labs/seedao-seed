@@ -4,6 +4,7 @@ import IconGovernance from "assets/images/home/governance.svg";
 import IconIncubation from "assets/images/home/incubation.svg";
 import IconRewards from "assets/images/home/rewards.svg";
 import IconStar from "assets/images/home/star.svg";
+import { CenterBox } from "style";
 
 const UTILITIES = [
   {
@@ -32,7 +33,7 @@ const UTILITIES = [
 
 export default function Utility() {
   return (
-    <UtilitytStyle>
+    <UtilitytStyle className="center">
       <UtilityTitle>Seed NFT Utility</UtilityTitle>
       <Box>
         {UTILITIES.map((item, i) => (
@@ -67,7 +68,7 @@ export default function Utility() {
   );
 }
 
-const UtilitytStyle = styled.section`
+const UtilitytStyle = styled(CenterBox)`
   padding: 80px 120px;
   @media (max-width: 960px) {
     padding: 60px 40px;

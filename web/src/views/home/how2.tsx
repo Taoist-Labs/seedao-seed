@@ -7,6 +7,7 @@ import NFT_03 from "assets/images/home/nfts/3.png";
 import NFT_04 from "assets/images/home/nfts/4.png";
 import NFT_05 from "assets/images/home/nfts/5.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { CenterBox } from "style";
 
 const CardPart = () => {
   return (
@@ -85,7 +86,7 @@ export default function How2() {
     </How2Style>
   );
 }
-const How2Style = styled.section`
+const How2Style = styled(CenterBox)`
   padding: 80px 120px;
   @media (max-width: 960px) {
     padding: 60px 40px;
