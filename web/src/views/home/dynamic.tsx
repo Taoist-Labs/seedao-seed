@@ -4,6 +4,7 @@ import DynamicIcon02 from "assets/images/home/dynamic_2.svg";
 import DynamicIcon03 from "assets/images/home/dynamic_3.svg";
 import DynamicIcon04 from "assets/images/home/dynamic_4.svg";
 import DynamicIcon05 from "assets/images/home/dynamic_5.svg";
+import { useTranslation, Trans } from "react-i18next";
 
 const DynamicNFTs = [
   {
@@ -79,13 +80,14 @@ const DynamicNFTs = [
 ];
 
 export default function DynamicNFT({ color }: { color: string }) {
+  const { t } = useTranslation();
   const openLevel = () => {
     // login
     // unlogin
   };
   return (
     <DynamicNFTStyle color={color}>
-      <Title>Dynamic PFP of Seed NFT</Title>
+      <Title>{t("home.dynamicTitle")}</Title>
       <Content>
         <p>
           {`The Polaris star on the character's forehead in the Seed NFT will
@@ -94,7 +96,12 @@ export default function DynamicNFT({ color }: { color: string }) {
           and updates when trading actions occur with a new owner.`}
         </p>
         <p className="second">
-          <span>Polaris star colors</span> for different points/Level:
+          <Trans
+            i18nKey="home.dynamicPolaris"
+            components={{ span: <span>Polaris star colors</span> }}
+          >
+            {/* <span>Polaris star colors</span> for different points/Level: */}
+          </Trans>
         </p>
       </Content>
       <NFTCard>

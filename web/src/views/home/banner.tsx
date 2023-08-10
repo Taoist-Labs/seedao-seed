@@ -2,31 +2,27 @@ import styled from "@emotion/styled";
 import BannerBg from "assets/images/home/banner.png";
 import BannerBg01 from "assets/images/home/banner1.jpeg";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTranslation } from "react-i18next";
 
 export default function Banner({ color }: { color: string }) {
   const matches = useMediaQuery("(max-width:960px)");
+  const { t } = useTranslation();
   return (
     <BannerStyle color={color}>
       <BannerContent>
         {matches && (
           <img src={color === "#F9D9FB" ? BannerBg : BannerBg01} alt="" />
         )}
-        <BannerTitle>Seed Now, See the DAO</BannerTitle>
+        <BannerTitle>{t("home.bannerTitle")}</BannerTitle>
         <BannerText>
-          <p>
-            The Seed NFT acts as your digital ID in SeeDAO, establishing your
-            eligibility to attain governance rights within the Network Polis.
-          </p>
-          <p>
-            The Seed NFT is your personal imprint on our shared SeeDAO journey,
-            capturing your transformation from Web3 novice to builder.
-          </p>
+          <p>{t("home.bannerContent01")}</p>
+          <p>{t("home.bannerContent02")}</p>
         </BannerText>
         <BannerButtonGroup>
           <ViewButton
             onClick={() => window.open(`${window.origin}/#/gallery`, "_blank")}
           >
-            View Gallery
+            {t("home.galleryButton")}
           </ViewButton>
           <BuyButton
             onClick={() =>
@@ -36,7 +32,7 @@ export default function Banner({ color }: { color: string }) {
               )
             }
           >
-            Buy A Seed
+            {t("home.buySeedButton")}
           </BuyButton>
         </BannerButtonGroup>
       </BannerContent>

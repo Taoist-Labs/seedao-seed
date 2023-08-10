@@ -231,7 +231,7 @@ export default function GalleryPage() {
             </FilterHeadRight>
           </FilterHead>
           {list.length > 0 ? (
-            <NFTList container spacing={3}>
+            <NFTList container spacing={3} style={{ width: "100%" }}>
               {list.map((item, idx) => (
                 <NFTCard
                   key={idx}
@@ -242,8 +242,8 @@ export default function GalleryPage() {
             </NFTList>
           ) : (
             <EmptyBox>
-              <p>很抱歉，找不到符合您搜索条件的Seed NFT</p>
-              <ClearButton>清空筛选标签</ClearButton>
+              <p>{t("gallery.emptyResult")}</p>
+              <ClearButton>{t("gallery.clearFilters")}</ClearButton>
             </EmptyBox>
           )}
         </GalleryContent>

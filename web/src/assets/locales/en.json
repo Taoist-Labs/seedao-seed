@@ -1,5 +1,20 @@
 {
     "home": {
-        "bannerTitle": "Seed Now, See the DAO"
+        "bannerTitle": "Seed Now, See the DAO",
+        "bannerContent01": "The Seed NFT acts as your digital ID in SeeDAO, establishing your eligibility to attain governance rights within the Network Polis.",
+        "bannerContent02": "The Seed NFT is your personal imprint on our shared SeeDAO journey, capturing your transformation from Web3 novice to builder.",
+        "galleryButton": "View Gallery",
+        "buySeedButton": "Buy A Seed",
+        "dynamicTitle": "Dynamic PFP of Seed NFT",
+        "dynamicPolaris": "<span>Polaris star colors</span> for different points/Level:"
+    },
+    "gallery": {
+        "serialTag": "serial: {{keyword}}",
+        "serialPlaceHolder": "Sort by serial...",
+        "emptyResult": "No matched your filter parameters.",
+        "clearFilters": "Clear Filters"
+    },
+    "user": {
+        "levelProgress": "您还需{{points}}积分升级到{{level}}"
     }
 }
