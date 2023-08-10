@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import CloseIcon from "@mui/icons-material/Close";
 import { GALLERY_ATTRS } from "data/gallery";
+import { useMemo } from "react";
 
 interface IProps {
   seed: INFT;
@@ -13,6 +15,10 @@ export default function SeedModal({ seed, handleClose }: IProps) {
     return seed.attrs.find((item) => item.name === attr)?.value;
   };
 
+  const seedTitle = useMemo(() => {
+    return `SEED NO.${seed.tokenId}`;
+  }, [seed]);
+
   return (
     <Modal
       open={!!seed}
@@ -20,14 +26,15 @@ export default function SeedModal({ seed, handleClose }: IProps) {
       aria-labelledby="modal-modal-title"
     >
       <ModalContainer>
+        <div className="sm-title">
+          <span>{seedTitle}</span>
+          <CloseIconStyle onClick={handleClose} />
+        </div>
         <ModalLeft>
           <img src={seed.image} alt="" />
         </ModalLeft>
         <ModalRight>
-          <div className="title">
-            SEED NO.
-            {seed.tokenId}
-          </div>
+          <div className="title">{seedTitle}</div>
           <AttrBox>
             {GALLERY_ATTRS.map((attr, idx) => (
               <li key={idx}>
@@ -57,8 +64,30 @@ const ModalContainer = styled(Box)`
   gap: 30px;
   border-radius: 8px;
   background: #fbf5ef;
+  .sm-title {
+    color: #040404;
+    font-size: 30px;
+    font-weight: 700;
+    display: none;
+    line-height: 90px;
+    padding-inline: 30px;
+    justify-content: space-between;
+    align-items: center;
+  }
   &:focus-visible {
     outline: none;
+  }
+  @media (max-width: 750px) {
+    width: calc(100% - 60px);
+    flex-direction: column;
+    padding: 0;
+    height: 80%;
+    min-height: 900px;
+    max-height: 99%;
+    gap: 0;
+    .sm-title {
+      display: flex;
+    }
   }
 `;
 
@@ -68,14 +97,27 @@ const ModalLeft = styled.div`
     width: 500px;
     max-width: 100%;
   }
+  @media (max-width: 750px) {
+    width: 100%;
+    img {
+      width: 100%;
+    }
+    margin-bottom: 20px;
+  }
 `;
 const ModalRight = styled.div`
   flex: 1;
+
   .title {
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 20px;
   }
+  @media (max-width: 750px) {
+    .title {
+      display: none;
+    }
+  } ;
 `;
 
 const AttrBox = styled.ul`
@@ -105,12 +147,25 @@ const AttrBox = styled.ul`
       font-size: 12px;
       opacity: 0.5;
       line-height: 15px;
+      margin-bottom: 4px;
     }
     .value {
       font-size: 16px;
       font-weight: 600;
       line-height: 19px;
-      margin-top: 4px;
     }
   }
+  @media (max-width: 750px) {
+    padding-inline: 18px;
+    .name {
+      display: none;
+    }
+  }
+`;
+
+const CloseIconStyle = styled(CloseIcon)`
+  font-size: 36px;
+  fill: #0f0f0f;
+  opacity: 0.5;
+  cursor: pointer;
 `;
