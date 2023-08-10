@@ -6,7 +6,9 @@
         "galleryButton": "View Gallery",
         "buySeedButton": "Buy A Seed",
         "dynamicTitle": "Dynamic PFP of Seed NFT",
-        "dynamicPolaris": "<span>Polaris star colors</span> for different points/Level:"
+        "dynamicPolaris": "<span>Polaris star colors</span> for different points/Level:",
+        "sgnRelated": "SGN Related",
+        "moreQuestions": "More Questions"
     },
     "gallery": {
         "serialTag": "serial: {{keyword}}",
