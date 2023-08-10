@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import SeedCard from "./seedCard";
+import { CenterBox } from "style";
 
 export default function UserPage() {
   return (
@@ -11,7 +12,7 @@ export default function UserPage() {
   );
 }
 
-const UserPageStyle = styled.div`
+const UserPageStyle = styled(CenterBox)`
   width: 100%;
   height: 100%;
   display: flex;

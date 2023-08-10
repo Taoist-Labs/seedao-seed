@@ -134,7 +134,7 @@ const DynamicNFTStyle = styled.section`
   padding: 80px 120px;
   background: ${(props) => props.color};
   @media (max-width: 960px) {
-    padding: 60px 40px;
+    padding: 60px 30px;
   }
 `;
 
@@ -146,6 +146,9 @@ const Title = styled.div`
   font-weight: 700;
   line-height: 50px;
   margin-bottom: 40px;
+  @media (max-width: 750px) {
+    font-size: 40px;
+  }
 `;
 
 const Content = styled.div`

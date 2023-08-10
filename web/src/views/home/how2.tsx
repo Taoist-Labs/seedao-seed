@@ -89,7 +89,7 @@ export default function How2() {
 const How2Style = styled(CenterBox)`
   padding: 80px 120px;
   @media (max-width: 960px) {
-    padding: 60px 40px;
+    padding: 60px 30px;
   }
 `;
 
@@ -103,6 +103,10 @@ const Title = styled.div`
   font-weight: 700;
   line-height: normal;
   margin-bottom: 80px;
+  @media (max-width: 750px) {
+    font-size: 40px;
+    margin-bottom: 64px;
+  }
 `;
 
 const CardsBox = styled.div`
@@ -170,6 +174,7 @@ const AvatarsBoxStyle = styled.div`
   font-size: 0;
   margin-top: 100px;
   margin-bottom: 80px;
+  height: 137px;
   img {
     width: calc(100% / 6);
   }
@@ -217,5 +222,10 @@ const InfoBoxStyle = styled.ul`
   }
   @media (max-width: 750px) {
     gap: 8px;
+  }
+  @media (max-width: 580px) {
+    flex-wrap: wrap;
+    height: unset;
+    padding-block: 20px;
   }
 `;
