@@ -19,6 +19,7 @@ import EarIcon from "assets/images/attrs/ear.svg";
 import PolarisIcon from "assets/images/attrs/polarist.svg";
 import HairIcon from "assets/images/attrs/hair.svg";
 import SpecialIcon from "assets/images/attrs/special.svg";
+import { CenterBox } from "style";
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
@@ -255,7 +256,7 @@ export default function GalleryPage() {
   );
 }
 
-const GalleryPageStyle = styled.div`
+const GalleryPageStyle = styled(CenterBox)`
   width: 100%;
   height: 100%;
   display: flex;
