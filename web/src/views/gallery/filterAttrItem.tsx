@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import Divider from "@mui/material/Divider";
 import Checkbox from "components/common/checkbox";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface IProps {
   id: number;
@@ -28,6 +28,8 @@ export default function FilterAttrItem({
   selected,
   onSelectValue,
 }: IProps) {
+  const matches = useMediaQuery("(max-width:960px)");
+
   const [isOpen, setIsOpen] = useState(false);
   const [attrList, setAttrList] = useState<AttrItem[]>([]);
   const [keyword, setKeyword] = useState<string>("");
@@ -70,6 +72,7 @@ export default function FilterAttrItem({
                 <Checkbox
                   checked={item.isSelected}
                   onChange={(checked) => onSelectValue(id, item.value, checked)}
+                  size={matches ? "medium" : "small"}
                 >
                   <span className="text">{item.value}</span>
                   <span className="num">(21)</span>
@@ -144,12 +147,13 @@ const FilterAttrValues = styled.ul`
 
 const InputWrapper = styled.div`
   border: 1px solid #bbb;
-  border-radius: 5px;
+  border-radius: 8px;
   height: 36px;
   display: flex;
   align-items: center;
   gap: 6px;
   padding-inline: 10px;
+  box-sizing: border-box;
   input {
     border: none;
     outline: none;
@@ -160,6 +164,14 @@ const InputWrapper = styled.div`
     font-size: 20px;
     &::placeholder {
       color: #b5b5b5;
+    }
+  }
+  @media (max-width: 960px) {
+    height: 72px;
+    border-width: 2px;
+    input {
+      line-height: 72px;
+      font-size: 40px;
     }
   }
 `;

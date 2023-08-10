@@ -51,7 +51,7 @@ export default function GalleryFilterMenu({
       </LeftTitle>
       <div className="container">
         <InputWrapper>
-          <SearchIcon />
+          <SearchIcon className="search-icon" />
           <input
             value={serialKeyword}
             type="text"
@@ -131,13 +131,14 @@ const LeftTitle = styled.div`
 
 const InputWrapper = styled.div`
   border: 1px solid #bbb;
-  border-radius: 5px;
+  border-radius: 8px;
   height: 36px;
   display: flex;
   align-items: center;
   gap: 6px;
   padding-inline: 10px;
   margin-block: 20px;
+  box-sizing: border-box;
   input {
     border: none;
     outline: none;
@@ -148,6 +149,17 @@ const InputWrapper = styled.div`
     font-size: 20px;
     &::placeholder {
       color: #b5b5b5;
+    }
+  }
+  @media (max-width: 960px) {
+    height: 72px;
+    border-width: 2px;
+    input {
+      line-height: 72px;
+      font-size: 40px;
+    }
+    .search-icon {
+      font-size: 40px;
     }
   }
 `;
