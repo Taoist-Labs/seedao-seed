@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { useTranslation } from "react-i18next";
 import SearchIcon from "@mui/icons-material/Search";
-
+import CloseIcon from "@mui/icons-material/Close";
 import FilterAttrItem from "./filterAttrItem";
 
 export interface IAttrGroup {
@@ -28,6 +28,7 @@ interface IProps {
     selected: boolean,
   ) => void;
   sm: boolean;
+  handleClose?: () => void;
 }
 
 export default function GalleryFilterMenu({
@@ -37,11 +38,15 @@ export default function GalleryFilterMenu({
   onChangeSerialKeyword,
   onSelectValue,
   sm,
+  handleClose,
 }: IProps) {
   const { t } = useTranslation();
   return (
     <GalleryLeft sm={sm}>
-      <LeftTitle>FILTER</LeftTitle>
+      <LeftTitle>
+        FILTER
+        {sm && <CloseButton onClick={handleClose} fontSize="large" />}
+      </LeftTitle>
       <InputWrapper>
         <SearchIcon />
         <input
@@ -135,4 +140,11 @@ const InputWrapper = styled.div`
 const FilterColumn = styled.div<{ hide: boolean }>`
   opacity: ${(props) => (props.hide ? 0.2 : 1)};
   cursor: ${(props) => (props.hide ? "not-allowed" : "pointer")};
+`;
+
+const CloseButton = styled(CloseIcon)`
+  float: right;
+  position: relative;
+  top: 15px;
+  cursor: pointer;
 `;

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
 import NFTCard from "./nft";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import Box from "@mui/material/Box";
@@ -147,6 +146,7 @@ export default function GalleryPage() {
                 serialKeyword={keyword}
                 onChangeSerialKeyword={(v) => setKeyword(v)}
                 onSelectValue={onSelectValue}
+                handleClose={() => setshowLeft(false)}
               />
             </GalleryMenuBox>
           )}
