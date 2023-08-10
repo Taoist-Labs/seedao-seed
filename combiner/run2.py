@@ -4,6 +4,7 @@ import random
 import math
 from multiprocessing import Pool
 from PIL import Image, ImageOps
+import json
 
 
 def load_images(path):
@@ -49,11 +50,58 @@ def load_7_cloth():
     return load_images('./meta/7.cloth')
 
 
+def merge_nft(params):
+    merge_metadata(params)
+    merge_img(params)
+    pass
+
+
+def merge_metadata(params):
+    save_name, combination = params
+    name = os.path.splitext(save_name)[0].split('-')[1]
+    n_background, n_body, n_eye, n_star, n_head, n_cloth = name.split('#')
+    # todo: save metadata
+    metadata= { 'attributes': [
+        {
+            "trait_type": "Background",
+            "value": n_background
+        },
+        {
+            "trait_type": "Body",
+            "value": n_body
+        },
+        {
+            "trait_type": "Eye",
+            "value": n_eye
+        },
+        {
+            "trait_type": "Star",
+            "value": n_star
+        },
+        {
+            "trait_type": "Head",
+            "value": n_head
+        },
+        {
+            "trait_type": "Cloth",
+            "value": n_cloth
+        }],
+        "image":"ipfs://"
+    }
+    # print(metadata)
+    
+    with open(f'{save_name}'.replace('.png', '.json'), 'w') as f:
+        js = json.dumps(metadata)
+        print(js)
+        f.write(js)
+    pass
+
+
 def merge_img(params):
     save_name, combination = params
     # print(save_name, combination)
     # im = Image.new('RGBA', (5000, 5000))
-    im = Image.new('RGBA', (1024, 1024))
+    im = Image.new('RGBA', (3000, 3000))
 
     # 图层顺序从上到下：
     # 7.cloth
@@ -97,125 +145,74 @@ def gen_random_comb(backgrounds, bodys, eyes, stars, heads, rings, clothes, dire
     if not os.path.exists(directory):
         os.mkdir(directory)
 
-    if num == 0:
-        generate_combinations(backgrounds, bodys, eyes,
-                              stars, heads, rings, clothes, directory)
-    else:
-        list_backgrouds = dup_list(backgrounds, num)
-        random.shuffle(list_backgrouds)  # backgrounds
+    list_backgrouds = dup_list(backgrounds, num)
+    random.shuffle(list_backgrouds)  # backgrounds
 
-        list_bodys = dup_list(bodys, num)
-        random.shuffle(list_bodys)  # bodys
+    list_bodys = dup_list(bodys, num)
+    random.shuffle(list_bodys)  # bodys
 
-        list_eyes_a = dup_list(
-            list(filter(lambda n: "3.eye/30" in n[0], eyes)), math.floor(0.3 * num))
-        list_eyes_b = dup_list(
-            list(filter(lambda n: "3.eye/70" in n[0], eyes)), num - math.floor(0.3 * num))
-        list_eyes = list_eyes_a + list_eyes_b
-        random.shuffle(list_eyes)  # eyes
+    list_eyes_a = dup_list(
+        list(filter(lambda n: "3.eye/30" in n[0], eyes)), math.floor(0.3 * num))
+    list_eyes_b = dup_list(
+        list(filter(lambda n: "3.eye/70" in n[0], eyes)), num - math.floor(0.3 * num))
+    list_eyes = list_eyes_a + list_eyes_b
+    random.shuffle(list_eyes)  # eyes
 
-        list_stars = dup_list(stars, num)
-        random.shuffle(list_stars)  # stars
+    list_stars = dup_list(stars, num)
+    random.shuffle(list_stars)  # stars
 
-        list_heads_girl = dup_list(
-            list(filter(lambda n: "5.head/girl" in n[0], heads)), math.floor(0.5 * num))
-        random.shuffle(list_heads_girl)
-        list_heads_man = dup_list(
-            list(filter(lambda n: "5.head/man" in n[0], heads)), num - math.floor(0.5 * num))
-        random.shuffle(list_heads_man)
-        list_heads = list_heads_girl + list_heads_man  # heads
+    list_heads_girl = dup_list(
+        list(filter(lambda n: "5.head/girl" in n[0], heads)), math.floor(0.5 * num))
+    random.shuffle(list_heads_girl)
+    list_heads_man = dup_list(
+        list(filter(lambda n: "5.head/man" in n[0], heads)), num - math.floor(0.5 * num))
+    random.shuffle(list_heads_man)
+    list_heads = list_heads_girl + list_heads_man  # heads
 
-        list_rings = dup_list(rings, math.floor(0.15 * num)) + dup_list([{"", None}], num - math.floor(0.15 * num))
-        random.shuffle(list_rings)  # rings
+    list_rings = dup_list(rings, math.floor(0.15 * num)) + \
+        dup_list([{"", None}], num - math.floor(0.15 * num))
+    random.shuffle(list_rings)  # rings
 
-        list_clothes_girls_1 = dup_list(
-            list(filter(lambda n: "7.cloth/girl" in n[0], clothes)), math.floor(0.2 * 0.5 * num))  # girls 10% only
-        list_clothes_girls_2 = dup_list(
-            list(filter(lambda n: "7.cloth/man+girl" in n[0], clothes)), math.floor(0.5 * num) - math.floor(0.2 * 0.5 * num))  # 40%
-        list_clothes_girls = list_clothes_girls_1 + list_clothes_girls_2
-        random.shuffle(list_clothes_girls)
+    list_clothes_girls_1 = dup_list(
+        list(filter(lambda n: "7.cloth/girl" in n[0], clothes)), math.floor(0.2 * 0.5 * num))  # girls 10% only
+    list_clothes_girls_2 = dup_list(
+        list(filter(lambda n: "7.cloth/man+girl" in n[0], clothes)), math.floor(0.5 * num) - math.floor(0.2 * 0.5 * num))  # 40%
+    list_clothes_girls = list_clothes_girls_1 + list_clothes_girls_2
+    random.shuffle(list_clothes_girls)
 
-        list_clothes_man = dup_list(
-            list(filter(lambda n: "7.cloth/man+girl" in n[0], clothes)), math.floor(0.5 * num))  # 50%
-        random.shuffle(list_clothes_man)
-        list_clothes = list_clothes_girls + list_clothes_man  # clothes
+    list_clothes_man = dup_list(
+        list(filter(lambda n: "7.cloth/man+girl" in n[0], clothes)), math.floor(0.5 * num))  # 50%
+    random.shuffle(list_clothes_man)
+    list_clothes = list_clothes_girls + list_clothes_man  # clothes
 
-        items = []
-        for x in range(len(list_backgrouds)):
-            n_background, background = list_backgrouds[x]
-            n_body, body = list_bodys[x]
-            n_eye, eye = list_eyes[x]
-            n_star, star = list_stars[x]
-            n_head, head = list_heads[x]
-            n_ring, ring = list_rings[x]
-            n_cloth, cloth = list_clothes[x]
+    items = []
 
-            save_name = os.path.join(
-                directory, 'seed-' + str(10000000+x) + '.png')
-            items.append(
-                (save_name, (background, body, eye, star, head, ring, cloth)))
-            pass
+    for x in range(len(list_backgrouds)):
+        n_background, background = list_backgrouds[x]
+        n_body, body = list_bodys[x]
+        n_eye, eye = list_eyes[x]
+        n_star, star = list_stars[x]
+        n_head, head = list_heads[x]
+        n_ring, ring = list_rings[x]
+        n_cloth, cloth = list_clothes[x]
+
+        name = '#'.join(list(map(lambda n: os.path.splitext(os.path.basename(n))
+                        [0], [n_background, n_body, n_eye, n_star, n_head, n_cloth])))
+
+        save_name = os.path.join(
+            directory, 'seed-' + name + '.png')
+        items.append(
+            (save_name, (background, body, eye, star, head, ring, cloth)))
+        pass
 
     print("max number:", len(items))
     return items
     pass
 
 
-def generate_combinations(backgrounds, bodys, eyes, stars, heads, rings, clothes, directory):
-    if not os.path.exists(directory):
-        os.mkdir(directory)
-    combinations = list(itertools.product(
-        backgrounds, bodys, eyes, stars, heads, rings, clothes))
-
-    items = []
-    for i, combination in enumerate(combinations):
-        # save_name = os.path.join(directory, str(10000000+i) + '.png')
-        # items.append((save_name, combination))
-
-        _backgrounds, _bodys, _eyes, _stars, _heads, _rings, _clothes = combination
-
-        n_background, background = _backgrounds
-        n_body, body = _bodys
-        n_eye, eye = _eyes
-        n_star, star = _stars
-        n_head, head = _heads
-        n_ring, ring = _rings
-        n_cloth, cloth = _clothes
-
-        save_name = os.path.join(directory, 'seed-' + str(10000000+i) + '.png')
-
-        # handle levels
-        if "white.png" not in n_star:
-            continue
-
-        # 7.cloth girl vs 5.head man
-        if "7.cloth/girl" in n_cloth and "5.head/man" in n_head:
-            continue
-
-        # 2.body B and 3.eye B
-        if "2.body/B" in n_body and "3.eye/B" not in n_eye:
-            continue
-
-        if "2.body/B" not in n_body and "3.eye/B" in n_eye:
-            continue
-
-        # 2.body B vs 7.cloth
-        if "2.body/B" in n_body:
-            n_cloth = ''
-            cloth = None
-
-        # print(save_name, n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth)
-
-        items.append(
-            (save_name, (background, body, eye, star, head, ring, cloth)))
-
-    print("max number:", len(items))
-    return items
-
-
-def merge_nft(items):
+def merge(items):
     pool = Pool(processes=4)
-    pool.map(merge_img, items)
+    pool.map(merge_nft, items)
     pool.close()
 
 
@@ -233,10 +230,10 @@ def main():
 
     # backgrounds, bodys, eyes, starts, heads, rings, clothes
     combinations = gen_random_comb(
-        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 3000)
+        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 30)
 
     print(len(combinations))
-    merge_nft(combinations)
+    merge(combinations)
 
     pass
 
