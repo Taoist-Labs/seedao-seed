@@ -11,6 +11,7 @@ import NFT_02 from "assets/images/home/nfts/2.png";
 import QuestIcon from "assets/images/user/quest.svg";
 import SeedModal from "components/modals/seedModal";
 import { useTranslation } from "react-i18next";
+import SeedList from "./seedList";
 
 const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
 const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
@@ -242,23 +243,26 @@ export default function SeedCard() {
           </SeedDetail>
 
           <CardBottomInnerRight>
-            {hasSeed ? (
-              <span className="minted">{t("user.hadMint")}</span>
-            ) : Number(points) < 5000 ? (
-              <div>
-                <span className="btn lock-btn">
-                  <label>Mint 未解锁</label>
-                </span>
-                <p className="tip">{t("user.lockTip")}</p>
-              </div>
-            ) : (
-              <div>
-                <span className="btn mint-btn" onClick={goMint}>
-                  <label>Mint Now</label>
-                </span>
-                <p className="tip">{t("user.unlockTip")}</p>
-              </div>
-            )}
+            <RightTopBox>
+              {hasSeed ? (
+                <span className="minted">{t("user.hadMint")}</span>
+              ) : Number(points) < 5000 ? (
+                <div>
+                  <span className="btn lock-btn">
+                    <label>Mint 未解锁</label>
+                  </span>
+                  <p className="tip">{t("user.lockTip")}</p>
+                </div>
+              ) : (
+                <div>
+                  <span className="btn mint-btn" onClick={goMint}>
+                    <label>Mint Now</label>
+                  </span>
+                  <p className="tip">{t("user.unlockTip")}</p>
+                </div>
+              )}
+            </RightTopBox>
+            <SeedList />
           </CardBottomInnerRight>
         </CardBottomInner>
       </CardBottom>
@@ -339,7 +343,9 @@ const SeedAttr = styled.div`
   }
 `;
 
-const CardBottomInnerRight = styled.div`
+const CardBottomInnerRight = styled.div``;
+
+const RightTopBox = styled.div`
   .btn {
     width: 196px;
     height: 48px;
