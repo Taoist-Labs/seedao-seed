@@ -18,6 +18,9 @@
     },
     "user": {
         "levelProgress": "您还需{{points}}积分升级到{{level}}",
-        "shareText": "Congrats"
+        "shareText": "Congrats",
+        "hadMint": "Had Mint",
+        "unlockTip": "unlocked",
+        "lockTip": "locked"
     }
 }
