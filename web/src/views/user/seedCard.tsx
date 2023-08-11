@@ -376,7 +376,6 @@ const RightTopBox = styled.div`
     border-radius: 8px;
     box-sizing: border-box;
     padding-inline: 14px;
-    font-family: DM Sans;
     font-size: 24px;
     font-weight: 700;
     display: flex;

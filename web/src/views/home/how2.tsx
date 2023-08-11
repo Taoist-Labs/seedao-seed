@@ -94,7 +94,6 @@ const CardPartStyle = styled.div``;
 
 const Title = styled.div`
   text-align: center;
-  font-family: DM Sans;
   font-size: 40px;
   font-style: normal;
   font-weight: 700;
@@ -138,7 +137,6 @@ const CardItem = styled.div`
     text-align: center;
     padding-inline: 16px;
     height: 44px;
-    font-family: DM Sans;
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
@@ -146,7 +144,6 @@ const CardItem = styled.div`
     cursor: pointer;
   }
   .title {
-    font-family: DM Sans;
     font-size: 32px;
     font-weight: 700;
     line-height: 28px;

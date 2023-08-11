@@ -108,8 +108,6 @@ const Button = styled.div`
   text-align: center;
   cursor: pointer;
   border-radius: 8px;
-  font-feature-settings: "clig" off, "liga" off;
-  font-family: DM Sans;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;

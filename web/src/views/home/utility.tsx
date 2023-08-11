@@ -110,7 +110,6 @@ const Box = styled.ul`
 
     span.title {
       text-align: center;
-      font-family: DM Sans;
       font-size: 32px;
       font-style: normal;
       font-weight: 700;
@@ -119,7 +118,6 @@ const Box = styled.ul`
     }
     .more {
       color: #9e9e9e;
-      font-family: DM Sans;
       font-size: 18px;
       font-style: normal;
       font-weight: 700;
@@ -150,7 +148,6 @@ const JoinButton = styled.a`
   justify-content: center;
   gap: 8px;
   flex-shrink: 0;
-  font-family: DM Sans;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;

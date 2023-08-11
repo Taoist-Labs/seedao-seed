@@ -222,7 +222,6 @@ const ViewButton = styled.div`
   margin: 0 auto;
   margin-top: 64px;
   text-align: center;
-  font-family: DM Sans;
   font-size: 20px;
   font-weight: 700;
   cursor: pointer;
