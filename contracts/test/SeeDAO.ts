@@ -63,23 +63,32 @@ describe("SeeDAO", function () {
     return { rootHash, proofOfSecondAccount, proofOfFakeAccount };
   }
 
-  // generate batch mint infos
-  async function fakeBatchMintInfos() {
+  // generate migrate param
+  async function fakeMigrateParam() {
     const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
 
-    const mintInfos = [
-      { to: owner.address, tokenId: ethers.getBigInt(100) },
-      { to: secondAccount.address, tokenId: ethers.getBigInt(101) },
-      { to: thirdAccount.address, tokenId: ethers.getBigInt(102) },
+    const ids = [
+      ethers.getBigInt(100),
+      ethers.getBigInt(101),
+      ethers.getBigInt(102),
     ];
 
-    const mint2Infos = [
+    const tos = [owner.address, secondAccount.address, thirdAccount.address];
+
+    return { ids, tos };
+  }
+
+  // generate batch mint param
+  async function fakeBatchMintParam() {
+    const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
+
+    const addresses = [
       owner.address,
       secondAccount.address,
       thirdAccount.address,
     ];
 
-    return { mintInfos, mint2Infos };
+    return { addresses };
   }
 
   // convert number to bigInt
@@ -438,7 +447,7 @@ describe("SeeDAO", function () {
 
         await expect(
           seeDAO.connect(secondAccount).claimWithPoints()
-        ).to.be.revertedWithoutReason();
+        ).to.be.revertedWith("Points token address is not set");
       });
 
       it("Should revert when not have enough points", async function () {
@@ -587,137 +596,129 @@ describe("SeeDAO", function () {
     });
   });
 
-  describe("Function batchMint", function () {
+  describe("Function migrate", function () {
     describe("Validations", function () {
       it("Should revert when caller is not minter", async function () {
         const { seeDAO, secondAccount } = await loadFixture(
           deploySeeDAOFixture
         );
-        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+        const { ids, tos } = await loadFixture(fakeMigrateParam);
 
         await expect(
-          seeDAO.connect(secondAccount).batchMint(mintInfos)
+          seeDAO.connect(secondAccount).migrate(ids, tos)
         ).to.be.revertedWith("Only minter can call this method");
       });
 
       it("Should revert when exceeds max supply", async function () {
         const { seeDAO } = await loadFixture(deploySeeDAOFixture);
-        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+        const { ids, tos } = await loadFixture(fakeMigrateParam);
 
         // set max supply to 2
         await seeDAO.setMaxSupply(ethers.getBigInt(2));
 
-        // will revert when batch mint 3
-        await expect(seeDAO.batchMint(mintInfos)).to.be.revertedWith(
+        // will revert when migrate 3
+        await expect(seeDAO.migrate(ids, tos)).to.be.revertedWith(
           "Exceeds the maximum supply"
         );
       });
 
       it("Should mint success", async function () {
         const { seeDAO, owner } = await loadFixture(deploySeeDAOFixture);
-        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+        const { ids, tos } = await loadFixture(fakeMigrateParam);
 
         expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(0));
 
-        // batch mint 3 nfts
-        await seeDAO.batchMint(mintInfos); // minted nft id: 0, 1, 2
+        // migrate 3 nfts
+        await seeDAO.migrate(ids, tos); // minted nft id: 0, 1, 2
 
         expect(await seeDAO.tokenIndex()).to.equal(
-          mintInfos[2].tokenId + ethers.getBigInt(1)
+          ids[2] + ethers.getBigInt(1)
         ); // 102+1
         expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
 
-        for (let i = 0; i < mintInfos.length; i++) {
-          expect(await seeDAO.balanceOf(mintInfos[i].to)).to.equal(
-            ethers.getBigInt(1)
-          );
-          expect(await seeDAO.tokenOfOwnerByIndex(mintInfos[i].to, 0)).to.equal(
-            mintInfos[i].tokenId
-          );
+        for (let i = 0; i < ids.length; i++) {
+          expect(await seeDAO.balanceOf(tos[i])).to.equal(ethers.getBigInt(1));
+          expect(await seeDAO.tokenOfOwnerByIndex(tos[i], 0)).to.equal(ids[i]);
         }
       });
 
       it("Should revert when mint a has minted nft", async function () {
         const { seeDAO, owner } = await loadFixture(deploySeeDAOFixture);
-        const { mintInfos } = await loadFixture(fakeBatchMintInfos);
+        const { ids, tos } = await loadFixture(fakeMigrateParam);
 
         expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(0));
 
-        // batch mint 3 nfts
-        await seeDAO.batchMint(mintInfos); // minted nft id: 0, 1, 2
+        // migrate 3 nfts
+        await seeDAO.migrate(ids, tos); // minted nft id: 0, 1, 2
 
         // --- --- --- duplicate code
         expect(await seeDAO.tokenIndex()).to.equal(
-          mintInfos[2].tokenId + ethers.getBigInt(1)
+          ids[2] + ethers.getBigInt(1)
         ); // 102+1
         expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
 
-        for (let i = 0; i < mintInfos.length; i++) {
-          expect(await seeDAO.balanceOf(mintInfos[i].to)).to.equal(
-            ethers.getBigInt(1)
-          );
-          expect(await seeDAO.tokenOfOwnerByIndex(mintInfos[i].to, 0)).to.equal(
-            mintInfos[i].tokenId
-          );
+        for (let i = 0; i < ids.length; i++) {
+          expect(await seeDAO.balanceOf(tos[i])).to.equal(ethers.getBigInt(1));
+          expect(await seeDAO.tokenOfOwnerByIndex(tos[i], 0)).to.equal(ids[i]);
         }
         // --- --- ---
 
-        // batch mint 3 nfts again will revert
-        await expect(seeDAO.batchMint(mintInfos)).to.be.revertedWith(
+        // migrate 3 nfts again will revert
+        await expect(seeDAO.migrate(ids, tos)).to.be.revertedWith(
           "Token already minted"
         );
       });
     });
 
     // describe("Events", function () {
-    //   it("Should emit an event on batchMint", async function () {
+    //   it("Should emit an event on migrate", async function () {
     //     });
     // });
   });
 
-  describe("Function batchMint2", function () {
+  describe("Function batchMint", function () {
     describe("Validations", function () {
       it("Should revert when caller is not minter", async function () {
         const { seeDAO, secondAccount } = await loadFixture(
           deploySeeDAOFixture
         );
-        const { mint2Infos } = await loadFixture(fakeBatchMintInfos);
+        const { addresses } = await loadFixture(fakeBatchMintParam);
 
         await expect(
-          seeDAO.connect(secondAccount).batchMint2(mint2Infos)
+          seeDAO.connect(secondAccount).batchMint(addresses)
         ).to.be.revertedWith("Only minter can call this method");
       });
 
       it("Should revert when exceeds max supply", async function () {
         const { seeDAO } = await loadFixture(deploySeeDAOFixture);
-        const { mint2Infos } = await loadFixture(fakeBatchMintInfos);
+        const { addresses } = await loadFixture(fakeBatchMintParam);
 
         // set max supply to 2
         await seeDAO.setMaxSupply(ethers.getBigInt(2));
 
         // will revert when batch mint 3
-        await expect(seeDAO.batchMint2(mint2Infos)).to.be.revertedWith(
+        await expect(seeDAO.batchMint(addresses)).to.be.revertedWith(
           "Exceeds the maximum supply"
         );
       });
 
       it("Should mint success", async function () {
         const { seeDAO, owner } = await loadFixture(deploySeeDAOFixture);
-        const { mint2Infos } = await loadFixture(fakeBatchMintInfos);
+        const { addresses } = await loadFixture(fakeBatchMintParam);
 
         expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(0));
 
         // batch mint 3 nfts
-        await seeDAO.batchMint2(mint2Infos); // minted nft id: 0, 1, 2
+        await seeDAO.batchMint(addresses); // minted nft id: 0, 1, 2
 
         expect(await seeDAO.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seeDAO.totalSupply()).to.equal(ethers.getBigInt(3));
 
-        for (let i = 0; i < mint2Infos.length; i++) {
-          expect(await seeDAO.balanceOf(mint2Infos[i])).to.equal(
+        for (let i = 0; i < addresses.length; i++) {
+          expect(await seeDAO.balanceOf(addresses[i])).to.equal(
             ethers.getBigInt(1)
           );
-          expect(await seeDAO.tokenOfOwnerByIndex(mint2Infos[i], 0)).to.equal(
+          expect(await seeDAO.tokenOfOwnerByIndex(addresses[i], 0)).to.equal(
             ethers.getBigInt(i)
           );
         }

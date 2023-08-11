@@ -46,11 +46,6 @@ contract SeeDAO is
 
   address public minter;
 
-  struct BatchMintInfo {
-    uint256 tokenId;
-    address to;
-  }
-
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   event MintEnabled(address account);
@@ -61,10 +56,7 @@ contract SeeDAO is
 
   event ClaimDisabled(address account);
 
-  event MinterChanged(
-    address indexed previousMinter,
-    address indexed newMinter
-  );
+  event MinterChanged(address indexed oldMinter, address indexed newMinter);
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
@@ -141,6 +133,8 @@ contract SeeDAO is
   /// noClaimed 修饰器用于限制每个用户只能领取一次，无论是通过白名单还是通过积分都只能免费领取一次
   /// nonReentrant 修饰器用于限制当前方法不能重入
   function claimWithPoints() external claimable noClaimed nonReentrant {
+    require(pointsToken != address(0), "Points token address is not set");
+
     uint256 points = IERC20Upgradeable(pointsToken).balanceOf(_msgSender());
     require(
       pointsCondi != 0 && points >= pointsCondi,
@@ -151,28 +145,27 @@ contract SeeDAO is
     _mint(_msgSender());
   }
 
-  /// @dev 批量 mint NFT，必须是 minter 才能调用，调用时需要指定 NFT ID 及其接收地址，可用于批量空投
+  /// @dev 迁移 NFT，必须是 minter 才能调用，调用时需要指定 NFT ID 及其接收地址，可用于批量空投
   /// onlyMinter 修饰器用于限制只有 minter 地址才能调用当前方法
-  function batchMint(BatchMintInfo[] calldata mintInfos) external onlyMinter {
-    require(
-      tokenIndex + mintInfos.length <= maxSupply,
-      "Exceeds the maximum supply"
-    );
+  function migrate(
+    uint256[] calldata ids,
+    address[] calldata tos
+  ) external onlyMinter {
+    require(ids.length == tos.length, "Lengths are not equal");
+
+    require(tokenIndex + ids.length <= maxSupply, "Exceeds the maximum supply");
 
     uint256 maxTokenId = tokenIndex > 0 ? tokenIndex - 1 : tokenIndex;
-    for (uint256 i = 0; i < mintInfos.length; i++) {
+    for (uint256 i = 0; i < ids.length; i++) {
       // reverts if the `mintInfos[i].tokenId` has been minted
-      require(
-        _ownerOf(mintInfos[i].tokenId) == address(0),
-        "Token already minted"
-      );
+      require(_ownerOf(ids[i]) == address(0), "Token already minted");
 
       // set maxTokenId
-      if (mintInfos[i].tokenId > maxTokenId) {
-        maxTokenId = mintInfos[i].tokenId;
+      if (ids[i] > maxTokenId) {
+        maxTokenId = ids[i];
       }
 
-      _safeMint(mintInfos[i].to, mintInfos[i].tokenId);
+      _safeMint(tos[i], ids[i]);
     }
 
     if (maxTokenId > tokenIndex) {
@@ -181,11 +174,14 @@ contract SeeDAO is
   }
 
   /// @dev 批量 mint NFT，必须是 minter 才能调用，调用时需要指定接收地址，可用于批量空投
-  function batchMint2(address[] calldata to) external onlyMinter {
-    require(tokenIndex + to.length <= maxSupply, "Exceeds the maximum supply");
+  function batchMint(address[] calldata addresses) external onlyMinter {
+    require(
+      tokenIndex + addresses.length <= maxSupply,
+      "Exceeds the maximum supply"
+    );
 
-    for (uint256 i = 0; i < to.length; i++) {
-      _mint(to[i]);
+    for (uint256 i = 0; i < addresses.length; i++) {
+      _mint(addresses[i]);
     }
   }
 
