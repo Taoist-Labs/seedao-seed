@@ -56,7 +56,7 @@ export default function Utility() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Learn More
+                {t("home.leanMore")}
               </a>
             )}
           </li>

@@ -1,11 +1,12 @@
 {
     "home": {
         "bannerTitle": "Seed Now, See the DAO",
-        "bannerContent01": "The Seed NFT acts as your digital ID in SeeDAO, establishing your eligibility to attain governance rights within the Network Polis.",
-        "bannerContent02": "The Seed NFT is your personal imprint on our shared SeeDAO journey, capturing your transformation from Web3 novice to builder.",
+        "bannerContent01": "Seed NFT serves as a citizenship proof within the SeeDAO network polis and is a prerequisite to obtain governance rights.",
+        "bannerContent02": "Every Seed NFT is a unique seed, capturing your personal imprint on our shared SeeDAO journey.",
         "galleryButton": "View Gallery",
         "buySeedButton": "Buy A Seed",
         "dynamicTitle": "Dynamic PFP of Seed NFT",
+        "dynamicContent": "The Polaris star on the character's forehead in the Seed NFT will dynamically change based on the points in the member's wallet, affecting all on-chain avatars. It reflects the current holder's level and updates when trading actions occur with a new owner.",
         "dynamicPolaris": "<span>Polaris star colors</span> for different points/Level:",
         "sgnRelated": "SGN Related",
         "moreQuestions": "More Questions",
@@ -20,34 +21,36 @@
         "rewardsDesc": "In an event of third party partnership benefits or tokens issued by SeeDAO will be based on the holdings of Seed NFT as the basis for airdrops.",
         "joinSeeDAO": "Join SeeDAO",
         "viewLevel": "View My Level",
+        "leanMore": "Learn More",
         "howToObtain": "How to Obtain an Seed NFT",
         "purchase": "Purchase",
         "buyOnOpensea": "Buy Seed tokens on OpenSea",
         "buy": "Buy a Seed",
-        "powMint": "PoW Minting",
+        "powMint": "PoW Mining",
         "powMintDesc": "Earn 50,000 points to unlock minting in SeeDAO.",
         "viewPoints": "View My Points"
     },
     "gallery": {
-        "filter" : "FILTER",
+        "filter": "FILTER",
         "filters": "FILTERS",
         "serialTag": "serial: {{keyword}}",
         "serialPlaceHolder": "Sort by serial...",
-        "emptyResult": "No matched your filter parameters.",
-        "clearFilters": "Clear Filters"
+        "emptyResult": "Sorry, we couldn't find a Seed NFT that matches your search criteria.",
+        "clearFilters": "Remove Filter"
     },
     "user": {
-        "levelProgress": "您还需{{points}}积分升级到{{level}}",
-        "shareText": "Congrats",
-        "lockMint": "Mint 未解锁",
+        "levelProgress": "{{points}} $SCR required to {{level}}",
+        "notOwneSeed": "Not Owning Seed",
+        "shareText": "Congratulations on achieving the minting requirements! Check out your exclusive Seed card.",
+        "lockMint": "Mint Locked",
         "unlockMint": "Mint Now",
-        "hadMint": "Had Mint",
+        "hadMint": "Minting right is used",
         "unlockTip": "unlocked",
         "lockTip": "locked",
-        "congrats": "恭喜你获得Seed NFT 铸币权",
-        "congratsTip": "除gas fee外，本次铸造无需支付额外费用",
-        "startMint": "开始铸造",
-        "shareTo": "分享到社交媒体",
-        "download": "下载到本地"
+        "congrats": "Congratulations",
+        "congratsTip": "Apart from the gas fee, there is no additional cost for this minting.",
+        "startMint": "Mint Now",
+        "shareTo": "Share to Social Media",
+        "download": "Download"
     }
 }

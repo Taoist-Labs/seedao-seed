@@ -91,12 +91,7 @@ export default function DynamicNFT({ color }: { color: string }) {
       <CenterBox>
         <Title>{t("home.dynamicTitle")}</Title>
         <Content>
-          <p>
-            {`The Polaris star on the character's forehead in the Seed NFT will
-          dynamically change based on the points in the member's wallet,
-          affecting all on-chain avatars. It reflects the current holder's level
-          and updates when trading actions occur with a new owner.`}
-          </p>
+          <p>{t("home.dynamicContent")}</p>
           <p className="second">
             <Trans
               i18nKey="home.dynamicPolaris"
