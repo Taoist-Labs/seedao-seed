@@ -12,6 +12,7 @@ import QuestIcon from "assets/images/user/quest.svg";
 import SeedModal from "components/modals/seedModal";
 import { useTranslation } from "react-i18next";
 import SeedList from "./seedList";
+import { GALLERY_ATTRS } from "data/gallery";
 
 const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
 const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
@@ -220,24 +221,15 @@ export default function SeedCard() {
             <SeedAttr>
               <div className="name">Seed # 2584</div>
               <ul>
-                <li>
-                  <div>
-                    <p className="name">Hair</p>
-                    <p className="value">BlackBlack</p>
-                  </div>
-                </li>
-                <li>
-                  <div>
-                    <p className="name">Hair</p>
-                    <p className="value">BlackBlack</p>
-                  </div>
-                </li>
-                <li>
-                  <div>
-                    <p className="name">Hair</p>
-                    <p className="value">BlackBlack</p>
-                  </div>
-                </li>
+                {GALLERY_ATTRS.map((item, i) => (
+                  <li key={i}>
+                    <img src={item.icon} alt="" />
+                    <div>
+                      <p className="name">{item.display}</p>
+                      <p className="value">BlackBlack</p>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </SeedAttr>
           </SeedDetail>
@@ -332,9 +324,16 @@ const SeedAttr = styled.div`
     background: #fff;
     padding: 4px 9px;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    img {
+      width: 24px;
+    }
     .name {
       font-size: 12px;
       font-weight: 400;
+      opacity: 0.5;
     }
     .value {
       font-size: 16px;
