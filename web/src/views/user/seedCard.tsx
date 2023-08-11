@@ -8,7 +8,6 @@ import Chain from "utils/chain";
 
 import LevelItem from "./levelItem";
 import NFT_02 from "assets/images/home/nfts/2.png";
-import QuestIcon from "assets/images/user/quest.svg";
 import SeedModal from "components/modals/seedModal";
 import { useTranslation } from "react-i18next";
 import SeedList from "./seedList";
