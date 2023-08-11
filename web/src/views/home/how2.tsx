@@ -88,6 +88,9 @@ const How2Style = styled(CenterBox)`
   @media (max-width: 960px) {
     padding: 60px 30px;
   }
+  @media (max-width: 412px) {
+    padding: 40px 20px;
+  }
 `;
 
 const CardPartStyle = styled.div``;
@@ -103,6 +106,10 @@ const Title = styled.div`
     font-size: 40px;
     margin-bottom: 64px;
   }
+  @media (max-width: 412px) {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
 `;
 
 const CardsBox = styled.div`
@@ -113,6 +120,10 @@ const CardsBox = styled.div`
     flex-direction: column;
     gap: 48px;
     padding-inline: 40px;
+  }
+  @media (max-width: 412px) {
+    gap: 24px;
+    padding-inline: 20px;
   }
 `;
 
@@ -162,6 +173,23 @@ const CardItem = styled.div`
       width: 80%;
     }
   }
+  @media (max-width: 412px) {
+    .title {
+      font-size: 16px;
+    }
+    .desc {
+      font-size: 12px;
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
+    .btn {
+      font-size: 12px;
+      line-height: 28px;
+      height: 28px;
+    }
+    padding-top: 12px;
+    padding-bottom: 15px;
+  }
 `;
 
 const AvatarsBoxStyle = styled.div`
@@ -177,6 +205,9 @@ const AvatarsBoxStyle = styled.div`
     img {
       width: calc(100% / 3);
     }
+  }
+  @media (max-width: 4120px) {
+    margin: 0;
   }
 `;
 
@@ -224,5 +255,8 @@ const InfoBoxStyle = styled.ul`
     flex-wrap: wrap;
     height: unset;
     padding-block: 20px;
+  }
+  @media (max-width: 412px) {
+    margin-block: 28px;
   }
 `;

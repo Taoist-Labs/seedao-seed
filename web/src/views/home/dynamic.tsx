@@ -113,7 +113,7 @@ export default function DynamicNFT({ color }: { color: string }) {
                   <span>{item.levels[1].title}</span> ({item.levels[1].points})
                 </p>
               </div>
-              <div>
+              <div className="img-box">
                 <img src={item.img} alt="" />
               </div>
             </NFTCardItem>
@@ -131,6 +131,9 @@ const DynamicNFTStyle = styled.section`
   @media (max-width: 960px) {
     padding: 60px 30px;
   }
+  @media (max-width: 412px) {
+    padding: 40px 15px;
+  }
 `;
 
 const Title = styled.div`
@@ -143,6 +146,10 @@ const Title = styled.div`
   margin-bottom: 40px;
   @media (max-width: 750px) {
     font-size: 40px;
+  }
+  @media (max-width: 412px) {
+    font-size: 20px;
+    margin-bottom: 32px;
   }
 `;
 
@@ -161,6 +168,13 @@ const Content = styled.div`
     span {
       color: #d9393b;
     }
+  }
+  @media (max-width: 412px) {
+    p {
+      font-size: 12px;
+      line-height: 20px;
+    }
+    margin-bottom: 32px;
   }
 `;
 
@@ -198,6 +212,7 @@ const NFTCardItem = styled.li`
   font-family: Inter;
   p span {
     font-size: 36px;
+    font-weight: 700;
   }
   @media (max-width: 960px) {
     flex-direction: row;
@@ -206,6 +221,29 @@ const NFTCardItem = styled.li`
       height: 100%;
     }
   }
+  @media (max-width: 412px) {
+    height: 68px;
+    position: relative;
+    .content {
+      padding-block: 10px;
+      flex: 1;
+    }
+    .line {
+      margin-block: 4px;
+    }
+    p {
+      font-size: 12px;
+      span {
+        font-size: 18px;
+        margin-right: 4px;
+      }
+    }
+    .img-box {
+      position: absolute;
+      right: 0;
+      height: 100%;
+    }
+  } ;
 `;
 
 const ViewButton = styled.div`
@@ -224,5 +262,11 @@ const ViewButton = styled.div`
     width: 80%;
     height: 56px;
     line-height: 56px;
+  }
+  @media (max-width: 412px) {
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    margin-top: 32px;
   }
 `;

@@ -17,7 +17,7 @@ export default function Banner({ color }: { color: string }) {
         <BannerTitle>{t("home.bannerTitle")}</BannerTitle>
         <BannerText>
           <p>{t("home.bannerContent01")}</p>
-          <p>{t("home.bannerContent02")}</p>
+          <p className="last">{t("home.bannerContent02")}</p>
         </BannerText>
         <BannerButtonGroup>
           <ViewButton
@@ -58,6 +58,9 @@ const BannerStyle = styled.section`
     height: unset;
     padding-bottom: 40px;
   }
+  @media (max-width: 412px) {
+    min-height: unset;
+  }
 `;
 
 const BannerContent = styled(CenterBox)`
@@ -72,6 +75,9 @@ const BannerContent = styled(CenterBox)`
   @media (max-width: 960px) {
     align-items: center;
   }
+  @media (max-width: 412px) {
+    gap: 14px;
+  }
 `;
 
 const BannerTitle = styled.div`
@@ -83,6 +89,9 @@ const BannerTitle = styled.div`
     line-height: 66px;
     font-weight: 900;
   }
+  @media (max-width: 412px) {
+    font-size: 24px;
+  }
 `;
 
 const BannerText = styled.div`
@@ -90,15 +99,25 @@ const BannerText = styled.div`
   p {
     font-family: Inter;
     font-size: 20px;
+    &.last {
+      margin-top: 20px;
+    }
   }
+
   @media (max-width: 960px) {
     width: unset;
+  }
+  @media (max-width: 750px) {
+    display: none;
   }
 `;
 
 const BannerButtonGroup = styled.div`
   display: flex;
   gap: 20px;
+  @media (max-width: 412px) {
+    gap: 10px;
+  }
 `;
 
 const Button = styled.div`
@@ -111,6 +130,11 @@ const Button = styled.div`
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
+  @media (max-width: 412px) {
+    font-size: 12px;
+    height: 28px;
+    line-height: 28px;
+  }
 `;
 
 const ViewButton = styled(Button)`

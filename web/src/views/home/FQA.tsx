@@ -109,6 +109,17 @@ const FQAStyle = styled.section`
     display: block;
     text-align: center;
   }
+  @media (max-width: 412px) {
+    padding: 40px 15px;
+    .subject {
+      font-size: 12px;
+      margin-top: 32px;
+      margin-bottom: 12px;
+    }
+    .more {
+      display: none;
+    }
+  }
 `;
 
 const Title = styled.div`
@@ -119,6 +130,10 @@ const Title = styled.div`
   font-weight: 700;
   line-height: 50px;
   margin-bottom: 17px;
+  color: #000;
+  @media (max-width: 412px) {
+    font-size: 24px;
+  }
 `;
 
 const QuestionItemStyle = styled.li`
@@ -154,6 +169,21 @@ const QuestionItemStyle = styled.li`
       line-height: 30px;
     }
   }
+  @media (max-width: 412px) {
+    .q {
+      .name {
+        font-size: 12px;
+      }
+      .btn {
+        font-size: 16px;
+      }
+    }
+    .answer {
+      font-size: 12px;
+      line-height: 22px;
+      margin-top: 0;
+    }
+  }
 `;
 
 const SocialBox = styled.div`
@@ -167,5 +197,13 @@ const SocialBox = styled.div`
   @media (max-width: 750px) {
     margin-top: 64px;
     height: unset;
+  }
+  @media (max-width: 412px) {
+    gap: 33px;
+    img {
+      width: 25px;
+    }
+    margin-bottom: 0;
+    margin-top: 32px;
   }
 `;

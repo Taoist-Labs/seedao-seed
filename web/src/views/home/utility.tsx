@@ -79,6 +79,9 @@ const UtilitytStyle = styled(CenterBox)`
   @media (max-width: 960px) {
     padding: 60px 40px;
   }
+  @media (max-width: 412px) {
+    padding: 40px 15px;
+  }
 `;
 
 const UtilityTitle = styled.div`
@@ -89,6 +92,10 @@ const UtilityTitle = styled.div`
   font-weight: 700;
   line-height: 50px;
   margin-bottom: 80px;
+  @media (max-width: 412px) {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
 `;
 
 const Box = styled.ul`
@@ -108,7 +115,7 @@ const Box = styled.ul`
       }
     }
 
-    span.title {
+    .title {
       text-align: center;
       font-size: 32px;
       font-style: normal;
@@ -134,6 +141,26 @@ const Box = styled.ul`
       width: calc((100% - 40px) / 2);
       align-items: stretch;
       margin-bottom: 50px;
+    }
+    @media (max-width: 412px) {
+      .icon img {
+        width: 60px;
+      }
+      width: calc((100% - 40px) / 2);
+      align-items: stretch;
+      margin-bottom: 32px;
+      .title {
+        font-size: 16px;
+        margin-block: 12px;
+      }
+      .more,
+      .text {
+        font-size: 12px;
+        text-align: center;
+      }
+      .more {
+        margin-top: 20px;
+      }
     }
   }
 `;
@@ -162,5 +189,11 @@ const JoinButton = styled.a`
   @media (max-width: 960px) {
     width: 80%;
     margin-top: 0;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    img {
+      display: none;
+    }
   }
 `;

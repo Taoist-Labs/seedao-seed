@@ -229,6 +229,11 @@ const HeaderStyle = styled.header`
   padding: 10px 30px;
   box-sizing: border-box;
   background-color: #fff;
+  @media (max-width: 412px) {
+    height: 60px;
+    line-height: 60px;
+    padding: 0 20px;
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -245,6 +250,12 @@ const LogoLink = styled(Link)`
     height: 55px;
     position: relative;
     top: 15px;
+  }
+  @media (max-width: 412px) {
+    img {
+      top: 10px;
+      left: -8px;
+    }
   }
 `;
 
@@ -271,6 +282,12 @@ const SmNavStyle = styled.div`
   }
   @media (max-width: 750px) {
     display: block;
+  }
+  @media (max-width: 412px) {
+    img {
+      width: 24px;
+      top: 8px;
+    }
   }
 `;
 
