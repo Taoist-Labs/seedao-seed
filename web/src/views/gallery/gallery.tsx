@@ -366,6 +366,9 @@ const ClearButton = styled.span`
   padding: 10px;
   font-size: 20px;
   margin-top: 36px;
+  cursor: pointer;
+  padding-inline: 10px;
+  line-height: 44px;
 `;
 
 const GalleryMenuBox = styled.div`
