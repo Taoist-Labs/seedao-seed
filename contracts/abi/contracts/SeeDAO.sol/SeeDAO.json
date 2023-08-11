@@ -64,7 +64,7 @@
         "type": "address"
       }
     ],
-    "name": "ClaimDisabled",
+    "name": "ClaimWithPointsDisabled",
     "type": "event"
   },
   {
@@ -77,7 +77,33 @@
         "type": "address"
       }
     ],
-    "name": "ClaimEnabled",
+    "name": "ClaimWithPointsEnabled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "ClaimWithWhiteListDisabled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "ClaimWithWhiteListEnabled",
     "type": "event"
   },
   {
@@ -125,7 +151,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousMinter",
+        "name": "oldMinter",
         "type": "address"
       },
       {
@@ -261,37 +287,12 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "to",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct SeeDAO.BatchMintInfo[]",
-        "name": "mintInfos",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "batchMint",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address[]",
-        "name": "to",
+        "name": "addresses",
         "type": "address[]"
       }
     ],
-    "name": "batchMint2",
+    "name": "batchMint",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -470,7 +471,20 @@
   },
   {
     "inputs": [],
-    "name": "onClaim",
+    "name": "onClaimWithPoints",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "onClaimWithWhiteList",
     "outputs": [
       {
         "internalType": "bool",
@@ -535,7 +549,14 @@
   },
   {
     "inputs": [],
-    "name": "pauseClaim",
+    "name": "pauseClaimWithPoints",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pauseClaimWithWhiteList",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -923,7 +944,14 @@
   },
   {
     "inputs": [],
-    "name": "unpauseClaim",
+    "name": "unpauseClaimWithPoints",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unpauseClaimWithWhiteList",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

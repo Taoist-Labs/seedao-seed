@@ -157,34 +157,6 @@ contract SeeDAO is
     _mint(_msgSender());
   }
 
-  /// @dev 迁移 NFT，必须是 minter 才能调用，调用时需要指定 NFT ID 及其接收地址，可用于批量空投
-  /// onlyMinter 修饰器用于限制只有 minter 地址才能调用当前方法
-  function migrate(
-    uint256[] calldata ids,
-    address[] calldata tos
-  ) external onlyMinter {
-    require(ids.length == tos.length, "Lengths are not equal");
-
-    require(tokenIndex + ids.length <= maxSupply, "Exceeds the maximum supply");
-
-    uint256 maxTokenId = tokenIndex > 0 ? tokenIndex - 1 : tokenIndex;
-    for (uint256 i = 0; i < ids.length; i++) {
-      // reverts if the `mintInfos[i].tokenId` has been minted
-      require(_ownerOf(ids[i]) == address(0), "Token already minted");
-
-      // set maxTokenId
-      if (ids[i] > maxTokenId) {
-        maxTokenId = ids[i];
-      }
-
-      _safeMint(tos[i], ids[i]);
-    }
-
-    if (maxTokenId > tokenIndex) {
-      tokenIndex = maxTokenId + 1;
-    }
-  }
-
   /// @dev 批量 mint NFT，必须是 minter 才能调用，调用时需要指定接收地址，可用于批量空投
   function batchMint(address[] calldata addresses) external onlyMinter {
     require(
