@@ -123,7 +123,7 @@ const FilterAttrValues = styled.ul`
 
   li {
     margin-top: 20px;
-    &:first-child {
+    &:first-of-type {
       margin-top: 0;
     }
     .text {
