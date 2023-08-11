@@ -171,6 +171,7 @@ export default function Header() {
 
 const SmMenu = styled.div`
   position: fixed;
+  z-index: 99;
   left: 0;
   top: 102px;
   width: 100vw;
