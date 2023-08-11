@@ -17,6 +17,7 @@
         "clearFilters": "Clear Filters"
     },
     "user": {
-        "levelProgress": "您还需{{points}}积分升级到{{level}}"
+        "levelProgress": "您还需{{points}}积分升级到{{level}}",
+        "shareText": "Congrats"
     }
 }

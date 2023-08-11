@@ -4,13 +4,17 @@ import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
 import { GALLERY_ATTRS } from "data/gallery";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import ShareIcon from "assets/images/user/share.svg";
 
 interface IProps {
   seed: INFT;
   handleClose: () => void;
+  isShare?: boolean;
 }
 
-export default function SeedModal({ seed, handleClose }: IProps) {
+export default function SeedModal({ seed, handleClose, isShare }: IProps) {
+  const { t } = useTranslation();
   const findAttrValue = (attr: string) => {
     return seed.attrs.find((item) => item.name === attr)?.value;
   };
@@ -46,6 +50,11 @@ export default function SeedModal({ seed, handleClose }: IProps) {
               </li>
             ))}
           </AttrBox>
+          {isShare && (
+            <div className="share">
+              <span>{t("user.shareText")}</span> <img src={ShareIcon} alt="" />
+            </div>
+          )}
         </ModalRight>
       </ModalContainer>
     </Modal>
@@ -112,6 +121,17 @@ const ModalRight = styled.div`
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 20px;
+  }
+  .share {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    margin-top: 60px;
+    margin-left: 60px;
+    img {
+      cursor: pointer;
+    }
   }
   @media (max-width: 750px) {
     .title {

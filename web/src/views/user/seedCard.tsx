@@ -9,6 +9,7 @@ import Chain from "utils/chain";
 import LevelItem from "./levelItem";
 import NFT_02 from "assets/images/home/nfts/2.png";
 import QuestIcon from "assets/images/user/quest.svg";
+import SeedModal from "components/modals/seedModal";
 
 const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
 const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
@@ -83,6 +84,7 @@ export default function SeedCard() {
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
   const [seedContract, setSeedContract] = useState<Contract>();
+  const [showSeedModal, setShowSeedModal] = useState<INFT>();
 
   const getSeedContract = () => {
     if (!provider) {
@@ -240,7 +242,6 @@ export default function SeedCard() {
             {!hasSeed && Number(points) < 5000 ? (
               <span className="btn lock-btn">
                 <label>Mint 未解锁</label>
-                <img src={QuestIcon} alt="" />
               </span>
             ) : (
               <span className="btn mint-btn" onClick={goMint}>
@@ -251,6 +252,13 @@ export default function SeedCard() {
           </CardBottomInnerRight>
         </CardBottomInner>
       </CardBottom>
+      {showSeedModal && (
+        <SeedModal
+          isShare
+          handleClose={() => setShowSeedModal(undefined)}
+          seed={showSeedModal}
+        />
+      )}
     </Card>
   );
 }
