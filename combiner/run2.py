@@ -59,7 +59,7 @@ def merge_nft(params):
 def merge_metadata(params):
     save_name, combination = params
     name = os.path.splitext(save_name)[0].split('-')[1]
-    n_background, n_body, n_eye, n_star, n_head, n_cloth = name.split('#')
+    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split('#')
     # todo: save metadata
     metadata= { 'attributes': [
         {
@@ -197,7 +197,7 @@ def gen_random_comb(backgrounds, bodys, eyes, stars, heads, rings, clothes, dire
         n_cloth, cloth = list_clothes[x]
 
         name = '#'.join(list(map(lambda n: os.path.splitext(os.path.basename(n))
-                        [0], [n_background, n_body, n_eye, n_star, n_head, n_cloth])))
+                        [0], [n_background, n_body, n_eye, n_star, n_head, str(n_ring), n_cloth])))
 
         save_name = os.path.join(
             directory, 'seed-' + name + '.png')
@@ -230,7 +230,7 @@ def main():
 
     # backgrounds, bodys, eyes, starts, heads, rings, clothes
     combinations = gen_random_comb(
-        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 30)
+        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 100)
 
     print(len(combinations))
     merge(combinations)
