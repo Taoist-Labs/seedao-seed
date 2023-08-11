@@ -57,13 +57,10 @@ const InfoBox = () => {
         { name: "VOLUME", value: "82K ETH" },
         { name: "ITEMS", value: "5K" },
       ].map((item, idx) => (
-        <>
-          {/* {idx > 0 && <li className="line"></li>} */}
-          <li key={idx}>
-            <div className="value">{item.value}</div>
-            <div className="name">{item.name}</div>
-          </li>
-        </>
+        <li key={idx}>
+          <div className="value">{item.value}</div>
+          <div className="name">{item.name}</div>
+        </li>
       ))}
     </InfoBoxStyle>
   );
@@ -174,7 +171,6 @@ const AvatarsBoxStyle = styled.div`
   font-size: 0;
   margin-top: 100px;
   margin-bottom: 80px;
-  height: 137px;
   img {
     width: calc(100% / 6);
   }
@@ -199,6 +195,10 @@ const InfoBoxStyle = styled.ul`
     font-family: Inter;
     text-align: center;
     flex: 1;
+    border-right: 1px solid #000;
+    &:last-child {
+      border-right: none;
+    }
     .value {
       font-size: 22px;
       font-weight: 700;
