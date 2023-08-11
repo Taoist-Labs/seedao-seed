@@ -12,6 +12,7 @@ import SeedModal from "components/modals/seedModal";
 import { useTranslation } from "react-i18next";
 import SeedList from "./seedList";
 import { GALLERY_ATTRS } from "data/gallery";
+import MintModal from "./mintModal";
 
 const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
 const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
@@ -88,6 +89,7 @@ export default function SeedCard() {
   const [hasSeed, setHasSeed] = useState(false);
   const [seedContract, setSeedContract] = useState<Contract>();
   const [showSeedModal, setShowSeedModal] = useState<INFT>();
+  const [showMintModal, setShowMintModal] = useState(false);
 
   const getSeedContract = () => {
     if (!provider) {
@@ -198,6 +200,19 @@ export default function SeedCard() {
       await res.wait();
       console.log("mint done");
       setHasSeed(true);
+      // TODO get seed and show modal
+      setShowSeedModal({
+        image:
+          "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
+        tokenId: "2000",
+        name: "lala",
+        attrs: [
+          { name: "background", value: "#fff" },
+          { name: "color", value: "#fff" },
+          { name: "height", value: "90cm" },
+        ],
+      });
+      setShowMintModal(false);
     } catch (error) {
       console.error("goMint error", error);
     } finally {
@@ -246,7 +261,10 @@ export default function SeedCard() {
                 </div>
               ) : (
                 <div>
-                  <span className="btn mint-btn" onClick={goMint}>
+                  <span
+                    className="btn mint-btn"
+                    onClick={() => setShowMintModal(true)}
+                  >
                     <label>Mint Now</label>
                   </span>
                   <p className="tip">{t("user.unlockTip")}</p>
@@ -262,6 +280,13 @@ export default function SeedCard() {
           isShare
           handleClose={() => setShowSeedModal(undefined)}
           seed={showSeedModal}
+        />
+      )}
+      {showMintModal && (
+        <MintModal
+          handleMint={goMint}
+          handleClose={() => setShowMintModal(false)}
+          show={showMintModal}
         />
       )}
     </Card>
