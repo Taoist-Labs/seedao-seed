@@ -24,6 +24,8 @@
         "lockTip": "locked",
         "congrats": "恭喜你获得Seed NFT 铸币权",
         "congratsTip": "除gas fee外，本次铸造无需支付额外费用",
-        "startMint": "开始铸造"
+        "startMint": "开始铸造",
+        "shareTo": "分享到社交媒体",
+        "download": "下载到本地"
     }
 }
