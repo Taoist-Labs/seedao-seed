@@ -306,7 +306,7 @@ describe("SeeDAO", function () {
     const whiteListId = ethers.getBigInt(1);
 
     describe("Validations", function () {
-      it("Should revert when not claimable", async function () {
+      it("Should revert when not enableClaimWithWhiteList", async function () {
         const { seeDAO } = await loadFixture(deploySeeDAOFixture);
         const { proofOfSecondAccount } = await loadFixture(
           generateMerkleTreeAndProof
@@ -314,7 +314,7 @@ describe("SeeDAO", function () {
 
         await expect(
           seeDAO.claimWithWhiteList(whiteListId, proofOfSecondAccount)
-        ).to.be.revertedWith("Claim is not open");
+        ).to.be.revertedWith("Claim with white list is not open");
       });
 
       it("Should revert when not int whiteList", async function () {
@@ -324,7 +324,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithWhiteList();
 
         await expect(
           seeDAO.claimWithWhiteList(whiteListId, proofOfFakeAccount)
@@ -340,7 +340,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithWhiteList();
         // set white list
         await seeDAO.setWhiteList(whiteListId, rootHash);
 
@@ -373,7 +373,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithWhiteList();
         // set white list
         await seeDAO.setWhiteList(whiteListId, rootHash);
 
@@ -407,7 +407,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithWhiteList();
         // set white list
         await seeDAO.setWhiteList(whiteListId, rootHash);
 
@@ -427,14 +427,14 @@ describe("SeeDAO", function () {
 
   describe("Function claimWithPoints", function () {
     describe("Validations", function () {
-      it("Should revert when not claimable", async function () {
+      it("Should revert when not enableClaimWithPoints", async function () {
         const { seeDAO, secondAccount } = await loadFixture(
           deploySeeDAOFixture
         );
 
         await expect(
           seeDAO.connect(secondAccount).claimWithPoints()
-        ).to.be.revertedWith("Claim is not open");
+        ).to.be.revertedWith("Claim with point is not open");
       });
 
       it("Should revert when not set points token address", async function () {
@@ -443,7 +443,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithPoints();
 
         await expect(
           seeDAO.connect(secondAccount).claimWithPoints()
@@ -461,7 +461,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithPoints();
         // set points token address
         await seeDAO.setPointsTokenAddress(mockERC20);
 
@@ -496,7 +496,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithPoints();
         // set points token address and set condition to 5k
         await seeDAO.setPointsTokenAddress(mockERC20);
         await seeDAO.setPointsCondition(ethers.getBigInt(5_000));
@@ -536,7 +536,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithPoints();
         // set points token address and set condition to 5k
         await seeDAO.setPointsTokenAddress(mockERC20);
         await seeDAO.setPointsCondition(ethers.getBigInt(5_000));
@@ -575,7 +575,7 @@ describe("SeeDAO", function () {
         );
 
         // enable claim
-        await seeDAO.unpauseClaim();
+        await seeDAO.unpauseClaimWithPoints();
         // set points token address and set condition to 5k
         await seeDAO.setPointsTokenAddress(mockERC20);
         await seeDAO.setPointsCondition(ethers.getBigInt(5_000));

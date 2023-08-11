@@ -38,7 +38,8 @@ contract SeeDAO is
   uint256 public pointsCondi;
 
   bool public onMint;
-  bool public onClaim;
+  bool public onClaimWithWhiteList;
+  bool public onClaimWithPoints;
 
   mapping(uint256 => bytes32) public whiteListRootHashes;
   uint256[] public whiteListIds;
@@ -52,9 +53,13 @@ contract SeeDAO is
 
   event MintDisabled(address account);
 
-  event ClaimEnabled(address account);
+  event ClaimWithWhiteListEnabled(address account);
 
-  event ClaimDisabled(address account);
+  event ClaimWithWhiteListDisabled(address account);
+
+  event ClaimWithPointsEnabled(address account);
+
+  event ClaimWithPointsDisabled(address account);
 
   event MinterChanged(address indexed oldMinter, address indexed newMinter);
 
@@ -81,30 +86,32 @@ contract SeeDAO is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   /// @dev 用于限制只有 minter 地址才能调用的方法
-  /// Used to restrict methods that can only be called by minter addresses
   modifier onlyMinter() {
     require(_msgSender() == minter, "Only minter can call this method");
     _;
   }
 
   /// @dev 限制每个用户只能领取一次，无论是通过白名单条件还是通过积分条件都只能免费领取一次
-  /// Limit each user to one free claim, either through the whitelist condition or through the points condition
   modifier noClaimed() {
     require(!claimed[_msgSender()], "You have claimed");
     _;
   }
 
   /// @dev 用于限制只有合约开启 mint 功能时才能调用的方法
-  /// Used to restrict methods that can only be called when the contract enables mint
-  modifier mintable() {
+  modifier enableMint() {
     require(onMint, "Mint is not open");
     _;
   }
 
-  /// @dev 用于限制只有合约开启 claim 功能时才能调用的方法
-  /// Used to restrict methods that can only be called when the contract enables claim
-  modifier claimable() {
-    require(onClaim, "Claim is not open");
+  /// @dev 用于限制只有合约开启使用白名单 claim 功能时才能调用的方法
+  modifier enableClaimWithWhiteList() {
+    require(onClaimWithWhiteList, "Claim with white list is not open");
+    _;
+  }
+
+  /// @dev 用于限制只有合约开启使用积分 claim 功能时才能调用的方法
+  modifier enableClaimWithPoints() {
+    require(onClaimWithPoints, "Claim with point is not open");
     _;
   }
 
@@ -112,13 +119,13 @@ contract SeeDAO is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   /// @dev 白名单用户免费领取，调用时需要指定白名单 ID 和 Merkle Proof
-  /// claimable 修饰器用于限制只有合约开启 claim 功能时才能调用当前方法
+  /// enableClaimWithWhiteList 修饰器用于限制只有合约开启 claim 功能时才能调用当前方法
   /// noClaimed 修饰器用于限制每个用户只能领取一次，无论是通过白名单还是通过积分都只能免费领取一次
   /// nonReentrant 修饰器用于限制当前方法不能重入
   function claimWithWhiteList(
     uint256 whiteListId,
     bytes32[] calldata proof
-  ) external claimable noClaimed nonReentrant {
+  ) external enableClaimWithWhiteList noClaimed nonReentrant {
     require(
       _verifyWhiteList(whiteListId, proof, _msgSender()),
       "You are not in the white list"
@@ -129,10 +136,15 @@ contract SeeDAO is
   }
 
   /// @dev 有5万积分用户免费领取，调用者必须有5w积分
-  /// claimable 修饰器用于限制只有合约开启 claim 功能时才能调用当前方法
+  /// enableClaimWithPoints 修饰器用于限制只有合约开启 claim 功能时才能调用当前方法
   /// noClaimed 修饰器用于限制每个用户只能领取一次，无论是通过白名单还是通过积分都只能免费领取一次
   /// nonReentrant 修饰器用于限制当前方法不能重入
-  function claimWithPoints() external claimable noClaimed nonReentrant {
+  function claimWithPoints()
+    external
+    enableClaimWithPoints
+    noClaimed
+    nonReentrant
+  {
     require(pointsToken != address(0), "Points token address is not set");
 
     uint256 points = IERC20Upgradeable(pointsToken).balanceOf(_msgSender());
@@ -187,9 +199,9 @@ contract SeeDAO is
 
   /// @dev 直接购买 NFT，支持一次购买多个
   /// payable 修饰器说明当前方法可以接收 native token
-  /// mintable 修饰器用于限制只有合约开启 mint 功能时才能调用当前方法
+  /// enableMint 修饰器用于限制只有合约开启 mint 功能时才能调用当前方法
   /// nonReentrant 修饰器用于限制当前方法不能重入
-  function mint(uint256 amount) external payable mintable nonReentrant {
+  function mint(uint256 amount) external payable enableMint nonReentrant {
     require(amount > 0, "Mint amount must bigger than zero");
     require(tokenIndex + amount <= maxSupply, "Exceeds the maximum supply");
 
@@ -204,7 +216,6 @@ contract SeeDAO is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   /// @dev 验证某个地址是否在白名单中
-  /// Verify whether an address is in the whitelist
   function _verifyWhiteList(
     uint256 whiteListId,
     bytes32[] calldata proof,
@@ -311,16 +322,28 @@ contract SeeDAO is
     emit MintEnabled(_msgSender());
   }
 
-  /// @dev 暂停 claim 功能，暂停后无法再 claim 新的 NFT
-  function pauseClaim() public onlyOwner {
-    onClaim = false;
-    emit ClaimDisabled(_msgSender());
+  /// @dev 暂停使用白名单 claim 功能，暂停后无法再使用白名单 claim 新的 NFT
+  function pauseClaimWithWhiteList() public onlyOwner {
+    onClaimWithWhiteList = false;
+    emit ClaimWithWhiteListDisabled(_msgSender());
   }
 
-  /// @dev 取消暂停 claim 功能，取消暂停后，可以继续 claim 新的 NFT
-  function unpauseClaim() public onlyOwner {
-    onClaim = true;
-    emit ClaimEnabled(_msgSender());
+  /// @dev 取消暂停使用白名单 claim 功能，取消暂停后，可以继续使用白名单 claim 新的 NFT
+  function unpauseClaimWithWhiteList() public onlyOwner {
+    onClaimWithWhiteList = true;
+    emit ClaimWithWhiteListEnabled(_msgSender());
+  }
+
+  /// @dev 暂停使用积分 claim 功能，暂停后无法再使用积分 claim 新的 NFT
+  function pauseClaimWithPoints() public onlyOwner {
+    onClaimWithPoints = false;
+    emit ClaimWithPointsDisabled(_msgSender());
+  }
+
+  /// @dev 取消暂停使用积分 claim 功能，取消暂停后，可以继续使用积分 claim 新的 NFT
+  function unpauseClaimWithPoints() public onlyOwner {
+    onClaimWithPoints = true;
+    emit ClaimWithPointsEnabled(_msgSender());
   }
 
   /// @dev 暂停合约，暂停后无法再 mint、claim 和 transfer NFT
