@@ -8,28 +8,28 @@ import NFT_04 from "assets/images/home/nfts/4.png";
 import NFT_05 from "assets/images/home/nfts/5.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { CenterBox } from "style";
+import { useTranslation } from "react-i18next";
 
 const CardPart = () => {
+  const { t } = useTranslation();
   return (
     <CardPartStyle>
-      <Title>How to Obtain an Seed NFT</Title>
+      <Title>{t("home.howToObtain")}</Title>
       <CardsBox>
         <CardItem>
           <img src={PurchaseIcon} alt="" />
-          <div className="title">Purchase</div>
-          <div className="desc">Buy Seed tokens on OpenSea</div>
+          <div className="title">{t("home.purchase")}</div>
+          <div className="desc">{t("home.buyOnOpensea")}</div>
           <div>
-            <span className="btn">Buy a Seed</span>
+            <span className="btn">{t("home.buy")}</span>
           </div>
         </CardItem>
         <CardItem>
           <img src={MintIcon} alt="" />
-          <div className="title">PoW Mining</div>
-          <div className="desc">
-            Earn 50,000 points to unlock minting in SeeDAO.
-          </div>
+          <div className="title">{t("home.powMint")}</div>
+          <div className="desc">{t("home.powMintDesc")}</div>
           <div>
-            <span className="btn">View My Points</span>
+            <span className="btn">{t("home.viewPoints")}</span>
           </div>
         </CardItem>
       </CardsBox>

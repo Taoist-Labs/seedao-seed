@@ -4,45 +4,51 @@ import IconGovernance from "assets/images/home/governance.svg";
 import IconIncubation from "assets/images/home/incubation.svg";
 import IconRewards from "assets/images/home/rewards.svg";
 import IconStar from "assets/images/home/star.svg";
+import { useTranslation } from "react-i18next";
 import { CenterBox } from "style";
 
 const UTILITIES = [
   {
     img: IconAvatar,
-    title: "Avatar",
-    text: "The Seed NFT serves as your avatar within the SeeDAO Network Polis, symbolising your membership. It provides a visual profile picture (PFP) and a reputation score, encapsulating your standing within the community.",
+    title: "home.avatar",
+    text: "home.avatarDesc",
   },
   {
     img: IconGovernance,
-    title: "Governance",
-    text: "The Seed NFT is a prerequisite for participating in our Node Consensus Conference and obtaining internal governance rights within the community. It, along with reputation, points, and ranking, collectively determines a citizen's governance privileges within SeeDAO.",
+    title: "home.governance",
+    text: "home.governanceDesc",
     link: "https://seedao.notion.site/SeeDAO-SIP-2-a4720f18c068455785a7a9ee5fd626ee",
   },
   {
     img: IconIncubation,
-    title: "Incubation",
-    text: "Seed NFT holders is able to initiate new DAO proposals to receive financial support from the SeeDAO Community Fund.",
+    title: "home.incubation",
+    text: "home.incubationDesc",
     link: "https://seedao.notion.site/SeeDAO-9d43e99fd34940f39f66187d11309e45",
   },
   {
     img: IconRewards,
-    title: "Rewards",
-    text: "In an event of third party partnership benefits or tokens issued by SeeDAO will be based on the holdings of Seed NFT as the basis for airdrops. ",
+    title: "home.rewards",
+    text: "home.rewardsDesc",
   },
 ];
 
 export default function Utility() {
+  const { t } = useTranslation();
   return (
     <UtilitytStyle className="center">
-      <UtilityTitle>Seed NFT Utility</UtilityTitle>
+      <UtilityTitle>{t("home.seedUtility")}</UtilityTitle>
       <Box>
         {UTILITIES.map((item, i) => (
           <li key={i}>
             <div className="icon">
               <img src={item.img} alt="" />
             </div>
-            <span className="title">{item.title}</span>
-            <div className="text">{item.text}</div>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
+            <span className="title">{t(item.title)}</span>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
+            <div className="text">{t(item.text)}</div>
             {item.link && (
               <a
                 className="more"
@@ -62,7 +68,7 @@ export default function Utility() {
         rel="noreferrer"
       >
         <img src={IconStar} alt="" />
-        <span>Join SeeDAO</span>
+        <span>{t("home.joinSeeDAO")}</span>
       </JoinButton>
     </UtilitytStyle>
   );

@@ -85,7 +85,7 @@ export default function LoginModal() {
           {/* <EvaIcon name="close-outline" /> */}
         </span>
 
-        <Title>ConnectWallet</Title>
+        <Title>Connect Wallet</Title>
         <Content>
           {LOGIN_WALLETS.map((w) => (
             <WalletOption key={w.value} onClick={() => connect(w)}>

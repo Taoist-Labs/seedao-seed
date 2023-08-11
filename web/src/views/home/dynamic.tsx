@@ -124,7 +124,7 @@ export default function DynamicNFT({ color }: { color: string }) {
             </NFTCardItem>
           ))}
         </NFTCard>
-        <ViewButton onClick={openLevel}>View My Level</ViewButton>
+        <ViewButton onClick={openLevel}>{t("home.viewLevel")}</ViewButton>
       </CenterBox>
     </DynamicNFTStyle>
   );

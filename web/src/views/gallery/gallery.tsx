@@ -204,7 +204,7 @@ export default function GalleryPage() {
       <GalleryRight>
         <GalleryContent>
           <FilterHead>
-            <span className="title">FILTERS</span>
+            <span className="title">{t("gallery.filters")}</span>
             <span className="num">{keyword ? 1 : selectAttrs.length}</span>
             <FilterTags>
               <ul className="tag-container">

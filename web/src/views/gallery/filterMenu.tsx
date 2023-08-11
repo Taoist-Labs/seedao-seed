@@ -46,7 +46,7 @@ export default function GalleryFilterMenu({
   return (
     <GalleryLeft sm={sm}>
       <LeftTitle>
-        FILTER
+        {t("gallery.filter")}
         {sm && <CloseButton onClick={handleClose} fontSize="large" />}
       </LeftTitle>
       <div className="container">

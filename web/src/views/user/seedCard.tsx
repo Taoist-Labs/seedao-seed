@@ -255,7 +255,7 @@ export default function SeedCard() {
               ) : Number(points) < 5000 ? (
                 <div>
                   <span className="btn lock-btn">
-                    <label>Mint 未解锁</label>
+                    <label>{t("user.lockMint")}</label>
                   </span>
                   <p className="tip">{t("user.lockTip")}</p>
                 </div>
@@ -265,7 +265,7 @@ export default function SeedCard() {
                     className="btn mint-btn"
                     onClick={() => setShowMintModal(true)}
                   >
-                    <label>Mint Now</label>
+                    <label>{t("user.unlockMint")}</label>
                   </span>
                   <p className="tip">{t("user.unlockTip")}</p>
                 </div>

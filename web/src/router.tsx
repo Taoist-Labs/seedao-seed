@@ -9,9 +9,9 @@ import Home from "./views/home/home";
 // import Footer from "./components/layout/footer";
 import LoadingModal from "./components/modals/loadingModal";
 import GalleryPage from "views/gallery/gallery";
-import LicensePage from "views/license";
+// import LicensePage from "views/license";
 import UserPage from "views/user/user";
-import ShopPage from "views/shop";
+// import ShopPage from "views/shop";
 
 export default function RouterLink() {
   return (
@@ -21,9 +21,9 @@ export default function RouterLink() {
         <Routes>
           <Route path="/" element={<Home />} index />
           <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/license" element={<LicensePage />} />
+          {/* <Route path="/license" element={<LicensePage />} /> */}
           <Route path="/user" element={<UserPage />} />
-          <Route path="/shop" element={<ShopPage />} />
+          {/* <Route path="/shop" element={<ShopPage />} /> */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
