@@ -12,7 +12,7 @@ interface IProps {
   valueNumbers: { [key: string]: number };
   selected: string[];
   icon: string;
-  onSelectValue: (id: number, value: string, selected: boolean) => void;
+  onSelectValue: (value: string, selected: boolean) => void;
 }
 
 type AttrItem = {
@@ -21,7 +21,6 @@ type AttrItem = {
 };
 
 export default function FilterAttrItem({
-  id,
   name,
   icon,
   values,
@@ -70,7 +69,7 @@ export default function FilterAttrItem({
               <li key={index}>
                 <Checkbox
                   checked={item.isSelected}
-                  onChange={(checked) => onSelectValue(id, item.value, checked)}
+                  onChange={(checked) => onSelectValue(item.value, checked)}
                 >
                   <span className="text">{item.value}</span>
                   <span className="num">({valueNumbers[item.value]})</span>

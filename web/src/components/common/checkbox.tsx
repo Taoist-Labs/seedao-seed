@@ -10,8 +10,8 @@ interface IProps {
 
 export default function Checkbox(props: IProps) {
   return (
-    <CheckboxStyle>
-      <div onClick={() => props.onChange(!props.checked)}>
+    <CheckboxStyle onClick={() => props.onChange(!props.checked)}>
+      <div>
         {props.checked ? (
           <img src={CheckboxOnIcon} alt="" style={{ width: "16px" }} />
         ) : (

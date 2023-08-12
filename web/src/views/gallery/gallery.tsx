@@ -41,7 +41,6 @@ const formatAttrValues = (): IAttrGroup[] => {
 
 const attrGroups = formatAttrValues();
 const AllNFTs = NFTsData.map((item) => ({ ...item, image: BannerImg } as INFT));
-console.log("AllNFTs:", AllNFTs);
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
@@ -49,40 +48,76 @@ export default function GalleryPage() {
   const [showLeft, setshowLeft] = useState<boolean>(!matches);
 
   const [selectAttrs, setSelectAttrs] = useState<SelectAttr[]>([]);
-  const [list] = useState<INFT[]>(AllNFTs);
+  const [list, setList] = useState<INFT[]>(AllNFTs);
   const [showSeed, setShowSeed] = useState<INFT>();
   const [keyword, setKeyword] = useState<string>("");
 
   const handleFilter = () => {
-    // TODO
+    setList([
+      ...AllNFTs.filter((item) => {
+        return selectAttrs.every((attr) => {
+          if (!attr.values.length) {
+            return true;
+          } else {
+            return item.attrs.some((v) => attr.values.indexOf(v.value) > -1);
+          }
+        });
+      }),
+    ]);
   };
 
-  const onSelectValue = (
-    id: number,
-    name: string,
-    value: string,
-    selected: boolean,
-  ) => {
+  const onSelectValue = (name: string, value: string, selected: boolean) => {
+    console.log(name, value, selected);
     if (selected) {
-      setSelectAttrs([
-        ...selectAttrs,
-        {
-          id,
-          name,
-          value,
-        },
-      ]);
+      const f = selectAttrs.find((item) => item.name === name);
+      if (!f) {
+        setSelectAttrs([
+          ...selectAttrs,
+          {
+            name,
+            values: [value],
+          },
+        ]);
+        return;
+      } else {
+        const _select_lst: SelectAttr[] = [];
+        selectAttrs.forEach((item) => {
+          _select_lst.push({
+            ...item,
+            values: item.name === name ? [...item.values, value] : item.values,
+          });
+        });
+        setSelectAttrs(_select_lst);
+      }
     } else {
-      setSelectAttrs(
-        selectAttrs.filter((item) => item.value !== value || item.id !== id),
-      );
+      const _select_lst: SelectAttr[] = [];
+      selectAttrs.forEach((item) => {
+        if (item.name === name) {
+          _select_lst.push({
+            ...item,
+            values: item.values.filter((v) => v !== value),
+          });
+        } else {
+          _select_lst.push({ ...item });
+        }
+      });
+      setSelectAttrs(_select_lst);
     }
   };
 
-  const removeAttr = ({ id, value }: SelectAttr) => {
-    setSelectAttrs(
-      selectAttrs.filter((item) => item.value !== value || item.id !== id),
-    );
+  const removeAttr = (name: string, value: string) => {
+    const _select_lst: SelectAttr[] = [];
+    selectAttrs.forEach((item) => {
+      if (item.name === name) {
+        _select_lst.push({
+          ...item,
+          values: item.values.filter((v) => v !== value),
+        });
+      } else {
+        _select_lst.push({ ...item });
+      }
+    });
+    setSelectAttrs(_select_lst);
   };
 
   useEffect(() => {
@@ -90,7 +125,16 @@ export default function GalleryPage() {
   }, [selectAttrs]);
 
   useEffect(() => {
-    // TODO
+    if (keyword) {
+      const f = AllNFTs.find((item) => item.tokenId === keyword);
+      if (f) {
+        setList([{ ...f }]);
+      } else {
+        setList([]);
+      }
+    } else {
+      handleFilter();
+    }
   }, [keyword]);
 
   return (
@@ -136,19 +180,24 @@ export default function GalleryPage() {
                     <CloseIcon fontSize="small" className="remove-tag" />
                   </Tag>
                 ) : (
-                  selectAttrs.map((item, idx) => (
-                    <Tag key={idx} onClick={() => removeAttr(item)}>
-                      <span>
-                        {item.name}:{item.value}
-                      </span>
-                      <CloseIcon fontSize="small" />
-                    </Tag>
-                  ))
+                  selectAttrs.map((item, idx) => {
+                    return item.values.map((v, jdx) => (
+                      <Tag
+                        key={`${idx}_${jdx}`}
+                        onClick={() => removeAttr(item.name, v)}
+                      >
+                        <span>
+                          {item.name}:{v}
+                        </span>
+                        <CloseIcon fontSize="small" />
+                      </Tag>
+                    ));
+                  })
                 )}
               </ul>
             </FilterTags>
             <FilterHeadRight>
-              <span className="result">123</span>
+              <span className="result">{list.length}</span>
               <img src={RefreshSvg} className="refresh" />
               {matches && (
                 <img
@@ -162,7 +211,7 @@ export default function GalleryPage() {
           {list.length > 0 ? (
             <NFTList
               container
-              spacing={"10px"}
+              spacing={matches ? "10px" : 3}
               style={{ width: "100%" }}
               className="nft-container"
             >

@@ -14,8 +14,7 @@ export interface IAttrGroup {
 
 export type SelectAttr = {
   name: string;
-  value: string;
-  id: number;
+  values: string[];
 };
 
 interface IProps {
@@ -23,12 +22,7 @@ interface IProps {
   selectAttrs: SelectAttr[];
   serialKeyword: string;
   onChangeSerialKeyword: (value: string) => void;
-  onSelectValue: (
-    id: number,
-    name: string,
-    value: string,
-    selected: boolean,
-  ) => void;
+  onSelectValue: (name: string, value: string, selected: boolean) => void;
   sm: boolean;
   handleClose?: () => void;
 }
@@ -74,11 +68,12 @@ export default function GalleryFilterMenu({
               icon={group.icon}
               values={group.values}
               valueNumbers={group.valueNumbers}
-              selected={selectAttrs
-                .filter((item) => item.id === index)
-                .map((item) => item.value)}
-              onSelectValue={(id, value, selected) =>
-                onSelectValue(id, group.name, value, selected)
+              selected={
+                selectAttrs.find((item) => item.name === group.name)?.values ||
+                []
+              }
+              onSelectValue={(value, selected) =>
+                onSelectValue(group.name, value, selected)
               }
             />
           ))}
