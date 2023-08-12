@@ -4,7 +4,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import Divider from "@mui/material/Divider";
 import Checkbox from "components/common/checkbox";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface IProps {
   id: number;
@@ -28,8 +27,6 @@ export default function FilterAttrItem({
   selected,
   onSelectValue,
 }: IProps) {
-  const matches = useMediaQuery("(max-width:960px)");
-
   const [isOpen, setIsOpen] = useState(false);
   const [attrList, setAttrList] = useState<AttrItem[]>([]);
   const [keyword, setKeyword] = useState<string>("");
@@ -72,7 +69,6 @@ export default function FilterAttrItem({
                 <Checkbox
                   checked={item.isSelected}
                   onChange={(checked) => onSelectValue(id, item.value, checked)}
-                  size={matches ? "medium" : "small"}
                 >
                   <span className="text">{item.value}</span>
                   <span className="num">(21)</span>
@@ -107,11 +103,11 @@ const FilterAttrName = styled.div`
     img {
       width: 30px;
     }
-    @media (max-width: 960px) {
+    @media (max-width: 412px) {
       img {
-        width: 50px;
+        width: 25px;
       }
-      font-size: 40px;
+      font-size: 20px;
     }
   }
 `;
@@ -134,12 +130,12 @@ const FilterAttrValues = styled.ul`
       font-size: 16px;
       font-weight: 400;
     }
-    @media (max-width: 960px) {
+    @media (max-width: 412px) {
       .text {
-        font-size: 36px;
+        font-size: 18px;
       }
       .num {
-        font-size: 20px;
+        font-size: 12px;
       }
     }
   }
@@ -164,14 +160,6 @@ const InputWrapper = styled.div`
     font-size: 20px;
     &::placeholder {
       color: #b5b5b5;
-    }
-  }
-  @media (max-width: 960px) {
-    height: 72px;
-    border-width: 2px;
-    input {
-      line-height: 72px;
-      font-size: 40px;
     }
   }
 `;

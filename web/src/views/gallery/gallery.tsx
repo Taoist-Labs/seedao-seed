@@ -9,8 +9,8 @@ import { useTranslation } from "react-i18next";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import GalleryFilterMenu, { IAttrGroup, SelectAttr } from "./filterMenu";
-import FilterSvg from "components/svg/filter";
-import RefreshSvg from "components/svg/refresh";
+import FilterSvg from "assets/images/filter.svg";
+import RefreshSvg from "assets/images/refresh.svg";
 
 import BackgroundIcon from "assets/images/attrs/background.svg";
 import BodyIcon from "assets/images/attrs/body.svg";
@@ -211,7 +211,7 @@ export default function GalleryPage() {
                 {keyword ? (
                   <Tag onClick={() => setKeyword("")}>
                     <span>{t("gallery.serialTag", { keyword })}</span>
-                    <CloseIcon fontSize="small" />
+                    <CloseIcon fontSize="small" className="remove-tag" />
                   </Tag>
                 ) : (
                   selectAttrs.map((item, idx) => (
@@ -227,12 +227,23 @@ export default function GalleryPage() {
             </FilterTags>
             <FilterHeadRight>
               <span className="result">123</span>
-              <RefreshSvg className="refresh" />
-              {matches && <FilterSvg onClick={() => setshowLeft(true)} />}
+              <img src={RefreshSvg} className="refresh" />
+              {matches && (
+                <img
+                  src={FilterSvg}
+                  onClick={() => setshowLeft(true)}
+                  className="filter-icon"
+                />
+              )}
             </FilterHeadRight>
           </FilterHead>
           {list.length > 0 ? (
-            <NFTList container spacing={3} style={{ width: "100%" }}>
+            <NFTList
+              container
+              spacing={"10px"}
+              style={{ width: "100%" }}
+              className="nft-container"
+            >
               {list.map((item, idx) => (
                 <NFTCard
                   key={idx}
@@ -282,9 +293,18 @@ const GalleryContent = styled.div`
   @media (max-width: 960px) {
     padding: 40px 30px 0;
   }
+  @media (max-width: 412px) {
+    padding: 20px 15px;
+  }
 `;
 
-const NFTList = styled(Grid)``;
+const NFTList = styled(Grid)`
+  @media (max-width: 412px) {
+    &.nft-container {
+      margin: 0;
+    }
+  }
+`;
 
 const FilterTags = styled.div`
   flex: 1;
@@ -311,6 +331,14 @@ const Tag = styled.li`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  @media (max-width: 412px) {
+    line-height: 18px;
+    height: 18px;
+    font-size: 12px;
+    .remove-tag {
+      font-size: 12px !important;
+    }
+  }
 `;
 
 const FilterHead = styled.div`
@@ -336,6 +364,14 @@ const FilterHead = styled.div`
     font-weight: 700;
     font-size: 14px;
   }
+  @media (max-width: 412px) {
+    margin-bottom: 15px;
+
+    .title {
+      font-size: 12px;
+      line-height: 15px;
+    }
+  }
 `;
 
 const FilterHeadRight = styled.div`
@@ -349,6 +385,20 @@ const FilterHeadRight = styled.div`
   .refresh {
     margin-left: 34px;
     margin-right: 28px;
+    cursor: pointer;
+  }
+  @media (max-width: 412px) {
+    .result {
+      font-size: 13px;
+    }
+    .refresh {
+      width: 15px;
+      margin-left: 17px;
+      margin-right: 14px;
+    }
+    .filter-icon {
+      width: 14px;
+    }
   }
 `;
 

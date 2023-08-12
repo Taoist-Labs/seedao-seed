@@ -104,6 +104,17 @@ const ModalContainer = styled(Box)`
       display: flex;
     }
   }
+  @media (max-width: 412px) {
+    width: calc(100% - 30px);
+    .sm-title {
+      font-size: 15px;
+      padding-inline: 15px;
+      line-height: 45px;
+    }
+    height: unset;
+    min-height: unset;
+    padding-bottom: 54px;
+  }
 `;
 
 const ModalLeft = styled.div`
@@ -146,7 +157,7 @@ const ModalRight = styled.div`
     .title {
       display: none;
     }
-  } ;
+  }
 `;
 
 const AttrBox = styled.ul`
@@ -190,6 +201,17 @@ const AttrBox = styled.ul`
       display: none;
     }
   }
+  @media (max-width: 412px) {
+    li {
+      height: 32px;
+      img {
+        width: 17px;
+      }
+      .value {
+        font-size: 12px;
+      }
+    }
+  }
 `;
 
 const CloseIconStyle = styled(CloseIcon)`
@@ -197,4 +219,7 @@ const CloseIconStyle = styled(CloseIcon)`
   fill: #0f0f0f;
   opacity: 0.5;
   cursor: pointer;
+  @media (max-width: 412px) {
+    font-size: 18px;
+  }
 `;

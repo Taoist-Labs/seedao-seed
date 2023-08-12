@@ -47,7 +47,13 @@ export default function GalleryFilterMenu({
     <GalleryLeft sm={sm}>
       <LeftTitle>
         {t("gallery.filter")}
-        {sm && <CloseButton onClick={handleClose} fontSize="large" />}
+        {sm && (
+          <CloseButton
+            onClick={handleClose}
+            fontSize="small"
+            className="close"
+          />
+        )}
       </LeftTitle>
       <div className="container">
         <InputWrapper>
@@ -120,6 +126,9 @@ const GalleryLeft = styled.div<{ sm: boolean }>`
       display: none;
     }
   }
+  @media (max-width: 412px) {
+    padding: 20px 15px;
+  } ;
 `;
 
 const LeftTitle = styled.div`
@@ -127,6 +136,12 @@ const LeftTitle = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: 64px;
+  .close {
+    top: 20px;
+  }
+  @media (max-width: 412px) {
+    font-size: 15px;
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -149,17 +164,6 @@ const InputWrapper = styled.div`
     font-size: 20px;
     &::placeholder {
       color: #b5b5b5;
-    }
-  }
-  @media (max-width: 960px) {
-    height: 72px;
-    border-width: 2px;
-    input {
-      line-height: 72px;
-      font-size: 40px;
-    }
-    .search-icon {
-      font-size: 40px;
     }
   }
 `;

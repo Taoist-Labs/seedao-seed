@@ -31,5 +31,10 @@ const Intro = styled.div`
   font-weight: 500;
   @media (max-width: 960px) {
     font-size: 24px;
-  } ;
+  }
+  @media (max-width: 412px) {
+    font-size: 12px;
+  }
+  margin-top: 5px;
+  margin-bottom: 5px;
 `;

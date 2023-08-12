@@ -232,7 +232,7 @@ const HeaderStyle = styled.header`
   @media (max-width: 412px) {
     height: 60px;
     line-height: 60px;
-    padding: 0 20px;
+    padding: 0 15px;
   }
 `;
 
