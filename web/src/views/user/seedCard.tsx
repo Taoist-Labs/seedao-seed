@@ -15,6 +15,7 @@ import { GALLERY_ATTRS } from "data/gallery";
 import MintModal from "./mintModal";
 import ShareModal from "./shareModal";
 import Opening from "components/common/opening";
+import EmptyIcon from "assets/images/user/empty.svg";
 
 const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
 const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
@@ -238,25 +239,46 @@ export default function SeedCard() {
       </CardTop>
       <CardBottom>
         <CardBottomInner>
-          <SeedDetail>
-            <SeedImg>
-              <img src={NFT_02} alt="" />
-            </SeedImg>
-            <SeedAttr>
-              <div className="name">Seed # 2584</div>
-              <ul>
-                {GALLERY_ATTRS.map((item, i) => (
-                  <li key={i}>
-                    <img src={item.icon} alt="" />
-                    <div>
-                      <p className="name">{item.display}</p>
-                      <p className="value">BlackBlack</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </SeedAttr>
-          </SeedDetail>
+          {Number(points) < 5000 ? (
+            <SeedDetail>
+              <SeedImg>
+                <img src={EmptyIcon} alt="" />
+              </SeedImg>
+              <SeedAttr>
+                <div className="name not-name">{t("user.notOwneSeed")}</div>
+                <ul>
+                  {GALLERY_ATTRS.map((item, i) => (
+                    <li key={i}>
+                      <img src={item.icon} alt="" />
+                      <div>
+                        <p className="name">{item.display}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </SeedAttr>
+            </SeedDetail>
+          ) : (
+            <SeedDetail>
+              <SeedImg>
+                <img src={NFT_02} alt="" />
+              </SeedImg>
+              <SeedAttr>
+                <div className="name">Seed # 2584</div>
+                <ul>
+                  {GALLERY_ATTRS.map((item, i) => (
+                    <li key={i}>
+                      <img src={item.icon} alt="" />
+                      <div>
+                        <p className="name">{item.display}</p>
+                        <p className="value">BlackBlack</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </SeedAttr>
+            </SeedDetail>
+          )}
 
           <CardBottomInnerRight>
             <RightTopBox>
@@ -351,6 +373,9 @@ const SeedAttr = styled.div`
   .name {
     font-size: 18px;
     font-weight: 700;
+  }
+  .not-name {
+    color: #929191;
   }
   ul {
     display: flex;
