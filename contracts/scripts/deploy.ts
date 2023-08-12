@@ -2,6 +2,9 @@ import { ethers, upgrades } from "hardhat";
 import deployed from "./deployed";
 
 async function main() {
+  const [signer] = await ethers.getSigners();
+  console.log("current signer: ", signer.address);
+
   console.log("Deploying SeeDAO...");
 
   const SeeDAO = await ethers.getContractFactory("SeeDAO");

@@ -4,7 +4,7 @@ import "@openzeppelin/hardhat-upgrades";
 import "hardhat-abi-exporter";
 import "hardhat-deployed-records";
 import "hardhat-publish-typechain";
-import "dotenv/config"
+import "dotenv/config";
 
 const PRIVATE_KEY =
   process.env.PRIVATE_KEY ||
@@ -23,6 +23,16 @@ const config: HardhatUserConfig = {
   },
   defaultNetwork: "hardhat",
   networks: {
+    mainnet: {
+      url: "https://eth-mainnet.g.alchemy.com/v2/FU0ujCat3OQd5hIqpddJ94SngVaeSxad",
+      chainId: 1,
+      accounts: [`${PRIVATE_KEY}`],
+    },
+    sepolia: {
+      url: "https://eth-sepolia.g.alchemy.com/v2/H43zK7UnIN2v7u2ZoTbizIPnXkylKIZl",
+      chainId: 11155111,
+      accounts: [`${PRIVATE_KEY}`],
+    },
     bsctest: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
@@ -31,6 +41,8 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
+      mainnet: "",
+      sepolia: "5K6DDRNW3U54VNMVGEPRH7STD3HICUT1CT",
       bscTestnet: "94QAM6RF43943N3VAAWHZBRYK7GHEPA2G4",
     },
   },
