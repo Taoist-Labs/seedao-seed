@@ -21,9 +21,6 @@ export default function SeedModal({
   handleClickShare,
 }: IProps) {
   const { t } = useTranslation();
-  const findAttrValue = (attr: string) => {
-    return seed.attrs.find((item) => item.name === attr)?.value;
-  };
 
   const seedTitle = useMemo(() => {
     return `SEED NO.${seed.tokenId}`;
