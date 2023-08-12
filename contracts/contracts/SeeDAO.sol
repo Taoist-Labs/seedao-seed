@@ -267,16 +267,61 @@ contract SeeDAO is
 
   /// @dev 获取 NFT URI，方法内部会根据 `tokenId` 拥有者地址拥有的积分数量或其他 Token、NFT 的不同而返回不同的 NFT URI，从而实现实现 Dynamic NFT
   /// 如：
-  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_level1
-  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_level2
+  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_L1.json
+  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_L2.json
+  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/disable_mint.json
   function tokenURI(
     uint256 tokenId
   ) public view override returns (string memory) {
     _requireMinted(tokenId);
 
-    // TODO: 根据 nft owner 的积分数量，返回不同的 NFT URI
-    return
-      string(abi.encodePacked(baseURI, "/", tokenId.toString(), "_", "level1"));
+    if (onMint) {
+      uint256 level = _parseLevel(tokenId);
+
+      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_L1.json
+      return
+        string(
+          abi.encodePacked(
+            baseURI,
+            "/",
+            tokenId.toString(),
+            "_L",
+            level.toString(),
+            ".json"
+          )
+        );
+    } else {
+      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/disable_mint.json
+      return string(abi.encodePacked(baseURI, "/disable_mint.json"));
+    }
+  }
+
+  /// @dev get level by owner's points amount
+  function _parseLevel(uint256 tokenId) internal view returns (uint256) {
+    uint256 de = 10 ** IERC20MetadataUpgradeable(pointsToken).decimals();
+    uint256 points = IERC20Upgradeable(pointsToken).balanceOf(ownerOf(tokenId)) * de;
+
+    if (points < 5_000 * de) {
+      return 0;
+    } else if (points >= 5_000 * de && points < 20_000 * de) {
+      return 1;
+    } else if (points >= 20_000 * de && points < 100_000 * de) {
+      return 2;
+    } else if (points >= 100_000 * de && points < 300_000 * de) {
+      return 3;
+    } else if (points >= 300_000 * de && points < 1_000_000 * de) {
+      return 4;
+    } else if (points >= 1_000_000 * de && points < 3_000_000 * de) {
+      return 5;
+    } else if (points >= 3_000_000 * de && points < 10_000_000 * de) {
+      return 6;
+    } else if (points >= 10_000_000 * de && points < 30_000_000 * de) {
+      return 7;
+    } else if (points >= 30_000_000 * de && points < 100_000_000 * de) {
+      return 8;
+    } else {
+      return 9;
+    }
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
