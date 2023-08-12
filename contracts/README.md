@@ -1,6 +1,8 @@
 ## prepare for development/deploy
 
-before development/deploy, you need to create a `.env` file in the root directory of the project, you can copy `.env.example` and rename it to `.env`, then fill in the corresponding parameters.
+before development and deploy, you need to copy `.env.example` and rename it to `.env`, then fill in the corresponding parameters.
+
+- `PRIVATE_KEY` is the private key of the account used to deploy the contract
 
 ## Run tests
 
@@ -11,20 +13,24 @@ $ REPORT_GAS=true npx hardhat test
 ## Deploy contracts
 
 ```
-$ PRIVATE_KEY=ac09...ff80 npx hardhat run --network bsctest scripts/deploy.ts
+$ npx hardhat run --network bsctest scripts/deploy.ts
 current network: bsctest
 Deploying SeeDAO...
 SeeDAO deployed to 0xfD98A13f9B815C2842b3dDbe9633dD070361490A
 ```
 
+- `--network` is the network you want to deploy to
+
 ## Upgrade contracts
 
 ```
-$ PRIVATE_KEY=ac09...ff80 npx hardhat run --network bsctest scripts/upgrade.ts
+$ npx hardhat run --network bsctest scripts/upgrade.ts
 current network: bsctest
 Upgrading SeeDAO...
 SeeDAO upgraded
 ```
+
+- `--network` is the network you want to upgrade at
 
 ## Verify contracts
 
@@ -46,3 +52,5 @@ Contract at 0x3f9b514Fe2d85C464B4DA4cE4De12C0e23A24FB8 already verified.
 
 Proxy fully verified.
 ```
+
+- `--network` is the network you want to verify at

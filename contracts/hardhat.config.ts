@@ -2,14 +2,11 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-abi-exporter";
-import "hardhat-deployed-records";
-import "hardhat-publish-typechain";
 import "dotenv/config";
 
 const PRIVATE_KEY =
   process.env.PRIVATE_KEY ||
   "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-const AUTH_TOKEN = process.env.AUTH_TOKEN || "npm_pZB...zyP";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -26,6 +23,11 @@ const config: HardhatUserConfig = {
     mainnet: {
       url: "https://eth-mainnet.g.alchemy.com/v2/FU0ujCat3OQd5hIqpddJ94SngVaeSxad",
       chainId: 1,
+      accounts: [`${PRIVATE_KEY}`],
+    },
+    polygon: {
+      url: "https://polygon-mainnet.g.alchemy.com/v2/-MLinGy2l91vLVZWXmRfNYf9DavMxaEA",
+      chainId: 137,
       accounts: [`${PRIVATE_KEY}`],
     },
     sepolia: {
@@ -49,18 +51,6 @@ const config: HardhatUserConfig = {
   abiExporter: {
     runOnCompile: true,
     pretty: false,
-  },
-  deployedRecords: {
-    ignoreContracts: ["MockERC20"],
-  },
-  publishTypechain: {
-    name: "seed-contracts",
-    version: "0.4.0",
-    ethers: "^5.7.2",
-    typescript: "^4.9.5",
-    // pretty: false,
-    ignoreContracts: ["MockERC20"],
-    authToken: AUTH_TOKEN,
   },
 };
 
