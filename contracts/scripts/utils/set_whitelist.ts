@@ -18,7 +18,7 @@ async function main() {
   latestWhitelist = latestWhitelist > 0 ? latestWhitelist - 1 : 0;
   console.log(`Latest whitelist id is ${latestWhitelist}`);
 
-  console.log(`Set withlist for SeeDAO contract at ${seeDAOAddress} ...`);
+  console.log(`Set whitelist for SeeDAO contract at ${seeDAOAddress} ...`);
 
   const whitelistId = latestWhitelist; // NOTE: this should be the latest whitelist id
   const whitelist = [
@@ -33,7 +33,7 @@ async function main() {
   await seeDAO.setWhiteList(whitelistId, rootHash);
 
   console.log(
-    `Set withlist with parameters (whitelistId=${whitelistId}, rootHash=${rootHash}) successsfully!`
+    `Set whitelist with parameters (whitelistId=${whitelistId}, rootHash=${rootHash}) successfully!`
   );
 }
 

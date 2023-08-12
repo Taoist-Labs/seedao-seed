@@ -10,37 +10,37 @@ async function main() {
   const minter = "0xc1eE7cB74583D1509362467443C44f1FCa981283";
   await seeDAO.changeMinter(minter);
   console.log(
-    `Call changeMinter() with paramater (minter=${minter}) to SeeDAO contract at ${seeDAOAddress} successfully!`
+    `Call changeMinter() with parameter (minter=${minter}) to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   const pointsTokenAddress = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
   await seeDAO.setPointsTokenAddress(pointsTokenAddress);
   console.log(
-    `Call setPointsTokenAddress() with paramater (pointsTokenAddress=${pointsTokenAddress}) to SeeDAO contract at ${seeDAOAddress} successfully!`
+    `Call setPointsTokenAddress() with parameter (pointsTokenAddress=${pointsTokenAddress}) to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   const pointsCondition = ethers.getBigInt(50_000);
   await seeDAO.setPointsCondition(pointsCondition);
   console.log(
-    `Call setPointsCondition() with paramater (pointsCondition=${pointsCondition}) to SeeDAO contract at ${seeDAOAddress} successfully!`
+    `Call setPointsCondition() with parameter (pointsCondition=${pointsCondition}) to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   const price = ethers.parseEther("0.8");
   await seeDAO.setPrice(price);
   console.log(
-    `Call setPrice() with paramater (price=${price}) to SeeDAO contract at ${seeDAOAddress} successfully!`
+    `Call setPrice() with parameter (price=${price}) to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   const maxSupply = ethers.getBigInt(10_000);
   await seeDAO.setMaxSupply(maxSupply);
   console.log(
-    `Call setMaxSupply() with paramater (maxSupply=${maxSupply}) to SeeDAO contract at ${seeDAOAddress} successfully!`
+    `Call setMaxSupply() with parameter (maxSupply=${maxSupply}) to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
   const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
   await seeDAO.setBaseURI(baseURI);
   console.log(
-    `Call setBaseURI() with paramater (baseURI=${baseURI}) to SeeDAO contract at ${seeDAOAddress} successfully!`
+    `Call setBaseURI() with parameter (baseURI=${baseURI}) to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 }
 

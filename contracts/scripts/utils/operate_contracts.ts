@@ -18,12 +18,22 @@ async function main() {
   );
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  await seeDAO.pauseClaim();
+  await seeDAO.pauseClaimWithWhiteList();
   console.log(
-    `Call pauseClaim() to SeeDAO contract at ${seeDAOAddress} successfully!`
+    `Call pauseClaimWithWhiteList() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
-  await seeDAO.unpauseClaim();
+  await seeDAO.unpauseClaimWithWhiteList();
+  console.log(
+    `Call unpauseClaimWithWhiteList() to SeeDAO contract at ${seeDAOAddress} successfully!`
+  );
+
+  await seeDAO.pauseClaimWithPoints();
+  console.log(
+    `Call pauseClaimWithPoints() to SeeDAO contract at ${seeDAOAddress} successfully!`
+  );
+
+  await seeDAO.unpauseClaimWithPoints();
   console.log(
     `Call unpauseClaim() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
