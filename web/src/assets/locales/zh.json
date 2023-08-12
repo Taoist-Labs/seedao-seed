@@ -1,4 +1,8 @@
 {
+    "header": {
+        "seed": "SEED",
+        "gallery": "画廊"
+    },
     "home": {
         "bannerTitle": "Seed Now, See the DAO",
         "bannerContent01": "Seed NFT, 是SeeDAO数字城邦的公民身份证明，也是获得城邦政治权利的前提。",

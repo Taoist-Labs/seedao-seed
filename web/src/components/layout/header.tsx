@@ -20,26 +20,29 @@ import { useTranslation } from "react-i18next";
 
 const SEED_OPTIONS = [
   // { path: "about", label: "About" },
-  { path: "gallery", label: "Gallery" },
+  { path: "gallery", label: "header.gallery" },
   // { path: "license", label: "License" },
   // { path: "shop", label: "Shop" },
 ];
 
 const SmNav = ({ handleClose }: { handleClose: () => void }) => {
+  const { t } = useTranslation();
   const [expand, setExpand] = useState(false);
   return (
     <SmMenu>
       <div className="content">
         <div className="top">
           <div className="seed-menu" onClick={() => setExpand(!expand)}>
-            <span>Seed</span>
+            <span>{t("header.seed")}</span>
             {expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </div>
           {expand && (
             <ul className="sub-menu">
               {SEED_OPTIONS.map((item, i) => (
                 <li key={i}>
-                  <Link to={item.path}>{item.label}</Link>
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/* @ts-ignore */}
+                  <Link to={item.path}>{t(item.label)}</Link>
                 </li>
               ))}
             </ul>
@@ -111,6 +114,7 @@ const Languagebutton = () => {
 };
 
 export default function Header() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { account } = useWeb3React();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -138,7 +142,7 @@ export default function Header() {
               setAnchorEl(event.currentTarget)
             }
           >
-            <span>Seed</span>
+            <span>{t("header.seed")}</span>
             <ExpandMoreIcon />
           </SelectBox>
           <Menu
@@ -155,7 +159,9 @@ export default function Header() {
                 key={idx}
                 onClick={() => handleSelect(option.path)}
               >
-                {option.label}
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                {/* @ts-ignore */}
+                {t(option.label)}
               </MenuItem>
             ))}
           </Menu>
