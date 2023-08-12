@@ -1,15 +1,24 @@
 import styled from "@emotion/styled";
-import DynamicIcon01 from "assets/images/home/dynamic_1.svg";
-import DynamicIcon02 from "assets/images/home/dynamic_2.svg";
-import DynamicIcon03 from "assets/images/home/dynamic_3.svg";
-import DynamicIcon04 from "assets/images/home/dynamic_4.svg";
-import DynamicIcon05 from "assets/images/home/dynamic_5.svg";
+import DynamicIcon01 from "assets/images/home/dynamic/dynamic_1.svg";
+import DynamicIcon02 from "assets/images/home/dynamic/dynamic_2.svg";
+import DynamicIcon03 from "assets/images/home/dynamic/dynamic_3.svg";
+import DynamicIcon04 from "assets/images/home/dynamic/dynamic_4.svg";
+import DynamicIcon05 from "assets/images/home/dynamic/dynamic_5.svg";
+
+import RowDynamicIcon01 from "assets/images/home/dynamic/row_dynamic_1.svg";
+import RowDynamicIcon02 from "assets/images/home/dynamic/row_dynamic_2.svg";
+import RowDynamicIcon03 from "assets/images/home/dynamic/row_dynamic_3.svg";
+import RowDynamicIcon04 from "assets/images/home/dynamic/row_dynamic_4.svg";
+import RowDynamicIcon05 from "assets/images/home/dynamic/row_dynamic_5.svg";
+
 import { useTranslation, Trans } from "react-i18next";
 import { CenterBox } from "style";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const DynamicNFTs = [
   {
     img: DynamicIcon01,
+    rimg: RowDynamicIcon01,
     color: "#FC6162",
     levels: [
       {
@@ -24,6 +33,7 @@ const DynamicNFTs = [
   },
   {
     img: DynamicIcon02,
+    rimg: RowDynamicIcon02,
     color: "#5939D9",
     levels: [
       {
@@ -38,6 +48,7 @@ const DynamicNFTs = [
   },
   {
     img: DynamicIcon03,
+    rimg: RowDynamicIcon03,
     color: "#6BE393",
     levels: [
       {
@@ -52,6 +63,7 @@ const DynamicNFTs = [
   },
   {
     img: DynamicIcon04,
+    rimg: RowDynamicIcon04,
     color: "#EF36A9",
     levels: [
       {
@@ -66,6 +78,7 @@ const DynamicNFTs = [
   },
   {
     img: DynamicIcon05,
+    rimg: RowDynamicIcon05,
     color: "#10D4FF",
     levels: [
       {
@@ -82,6 +95,7 @@ const DynamicNFTs = [
 
 export default function DynamicNFT({ color }: { color: string }) {
   const { t } = useTranslation();
+  const matches = useMediaQuery("(max-width:680px)");
   const openLevel = () => {
     // login
     // unlogin
@@ -113,7 +127,12 @@ export default function DynamicNFT({ color }: { color: string }) {
                   <span>{item.levels[1].title}</span> ({item.levels[1].points})
                 </p>
               </div>
-              <div className="img-box">
+              <div
+                className="img-box"
+                style={{
+                  backgroundImage: matches ? `url(${item.rimg})` : "unset",
+                }}
+              >
                 <img src={item.img} alt="" />
               </div>
             </NFTCardItem>
@@ -183,7 +202,7 @@ const NFTCard = styled.ul`
   flex-direction: row;
   gap: 20px;
   justify-content: space-between;
-  @media (max-width: 960px) {
+  @media (max-width: 680px) {
     flex-direction: column;
   }
 `;
@@ -195,6 +214,7 @@ const NFTCardItem = styled.li`
   flex-direction: column;
   justify-content: space-between;
   color: ${(props) => props.color};
+  position: relative;
 
   img {
     vertical-align: bottom;
@@ -214,11 +234,18 @@ const NFTCardItem = styled.li`
     font-size: 36px;
     font-weight: 700;
   }
-  @media (max-width: 960px) {
-    flex-direction: row;
-    height: 137px;
-    img {
+  @media (max-width: 680px) {
+    .img-box {
+      position: absolute;
+      right: 0;
       height: 100%;
+      width: 50%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: right;
+      img {
+        display: none;
+      }
     }
   }
   @media (max-width: 412px) {
@@ -237,11 +264,6 @@ const NFTCardItem = styled.li`
         font-size: 18px;
         margin-right: 4px;
       }
-    }
-    .img-box {
-      position: absolute;
-      right: 0;
-      height: 100%;
     }
   } ;
 `;
