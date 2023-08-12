@@ -9,6 +9,7 @@ import { SELECT_WALLET } from "utils/constant";
 import { MetaMask } from "@web3-react/metamask";
 import { injected } from "wallet/connector";
 import MetamaskIcon from "assets/images/metamask.png";
+import { useTranslation } from "react-i18next";
 
 enum LoginStatus {
   Default = 0,
@@ -36,6 +37,7 @@ const LOGIN_WALLETS: LoginWallet[] = [
 ];
 
 export default function LoginModal() {
+  const { t } = useTranslation();
   const {
     state: { show_login_modal },
     dispatch,
@@ -48,9 +50,6 @@ export default function LoginModal() {
 
   const handleClose = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-  };
-  const closeModal = () => {
-    //  TODO
   };
 
   const handleFailed = () => {
@@ -81,11 +80,11 @@ export default function LoginModal() {
       aria-describedby="modal-modal-description"
     >
       <ModalContainer>
-        <span className="icon-close" onClick={closeModal}>
+        <span className="icon-close" onClick={handleClose}>
           {/* <EvaIcon name="close-outline" /> */}
         </span>
 
-        <Title>Connect Wallet</Title>
+        <Title>{t("header.connectWallet")}</Title>
         <Content>
           {LOGIN_WALLETS.map((w) => (
             <WalletOption key={w.value} onClick={() => connect(w)}>
@@ -106,10 +105,14 @@ const ModalContainer = styled(Box)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 400px;
-  height: 300px;
+  width: 370px;
+  height: 160px;
   background-color: #fff;
   padding: 30px 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Title = styled.div`
@@ -128,9 +131,14 @@ const WalletOption = styled.li`
   border-radius: 8px;
   margin-block: 10px;
   cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f1f1;
+  background: rgb(191, 239, 45);
+  color: #fff;
   font-weight: 600;
   font-size: 16px;
   &:hover {
+    background-color: rgb(201, 251, 48);
   }
   img {
     width: 28px;

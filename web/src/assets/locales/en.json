@@ -1,7 +1,8 @@
 {
     "header": {
         "seed": "SEED",
-        "gallery": "GALLERY"
+        "gallery": "GALLERY",
+        "connectWallet": "Connect Wallet"
     },
     "home": {
         "bannerTitle": "Seed Now, See the DAO",

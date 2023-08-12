@@ -59,6 +59,7 @@ const SmNav = ({ handleClose }: { handleClose: () => void }) => {
 };
 
 const LoginBox = ({ account }: { account?: string }) => {
+  const { t } = useTranslation();
   const { dispatch } = useAppContext();
 
   const showLoginModal = () => {
@@ -69,7 +70,7 @@ const LoginBox = ({ account }: { account?: string }) => {
     return (
       <React.Fragment>
         <LoginModal />
-        <Button onClick={showLoginModal}>Connect Wallet</Button>
+        <Button onClick={showLoginModal}>{t("header.connectWallet")}</Button>
       </React.Fragment>
     );
   }
