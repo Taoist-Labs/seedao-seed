@@ -4,4 +4,8 @@ venv
 # output
 output*
 
+# .tmp
 .tmp
+
+# seed
+seed
