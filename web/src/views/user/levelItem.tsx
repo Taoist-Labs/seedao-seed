@@ -93,6 +93,9 @@ const RightPart = styled.div`
     margin-bottom: 13px;
     font-size: 16px;
   }
+  .percent {
+    font-weight: 700;
+  }
 `;
 interface IProcessProps {
   color: string;
