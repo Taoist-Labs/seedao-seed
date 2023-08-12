@@ -75,7 +75,7 @@ contract SeeDAO is
     maxSupply = 100_000;
     minter = msg.sender;
 
-    __ERC721_init("SeeDAO", "SEED");
+    __ERC721_init("SeeDAO Seed NFT", "SEED");
     __ERC721Enumerable_init();
     __Pausable_init();
     __Ownable_init();

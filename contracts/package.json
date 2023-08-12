@@ -30,7 +30,8 @@
     "hardhat-deployed-records": "^0.2.0",
     "hardhat-publish-typechain": "^0.3.0",
     "prettier": "^3.0.0",
-    "prettier-plugin-solidity": "^1.1.3"
+    "prettier-plugin-solidity": "^1.1.3",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "@openzeppelin/contracts-upgradeable": "^4.9.2"
