@@ -190,7 +190,7 @@ export default function SeedCard() {
   }, [chainId, account]);
 
   const checkIfinWhiteList = () => {
-    return WhiteListData.find((d) => d.address === account)?.proof;
+    return WhiteListData.find((d) => d.address === account);
   };
 
   const goMint = async () => {
@@ -204,7 +204,13 @@ export default function SeedCard() {
     // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       setLoading(true);
-      const res = await seedContract.claimWithPoints();
+      let res: any;
+      const find = checkIfinWhiteList();
+      if (find) {
+        res = await seedContract.claimWithWhiteList(find.no, find.proof);
+      } else {
+        res = await seedContract.claimWithPoints();
+      }
       await res.wait();
       console.log("mint done");
       setHasSeed(true);
