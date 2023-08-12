@@ -6,7 +6,7 @@ import { GALLERY_ATTRS } from "data/gallery";
 export default function SeedShare() {
   return (
     <SeedShareBox id="SEED">
-      <img src={BannerImg} alt="" />
+      <img src={BannerImg} alt="" className="nft" />
       <SeedContent>
         <div className="title">SEED NO. 2879</div>
         <div className="num">
@@ -31,10 +31,9 @@ export default function SeedShare() {
 }
 
 const SeedShareBox = styled.div`
-  width: 100%;
-  max-width: 750px;
+  width: 750px;
   background-color: #fbf5ef;
-  img {
+  img.nft {
     width: 100%;
   }
 `;
@@ -89,9 +88,10 @@ const AttrBox = styled.ul`
 
 const LogoBottom = styled.div`
   border-top: 1px solid #c4c4c4;
-  padding-top: 38px;
-  padding-bottom: 36px;
+  padding-top: 28px;
+  padding-bottom: 26px;
   text-align: center;
+  margin-top: 54px;
   img {
     width: 200px;
   }

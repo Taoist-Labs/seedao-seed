@@ -6,6 +6,9 @@ import TwitterIcon from "assets/images/share/Twitter.svg";
 import DiscordIcon from "assets/images/share/Discord.svg";
 
 import DownloadIcon from "assets/images/user/download.svg";
+import SeedShare from "components/seedShare";
+import * as htmlToImage from "html-to-image";
+import { useEffect, useState } from "react";
 
 interface IProps {
   show: boolean;
@@ -14,9 +17,8 @@ interface IProps {
 
 export default function ShareModal({ show, handleClose }: IProps) {
   const { t } = useTranslation();
-  const handleDownload = () => {
-    // TODO
-  };
+  const [imgSrc, setImgSrc] = useState("");
+
   const share2discord = () => {
     // TODO copy link
   };
@@ -27,6 +29,25 @@ export default function ShareModal({ show, handleClose }: IProps) {
   const share2wechat = () => {
     // TODO generate qrcode
   };
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.download = "SEED.png";
+    link.href = imgSrc;
+    link.click();
+  };
+
+  useEffect(() => {
+    const node = document.getElementById("SEED");
+    if (!node) return;
+    htmlToImage
+      .toPng(node, { cacheBust: true })
+      .then(function (dataUrl) {
+        setImgSrc(dataUrl);
+      })
+      .catch(function (error) {
+        console.error("oops, something went wrong!", error);
+      });
+  }, []);
   return (
     <Modal
       open={show}
@@ -34,7 +55,11 @@ export default function ShareModal({ show, handleClose }: IProps) {
       aria-labelledby="modal-modal-title"
     >
       <ShareModalStyle>
-        <div className="share-modal"></div>
+        <div className="share-modal">
+          <div className="share-content">
+            <SeedShare />
+          </div>
+        </div>
         <RightBox>
           <div className="content">
             <div className="title">{t("user.shareTo")}</div>
@@ -67,7 +92,6 @@ const ShareModalStyle = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  overflow-y: auto;
 
   &:focus-visible {
     outline: none;
@@ -80,11 +104,14 @@ const ShareModalStyle = styled.div`
   padding: 40px 50px;
   width: 657px;
   .share-modal {
-    width: 254px;
-    height: 480px;
     border: 8px solid #fff;
     background: #f9d9fb;
-    overflow: hidden;
+    width: 252px;
+    height: 486px;
+    .share-content {
+      transform: scale(0.338);
+      transform-origin: 0 0;
+    }
   }
 `;
 
