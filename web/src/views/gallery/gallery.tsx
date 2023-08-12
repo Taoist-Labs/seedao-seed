@@ -11,123 +11,45 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import GalleryFilterMenu, { IAttrGroup, SelectAttr } from "./filterMenu";
 import FilterSvg from "assets/images/filter.svg";
 import RefreshSvg from "assets/images/refresh.svg";
-
-import BackgroundIcon from "assets/images/attrs/background.svg";
-import BodyIcon from "assets/images/attrs/body.svg";
-import ClothIcon from "assets/images/attrs/cloth.svg";
-import EarIcon from "assets/images/attrs/ear.svg";
-import PolarisIcon from "assets/images/attrs/polarist.svg";
-import HairIcon from "assets/images/attrs/hair.svg";
-import SpecialIcon from "assets/images/attrs/special.svg";
 import { CenterBox } from "style";
+import AttrValuesData from "data/att_values.json";
+import NFTsData from "data/nfts.json";
+import BannerImg from "assets/images/home/banner.png";
+import { ATTR_ICON_MAP } from "utils/constant";
+
+type AttrValuesType = {
+  [k: string]: {
+    [k: string]: number;
+  };
+};
+
+type AttrT = keyof typeof AttrValuesData;
+
+const formatAttrValues = (): IAttrGroup[] => {
+  const result: IAttrGroup[] = [];
+  for (const key in AttrValuesData as AttrValuesType) {
+    const element = AttrValuesData[key as AttrT];
+    result.push({
+      name: key,
+      values: Object.keys(element),
+      icon: ATTR_ICON_MAP[key] || "",
+      valueNumbers: element,
+    });
+  }
+  return result;
+};
+
+const attrGroups = formatAttrValues();
+const AllNFTs = NFTsData.map((item) => ({ ...item, image: BannerImg } as INFT));
+console.log("AllNFTs:", AllNFTs);
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
   const { t } = useTranslation();
   const [showLeft, setshowLeft] = useState<boolean>(!matches);
 
-  const [attrGroups] = useState<IAttrGroup[]>([
-    {
-      display: "Cloth",
-      name: "cloth",
-      icon: ClothIcon,
-      values: ["90cm", "456"],
-    },
-    {
-      display: "Polaris",
-      name: "polaris",
-      icon: PolarisIcon,
-      values: ["90cm", "456"],
-    },
-    {
-      display: "Haire",
-      name: "haire",
-      icon: HairIcon,
-      values: ["90cm", "456"],
-    },
-    {
-      display: "Body",
-      name: "body",
-      values: ["#fff", "#aaa"],
-      icon: BodyIcon,
-    },
-    {
-      display: "Ear",
-      name: "ear",
-      icon: EarIcon,
-      values: ["90cm", "456"],
-    },
-    {
-      display: "Background",
-      name: "background",
-      icon: BackgroundIcon,
-      values: ["1235", "456"],
-    },
-    {
-      display: "Special",
-      name: "special",
-      icon: SpecialIcon,
-      values: ["90cm", "456"],
-    },
-  ]);
   const [selectAttrs, setSelectAttrs] = useState<SelectAttr[]>([]);
-  const [list] = useState<INFT[]>([
-    {
-      image:
-        "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-      tokenId: "2000",
-      name: "lala",
-      attrs: [
-        { name: "background", value: "#fff" },
-        { name: "color", value: "#fff" },
-        { name: "height", value: "90cm" },
-      ],
-    },
-    {
-      image:
-        "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-      tokenId: "2000",
-      name: "lala",
-      attrs: [
-        { name: "background", value: "#fff" },
-        { name: "color", value: "#fff" },
-        { name: "height", value: "90cm" },
-      ],
-    },
-    {
-      image:
-        "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-      tokenId: "2000",
-      name: "lala",
-      attrs: [
-        { name: "background", value: "#fff" },
-        { name: "color", value: "#fff" },
-        { name: "height", value: "90cm" },
-      ],
-    },
-    {
-      image:
-        "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-      tokenId: "2000",
-      name: "lala",
-      attrs: [
-        { name: "background", value: "#fff" },
-        { name: "color", value: "#fff" },
-        { name: "height", value: "90cm" },
-      ],
-    },
-    {
-      image:
-        "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-      tokenId: "2000",
-      name: "lala",
-      attrs: [
-        { name: "background", value: "#fff" },
-        { name: "color", value: "#fff" },
-        { name: "height", value: "90cm" },
-      ],
-    },
-  ]);
+  const [list] = useState<INFT[]>(AllNFTs);
   const [showSeed, setShowSeed] = useState<INFT>();
   const [keyword, setKeyword] = useState<string>("");
 
@@ -321,6 +243,7 @@ const FilterTags = styled.div`
   }
 `;
 const Tag = styled.li`
+  flex-shrink: 0;
   padding-inline: 10px;
   height: 24px;
   line-height: 24px;

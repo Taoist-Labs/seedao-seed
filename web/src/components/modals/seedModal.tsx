@@ -2,10 +2,10 @@ import styled from "@emotion/styled";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CloseIcon from "@mui/icons-material/Close";
-import { GALLERY_ATTRS } from "data/gallery";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import ShareIcon from "assets/images/user/share.svg";
+import { ATTR_ICON_MAP } from "utils/constant";
 
 interface IProps {
   seed: INFT;
@@ -46,12 +46,12 @@ export default function SeedModal({
         <ModalRight>
           <div className="title">{seedTitle}</div>
           <AttrBox>
-            {GALLERY_ATTRS.map((attr, idx) => (
+            {seed.attrs.map((attr, idx) => (
               <li key={idx}>
-                <img src={attr.icon} alt="" />
+                <img src={ATTR_ICON_MAP[attr.name]} alt="" />
                 <div>
-                  <p className="name">{attr.display}</p>
-                  <p className="value">{findAttrValue(attr.name)}</p>
+                  <p className="name">{attr.name}</p>
+                  <p className="value">{attr.value}</p>
                 </div>
               </li>
             ))}

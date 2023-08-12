@@ -10,9 +10,7 @@ export default function NFTCard({ data, onClick }: IProps) {
   return (
     <NFTStyle xs={6} sm={3} onClick={() => onClick && onClick(data)}>
       <img src={data.image} title={data.name} alt="" />
-      <Intro>
-        {data.name} {data.tokenId}
-      </Intro>
+      <Intro>SEED No.{data.tokenId}</Intro>
     </NFTStyle>
   );
 }

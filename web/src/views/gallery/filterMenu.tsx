@@ -6,10 +6,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import FilterAttrItem from "./filterAttrItem";
 
 export interface IAttrGroup {
-  display: string;
   name: string;
   values: string[];
   icon: string;
+  valueNumbers: { [key: string]: number };
 }
 
 export type SelectAttr = {
@@ -73,6 +73,7 @@ export default function GalleryFilterMenu({
               name={group.name}
               icon={group.icon}
               values={group.values}
+              valueNumbers={group.valueNumbers}
               selected={selectAttrs
                 .filter((item) => item.id === index)
                 .map((item) => item.value)}

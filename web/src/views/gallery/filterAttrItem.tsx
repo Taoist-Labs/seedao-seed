@@ -9,6 +9,7 @@ interface IProps {
   id: number;
   name: string;
   values: string[];
+  valueNumbers: { [key: string]: number };
   selected: string[];
   icon: string;
   onSelectValue: (id: number, value: string, selected: boolean) => void;
@@ -24,6 +25,7 @@ export default function FilterAttrItem({
   name,
   icon,
   values,
+  valueNumbers,
   selected,
   onSelectValue,
 }: IProps) {
@@ -71,7 +73,7 @@ export default function FilterAttrItem({
                   onChange={(checked) => onSelectValue(id, item.value, checked)}
                 >
                   <span className="text">{item.value}</span>
-                  <span className="num">(21)</span>
+                  <span className="num">({valueNumbers[item.value]})</span>
                 </Checkbox>
               </li>
             ))}
