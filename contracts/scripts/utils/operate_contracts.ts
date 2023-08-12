@@ -44,7 +44,7 @@ async function main() {
     `Call unpause() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
 
-  await seeDAO.unpauseMint();
+  await seeDAO.unpause();
   console.log(
     `Call unpause() to SeeDAO contract at ${seeDAOAddress} successfully!`
   );
