@@ -28,7 +28,12 @@
         "buy": "购买 Seed",
         "powMint": "挖矿",
         "powMintDesc": "加入SeeDAO公会获取50,000积分解锁铸币权",
-        "viewPoints": "查看积分"
+        "viewPoints": "查看积分",
+        "items": "总数",
+        "volume": "市值",
+        "avg7d": "七日均价",
+        "owners": "持有人",
+        "floorPrice": "地板价"
     },
     "gallery": {
         "filter" : "筛选",

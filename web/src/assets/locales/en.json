@@ -28,7 +28,12 @@
         "buy": "Buy a Seed",
         "powMint": "PoW Mining",
         "powMintDesc": "Earn 50,000 points to unlock minting in SeeDAO.",
-        "viewPoints": "View My Points"
+        "viewPoints": "View My Points",
+        "items": "ITEMS",
+        "volume": "VOLUME",
+        "avg7d": "AVG.SALES. 7D",
+        "owners": "OWNERS",
+        "floorPrice": "FLOOR PRICE"
     },
     "gallery": {
         "filter": "FILTER",

@@ -48,14 +48,15 @@ const AvatarsBox = () => {
 };
 
 const InfoBox = () => {
+  const { t } = useTranslation();
   return (
     <InfoBoxStyle>
       {[
-        { name: "ITEMS", value: "5K" },
-        { name: "VOLUME", value: "82K ETH" },
-        { name: "ITEMS", value: "5K" },
-        { name: "VOLUME", value: "82K ETH" },
-        { name: "ITEMS", value: "5K" },
+        { name: t("home.items"), value: "5K" },
+        { name: t("home.volume"), value: "82K ETH" },
+        { name: t("home.avg7d"), value: "5K" },
+        { name: t("home.owners"), value: "82K ETH" },
+        { name: t("home.floorPrice"), value: "5K" },
       ].map((item, idx) => (
         <li key={idx}>
           <div className="value">{item.value}</div>
@@ -206,7 +207,7 @@ const AvatarsBoxStyle = styled.div`
       width: calc(100% / 3);
     }
   }
-  @media (max-width: 4120px) {
+  @media (max-width: 412px) {
     margin: 0;
   }
 `;
