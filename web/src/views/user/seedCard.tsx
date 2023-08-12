@@ -15,6 +15,7 @@ import MintModal from "./mintModal";
 import ShareModal from "./shareModal";
 import Opening from "components/common/opening";
 import EmptyIcon from "assets/images/user/empty.svg";
+import WhiteListData from "data/whitelist.json";
 
 const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
 const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
@@ -188,6 +189,10 @@ export default function SeedCard() {
     chainId === 97 && account && getSeedContract();
   }, [chainId, account]);
 
+  const checkIfinWhiteList = () => {
+    return WhiteListData.find((d) => d.address === account)?.proof;
+  };
+
   const goMint = async () => {
     if (!seedContract) {
       return;
@@ -282,14 +287,7 @@ export default function SeedCard() {
             <RightTopBox>
               {hasSeed ? (
                 <span className="minted">{t("user.hadMint")}</span>
-              ) : Number(points) < 5000 ? (
-                <div>
-                  <span className="btn lock-btn">
-                    <label>{t("user.lockMint")}</label>
-                  </span>
-                  <p className="tip">{t("user.lockTip")}</p>
-                </div>
-              ) : (
+              ) : checkIfinWhiteList() || Number(points) >= 5000 ? (
                 <div>
                   <span
                     className="btn mint-btn"
@@ -298,6 +296,13 @@ export default function SeedCard() {
                     <label>{t("user.unlockMint")}</label>
                   </span>
                   <p className="tip">{t("user.unlockTip")}</p>
+                </div>
+              ) : (
+                <div>
+                  <span className="btn lock-btn">
+                    <label>{t("user.lockMint")}</label>
+                  </span>
+                  <p className="tip">{t("user.lockTip")}</p>
                 </div>
               )}
             </RightTopBox>
