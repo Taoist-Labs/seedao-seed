@@ -58,10 +58,11 @@ def merge_nft(params):
 
 def merge_metadata(params):
     save_name, combination = params
-    name = os.path.splitext(save_name)[0].split('-')[1]
-    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split('#')
+    name = os.path.splitext(os.path.basename(save_name))[0].split('-', 1)[1]
+    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
+        '#')
     # todo: save metadata
-    metadata= { 'attributes': [
+    metadata = {'attributes': [
         {
             "trait_type": "Background",
             "value": n_background
@@ -86,10 +87,10 @@ def merge_metadata(params):
             "trait_type": "Cloth",
             "value": n_cloth
         }],
-        "image":"ipfs://"
+        "image": "ipfs://"
     }
     # print(metadata)
-    
+
     with open(f'{save_name}'.replace('.png', '.json'), 'w') as f:
         js = json.dumps(metadata)
         print(js)
