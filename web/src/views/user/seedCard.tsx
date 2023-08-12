@@ -13,6 +13,8 @@ import { useTranslation } from "react-i18next";
 import SeedList from "./seedList";
 import { GALLERY_ATTRS } from "data/gallery";
 import MintModal from "./mintModal";
+import ShareModal from "./shareModal";
+import Opening from "components/common/opening";
 
 const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
 const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
@@ -90,6 +92,8 @@ export default function SeedCard() {
   const [seedContract, setSeedContract] = useState<Contract>();
   const [showSeedModal, setShowSeedModal] = useState<INFT>();
   const [showMintModal, setShowMintModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getSeedContract = () => {
     if (!provider) {
@@ -193,9 +197,9 @@ export default function SeedCard() {
     if (chainId !== 97) {
       await connector.activate({ ...Chain.BSC_TESTNET });
     }
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-
+    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
+      setLoading(true);
       const res = await seedContract.claimWithPoints();
       await res.wait();
       console.log("mint done");
@@ -216,8 +220,14 @@ export default function SeedCard() {
     } catch (error) {
       console.error("goMint error", error);
     } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      // dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      setLoading(false);
     }
+  };
+  const handleClickShare = () => {
+    // TODO
+    setShowSeedModal(undefined);
+    setShowShareModal(true);
   };
   return (
     <Card>
@@ -279,6 +289,7 @@ export default function SeedCard() {
         <SeedModal
           isShare
           handleClose={() => setShowSeedModal(undefined)}
+          handleClickShare={handleClickShare}
           seed={showSeedModal}
         />
       )}
@@ -289,6 +300,13 @@ export default function SeedCard() {
           show={showMintModal}
         />
       )}
+      {showShareModal && (
+        <ShareModal
+          show={showShareModal}
+          handleClose={() => setShowShareModal(false)}
+        />
+      )}
+      {loading && <Opening />}
     </Card>
   );
 }

@@ -37,6 +37,7 @@ const MintModalStyle = styled.div`
   background: #fbf5ef;
   padding-top: 67px;
   padding-bottom: 47px;
+  text-align: center;
   &:focus-visible {
     outline: none;
   }
@@ -50,9 +51,10 @@ const MintModalStyle = styled.div`
   .tip {
     color: #898e7b;
     font-size: 20px;
-    line-height: 38px;
+    line-height: 26px;
     margin-top: 24px;
     margin-bottom: 54px;
+    white-space: pre-line;
   }
 `;
 

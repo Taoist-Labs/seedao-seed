@@ -9,11 +9,17 @@ import ShareIcon from "assets/images/user/share.svg";
 
 interface IProps {
   seed: INFT;
-  handleClose: () => void;
   isShare?: boolean;
+  handleClose: () => void;
+  handleClickShare?: () => void;
 }
 
-export default function SeedModal({ seed, handleClose, isShare }: IProps) {
+export default function SeedModal({
+  seed,
+  isShare,
+  handleClose,
+  handleClickShare,
+}: IProps) {
   const { t } = useTranslation();
   const findAttrValue = (attr: string) => {
     return seed.attrs.find((item) => item.name === attr)?.value;
@@ -51,7 +57,7 @@ export default function SeedModal({ seed, handleClose, isShare }: IProps) {
             ))}
           </AttrBox>
           {isShare && (
-            <div className="share">
+            <div className="share" onClick={handleClickShare}>
               <span>{t("user.shareText")}</span> <img src={ShareIcon} alt="" />
             </div>
           )}
@@ -128,9 +134,12 @@ const ModalRight = styled.div`
     gap: 10px;
     font-size: 16px;
     margin-top: 60px;
-    margin-left: 60px;
+    text-align: center;
+    white-space: pre-line;
+    justify-content: center;
+    cursor: pointer;
+
     img {
-      cursor: pointer;
     }
   }
   @media (max-width: 750px) {

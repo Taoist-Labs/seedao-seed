@@ -41,14 +41,14 @@
     "user": {
         "levelProgress": "{{points}} $SCR required to {{level}}",
         "notOwneSeed": "Not Owning Seed",
-        "shareText": "Congratulations on achieving the minting requirements! Check out your exclusive Seed card.",
+        "shareText": "Congratulations on achieving the minting requirements! \n Check out your exclusive Seed card.",
         "lockMint": "Mint Locked",
         "unlockMint": "Mint Now",
         "hadMint": "Minting right is used",
         "unlockTip": "unlocked",
         "lockTip": "locked",
         "congrats": "Congratulations",
-        "congratsTip": "Apart from the gas fee, there is no additional cost for this minting.",
+        "congratsTip": "Apart from the gas fee, \n there is no additional cost for this minting.",
         "startMint": "Mint Now",
         "shareTo": "Share to Social Media",
         "download": "Download"
