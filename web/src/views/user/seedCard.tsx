@@ -3,7 +3,6 @@ import styled from "@emotion/styled";
 import { ethers, Contract } from "ethers";
 import { useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useAppContext, AppActionType } from "providers/appProvider";
 import Chain from "utils/chain";
 
 import LevelItem from "./levelItem";
@@ -86,7 +85,6 @@ const LEVELS = [
 export default function SeedCard() {
   const { t } = useTranslation();
   const { account, provider, chainId, connector } = useWeb3React();
-  const { dispatch } = useAppContext();
 
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
