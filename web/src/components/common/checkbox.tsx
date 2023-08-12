@@ -13,16 +13,12 @@ export default function Checkbox(props: IProps) {
     <CheckboxStyle>
       <div onClick={() => props.onChange(!props.checked)}>
         {props.checked ? (
-          <img
-            src={CheckboxOnIcon}
-            alt=""
-            style={{ width: props.size === "medium" ? "32px" : "16px" }}
-          />
+          <img src={CheckboxOnIcon} alt="" style={{ width: "16px" }} />
         ) : (
           <Box
             isSelectd={!!props.checked}
-            size={props.size === "medium" ? "32" : "16"}
-            style={{ borderRadius: props.size === "medium" ? "8px" : "4px" }}
+            size={"16"}
+            style={{ borderRadius: "4px" }}
           />
         )}
       </div>
