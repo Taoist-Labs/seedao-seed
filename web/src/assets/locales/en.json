@@ -1,4 +1,5 @@
 {
+    "copied": "Copied",
     "header": {
         "seed": "SEED",
         "gallery": "GALLERY",
@@ -62,6 +63,8 @@
         "congratsTip": "Apart from the gas fee, \n there is no additional cost for this minting.",
         "startMint": "Mint Now",
         "shareTo": "Share to Social Media",
-        "download": "Download"
+        "download": "Download",
+        "minNum1": "The ",
+        "minNum2": "the SEED NFT Minted"
     }
 }

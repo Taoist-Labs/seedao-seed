@@ -8,46 +8,88 @@ import DiscordIcon from "assets/images/share/Discord.svg";
 import DownloadIcon from "assets/images/user/download.svg";
 import SeedShare from "components/seedShare";
 import * as htmlToImage from "html-to-image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { uploadByFetch } from "utils/request";
+import CopyBox from "components/common/copy";
 
 interface IProps {
   show: boolean;
+  seed: INFT;
   handleClose: () => void;
 }
 
-export default function ShareModal({ show, handleClose }: IProps) {
-  const { t } = useTranslation();
-  const [imgSrc, setImgSrc] = useState("");
+const SHARE_TEXT =
+  "🌱 Proudly unveiling my Seed NFT avatar, a testament to 500K points earned through creativity and collaboration within SeeDAO! 🚀 Join me in celebrating this achievement and our vibrant community. Let's spread the joy together! 🌟 #SeeDAO #SeedNFT #500KPoints";
 
-  const share2discord = () => {
-    // TODO copy link
-  };
+export default function ShareModal({ show, seed, handleClose }: IProps) {
+  const { t } = useTranslation();
+  const [imgBlob, setImgBlob] = useState<Blob>();
+  const [isRead, setIsRead] = useState(false);
+  const [ipfsHash, setIpfsHash] = useState(
+    "QmZ4z4LqRVJZVgEYYiNtLTvZJZ4C31ru3oZY7x7Hx1qJJq",
+  );
+  console.log("ipfsHash:", ipfsHash);
+
+  const shareLink = useMemo(() => {
+    return `https://social-share.xiaosongfu.workers.dev?url=&title=SEED&desc=ddd&image=https://gateway.pinata.cloud/ipfs/${ipfsHash}&style=summary_large_image`;
+  }, [ipfsHash]);
+  console.log("sharelink:", shareLink);
+
+  const discordShareText = useMemo(() => {
+    return `${SHARE_TEXT} ${shareLink}}`;
+  }, [shareLink]);
+
+  console.log("discordShareText: ", discordShareText);
   const share2twitter = () => {
     // TODO
-    window.open(`https://twitter.com/intent/tweet?text=111&url=222`, "_blank");
+    window.open(
+      `https://twitter.com/intent/tweet?text=${SHARE_TEXT}&url=${shareLink}`,
+      "_blank",
+    );
   };
   const share2wechat = () => {
     // TODO generate qrcode
   };
   const handleDownload = () => {
-    const link = document.createElement("a");
-    link.download = "SEED.png";
-    link.href = imgSrc;
-    link.click();
-  };
-
-  useEffect(() => {
     const node = document.getElementById("SEED");
     if (!node) return;
     htmlToImage
       .toPng(node, { cacheBust: true })
       .then(function (dataUrl) {
-        setImgSrc(dataUrl);
+        const link = document.createElement("a");
+        link.download = "SEED.png";
+        link.href = dataUrl;
+        link.click();
       })
       .catch(function (error) {
         console.error("oops, something went wrong!", error);
       });
-  }, []);
+  };
+
+  // useEffect(() => {
+  //   if (!imgBlob) return;
+  //   uploadByFetch(imgBlob)
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       setIpfsHash(res.Hash);
+  //     });
+  // }, [imgBlob]);
+
+  useEffect(() => {
+    if (!isRead) {
+      return;
+    }
+    const node = document.getElementById("SEED");
+    if (!node) return;
+    htmlToImage
+      .toBlob(node, { cacheBust: true })
+      .then(function (data) {
+        data && setImgBlob(data);
+      })
+      .catch(function (error) {
+        console.error("oops, something went wrong!", error);
+      });
+  }, [isRead]);
   return (
     <Modal
       open={show}
@@ -57,7 +99,7 @@ export default function ShareModal({ show, handleClose }: IProps) {
       <ShareModalStyle>
         <div className="share-modal">
           <div className="share-content">
-            <SeedShare />
+            <SeedShare seed={seed} handleLoaded={() => setIsRead(true)} />
           </div>
         </div>
         <RightBox>
@@ -71,7 +113,9 @@ export default function ShareModal({ show, handleClose }: IProps) {
                 <img src={TwitterIcon} alt="" onClick={share2twitter} />
               </li>
               <li>
-                <img src={DiscordIcon} alt="" onClick={share2discord} />
+                <CopyBox text={discordShareText}>
+                  <img src={DiscordIcon} alt="" />
+                </CopyBox>
               </li>
             </ul>
           </div>

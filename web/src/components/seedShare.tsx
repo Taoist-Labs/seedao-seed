@@ -1,29 +1,39 @@
 import styled from "@emotion/styled";
 import BannerImg from "assets/images/home/banner.png";
 import LogoIcon from "assets/images/logo.png";
-import { GALLERY_ATTRS } from "data/gallery";
+import { useTranslation } from "react-i18next";
+import { ATTR_ICON_MAP } from "utils/constant";
 
-export default function SeedShare() {
+export default function SeedShare({
+  seed,
+  handleLoaded,
+}: {
+  seed: INFT;
+  handleLoaded: () => void;
+}) {
+  const { t } = useTranslation();
   return (
     <SeedShareBox id="SEED">
-      <img src={BannerImg} alt="" className="nft" />
+      <img src={BannerImg} alt="" className="nft" onLoad={handleLoaded} />
       <SeedContent>
-        <div className="title">SEED NO. 2879</div>
+        <div className="title">
+          {seed.tokenId ? seed.tokenIdFormat : seed.name}
+        </div>
         <div className="num">
-          第 <span>524</span> 位 SEED NFT 铸造者
+          {t("user.minNum1")} <span>{seed.tokenId}</span> {t("user.minNum2")}
         </div>
         <AttrBox>
-          {GALLERY_ATTRS.map((attr, idx) => (
+          {seed.attrs.map((attr, idx) => (
             <li key={idx}>
-              <img src={attr.icon} alt="" />
+              <img src={ATTR_ICON_MAP[attr.name]} alt="" />
               <div>
-                <p className="value">TextText</p>
+                <p className="value">{attr.value}</p>
               </div>
             </li>
           ))}
         </AttrBox>
       </SeedContent>
-      <LogoBottom>
+      <LogoBottom id="sss">
         <img src={LogoIcon} alt="" />
       </LogoBottom>
     </SeedShareBox>
@@ -32,7 +42,10 @@ export default function SeedShare() {
 
 const SeedShareBox = styled.div`
   width: 750px;
+  height: 1438px;
   background-color: #fbf5ef;
+  display: flex;
+  flex-direction: column;
   img.nft {
     width: 100%;
   }
@@ -40,6 +53,7 @@ const SeedShareBox = styled.div`
 
 const SeedContent = styled.div`
   margin-top: 36px;
+  flex: 1;
   .title {
     color: #040404;
     font-size: 40px;

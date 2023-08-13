@@ -17,6 +17,7 @@ import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
 import ABI from "data/SeeDAO.json";
 import SeedDisplay from "./seedDisplay";
+import { ATTR_ICON_MAP } from "utils/constant";
 
 const SCR_CONTRACT = "0x27D4539d19b292b68369Ed588d682Db3aF679005";
 const SEED_CONTRACT = "0xdC46E9b8658CEFA4690751Aad513c5e7Cca131b4";
@@ -91,10 +92,12 @@ export default function SeedCard() {
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
   const [seedContract, setSeedContract] = useState<Contract>();
-  const [showSeedModal, setShowSeedModal] = useState<INFT>();
+  const [showSeedModal, setShowSeedModal] = useState(false);
   const [showMintModal, setShowMintModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [newNft, setNewNft] = useState<INFT>();
   const [selectSeed] = useState<INFT>();
 
   console.log("points:", points);
@@ -165,14 +168,50 @@ export default function SeedCard() {
   const checkIfinWhiteList = () => {
     return WhiteListData.find((d) => d.address === account);
   };
-  console.log("checkIfinWhiteList:", checkIfinWhiteList());
 
   const goMint = async () => {
-    // setLoading(true);
-    // setTimeout(() => {
+    setLoading(true);
+    setTimeout(() => {
+      console.log("mint done");
+      setHasSeed(true);
+      setNewNft({
+        image:
+          "https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/seed-Beige%20Gray%23Stategrey%23Normal%23Red%20L0-L1%23Headband_1%23%23Waves%20and%20Peaks_4.png",
+        tokenId: "2000",
+        name: "lala",
+        attrs: [
+          { name: "Background", value: "#fff" },
+          { name: "Eyes", value: "#fff" },
+          { name: "Background", value: "90cm" },
+        ],
+      });
+      setShowSeedModal(true);
+      setLoading(false);
+      setShowMintModal(false);
+    }, 3000);
+    // if (!seedContract) {
+    //   return;
+    // }
+    // // check network
+    // if (chainId !== Chain.SEPOLIA.chaiId) {
+    //   await connector.activate({ ...Chain.SEPOLIA });
+    // }
+    // // dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    // try {
+    //   setLoading(true);
+    //   let res: any;
+    //   const find = checkIfinWhiteList();
+    //   if (find) {
+    //     res = await seedContract.claimWithWhiteList(find.no, find.proof);
+    //   } else {
+    //     res = await seedContract.claimWithPoints();
+    //   }
+    //   await res.wait();
     //   console.log("mint done");
     //   setHasSeed(true);
-    //   setShowSeedModal({
+    //   // TODO get seed and show modal
+    //   setShowSeedModal(true);
+    //   setNewNft({
     //     image:
     //       "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
     //     tokenId: "2000",
@@ -183,52 +222,16 @@ export default function SeedCard() {
     //       { name: "height", value: "90cm" },
     //     ],
     //   });
-    //   setLoading(false);
     //   setShowMintModal(false);
-    // }, 3000);
-    if (!seedContract) {
-      return;
-    }
-    // check network
-    if (chainId !== Chain.SEPOLIA.chaiId) {
-      await connector.activate({ ...Chain.SEPOLIA });
-    }
-    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      setLoading(true);
-      let res: any;
-      const find = checkIfinWhiteList();
-      if (find) {
-        res = await seedContract.claimWithWhiteList(find.no, find.proof);
-      } else {
-        res = await seedContract.claimWithPoints();
-      }
-      await res.wait();
-      console.log("mint done");
-      setHasSeed(true);
-      // TODO get seed and show modal
-      setShowSeedModal({
-        image:
-          "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-        tokenId: "2000",
-        name: "lala",
-        attrs: [
-          { name: "background", value: "#fff" },
-          { name: "color", value: "#fff" },
-          { name: "height", value: "90cm" },
-        ],
-      });
-      setShowMintModal(false);
-    } catch (error) {
-      console.error("goMint error", error);
-    } finally {
-      // dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      setLoading(false);
-    }
+    // } catch (error) {
+    //   console.error("goMint error", error);
+    // } finally {
+    //   // dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    //   setLoading(false);
+    // }
   };
   const handleClickShare = () => {
-    // TODO
-    setShowSeedModal(undefined);
+    setShowSeedModal(false);
     setShowShareModal(true);
   };
   return (
@@ -248,11 +251,11 @@ export default function SeedCard() {
               <SeedAttr>
                 <div className="name not-name">{t("user.notOwneSeed")}</div>
                 <ul>
-                  {GALLERY_ATTRS.map((item, i) => (
+                  {Object.keys(ATTR_ICON_MAP).map((key, i) => (
                     <li key={i}>
-                      <img src={item.icon} alt="" />
+                      <img src={ATTR_ICON_MAP[key]} alt="" />
                       <div>
-                        <p className="name">{item.display}</p>
+                        <p className="name">{key}</p>
                       </div>
                     </li>
                   ))}
@@ -265,7 +268,7 @@ export default function SeedCard() {
 
           <CardBottomInnerRight>
             <RightTopBox>
-              {hasSeed ? (
+              {/* {hasSeed ? (
                 <span className="minted">{t("user.hadMint")}</span>
               ) : checkIfinWhiteList() || Number(points) >= 5000 ? (
                 <div>
@@ -284,20 +287,22 @@ export default function SeedCard() {
                   </span>
                   <p className="tip">{t("user.lockTip")}</p>
                 </div>
-              )}
+              )} */}
+              <div>
+                <span
+                  className="btn mint-btn"
+                  onClick={() => setShowMintModal(true)}
+                >
+                  <label>{t("user.unlockMint")}</label>
+                </span>
+                <p className="tip">{t("user.unlockTip")}</p>
+              </div>
             </RightTopBox>
             <SeedList />
           </CardBottomInnerRight>
         </CardBottomInner>
       </CardBottom>
-      {showSeedModal && (
-        <SeedModal
-          isShare
-          handleClose={() => setShowSeedModal(undefined)}
-          handleClickShare={handleClickShare}
-          seed={showSeedModal}
-        />
-      )}
+      {/* before mint -- congrats */}
       {showMintModal && (
         <MintModal
           handleMint={goMint}
@@ -305,9 +310,20 @@ export default function SeedCard() {
           show={showMintModal}
         />
       )}
-      {showShareModal && (
+      {/* mint success */}
+      {showSeedModal && newNft && (
+        <SeedModal
+          isShare
+          handleClose={() => setShowSeedModal(false)}
+          handleClickShare={handleClickShare}
+          seed={newNft}
+        />
+      )}
+      {/* share modal */}
+      {showShareModal && newNft && (
         <ShareModal
           show={showShareModal}
+          seed={newNft}
           handleClose={() => setShowShareModal(false)}
         />
       )}
