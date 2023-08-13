@@ -31,7 +31,9 @@ export const handleNfts = (data: OType[]) => {
       })),
       image: item.image,
       thumb: item.thumb,
-      tokenId: item.name,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      tokenId: item.id,
       name: item.name,
     });
   });
