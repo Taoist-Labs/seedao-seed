@@ -192,17 +192,13 @@ const CardItem = styled.div`
   }
   .desc {
     text-align: center;
-    font-family: Heiti SC;
     font-size: 22px;
     font-style: normal;
     font-weight: 400;
     line-height: 30px;
     margin-top: 24px;
     margin-bottom: 40px;
-    width: 50%;
-    @media (max-width: 960px) {
-      width: 80%;
-    }
+    white-space: pre-line;
   }
   @media (max-width: 412px) {
     .title {
@@ -212,6 +208,7 @@ const CardItem = styled.div`
       font-size: 12px;
       margin-top: 0;
       margin-bottom: 24px;
+      line-height: 15px;
     }
     .btn {
       font-size: 12px;
