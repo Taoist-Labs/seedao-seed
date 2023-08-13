@@ -9,7 +9,6 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
@@ -24,13 +23,12 @@ contract SeeDAO is
   OwnableUpgradeable,
   ERC721BurnableUpgradeable
 {
-  using SafeMathUpgradeable for uint256;
   using StringsUpgradeable for uint256;
 
-  uint256 public tokenIndex;
+  uint256 private tokenIndex;
 
-  uint256 public price;
-  uint256 public maxSupply;
+  uint256 private price;
+  uint256 private maxSupply;
 
   string public baseURI;
   uint256[] public uriLevelRanges;
@@ -43,10 +41,9 @@ contract SeeDAO is
   bool public onClaimWithPoints;
 
   mapping(uint256 => bytes32) public whiteListRootHashes;
-  uint256[] public whiteListIds;
   mapping(address => bool) public claimed;
 
-  address public minter;
+  address private minter;
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
@@ -185,8 +182,13 @@ contract SeeDAO is
     require(amount > 0, "Mint amount must bigger than zero");
     require(tokenIndex + amount <= maxSupply, "Exceeds the maximum supply");
 
-    uint256 payValue = amount.mul(price);
+    uint256 payValue = amount * price;
     require(price != 0 && msg.value >= payValue, "Insufficient payment");
+
+    // 退回多余的 native token
+    if (msg.value > payValue) {
+      payable(_msgSender()).transfer(msg.value - payValue);
+    }
 
     for (uint256 i = 0; i < amount; i++) {
       _mint(_msgSender());
@@ -214,9 +216,8 @@ contract SeeDAO is
   function _mint(address to) internal {
     require(tokenIndex < maxSupply, "Exceeds the maximum supply");
 
-    uint256 tokenId = tokenIndex;
+    _safeMint(to, tokenIndex);
     tokenIndex += 1;
-    _safeMint(to, tokenId);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
@@ -239,9 +240,9 @@ contract SeeDAO is
   function setPointsCondition(uint256 pointsCondi_) external onlyOwner {
     require(pointsToken != address(0), "Points token address is not set");
 
-    pointsCondi = pointsCondi_.mul(
-      10 ** IERC20MetadataUpgradeable(pointsToken).decimals()
-    );
+    pointsCondi =
+      pointsCondi_ *
+      10 ** IERC20MetadataUpgradeable(pointsToken).decimals();
   }
 
   /// @dev 设置白名单的，调用时需要传入白名单 ID 和 Merkle Tree Root Hash
@@ -251,7 +252,6 @@ contract SeeDAO is
     bytes32 rootHash
   ) external onlyOwner {
     whiteListRootHashes[whiteListId] = rootHash;
-    whiteListIds.push(whiteListId);
   }
 
   /// @dev 设置 NFT 价格，价格的精度与链 native token 的精度相同
