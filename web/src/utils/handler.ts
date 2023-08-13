@@ -34,6 +34,9 @@ export const handleNfts = (data: OType[]) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       tokenId: item.id,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      tokenIdFormat: `SEED No.${item.id}`,
       name: item.name,
     });
   });

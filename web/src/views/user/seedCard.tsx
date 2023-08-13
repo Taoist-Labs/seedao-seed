@@ -6,7 +6,6 @@ import { useWeb3React } from "@web3-react/core";
 import Chain from "utils/chain";
 
 import LevelItem from "./levelItem";
-import NFT_02 from "assets/images/home/nfts/2.png";
 import SeedModal from "components/modals/seedModal";
 import { useTranslation } from "react-i18next";
 import SeedList from "./seedList";
@@ -16,9 +15,11 @@ import ShareModal from "./shareModal";
 import Opening from "components/common/opening";
 import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
+import ABI from "data/SeeDAO.json";
+import SeedDisplay from "./seedDisplay";
 
-const SCR_CONTRACT = "0x77dea9602D6768889819B24D6f5deB7e3362B496";
-const SEED_CONTRACT_BSC_TESTNET = "0x22B3a87635B7fF5E8e1178522596a6e23b568DDE";
+const SCR_CONTRACT = "0x27D4539d19b292b68369Ed588d682Db3aF679005";
+const SEED_CONTRACT = "0xdC46E9b8658CEFA4690751Aad513c5e7Cca131b4";
 
 const LEVELS = [
   {
@@ -94,44 +95,16 @@ export default function SeedCard() {
   const [showMintModal, setShowMintModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectSeed] = useState<INFT>();
+
+  console.log("points:", points);
 
   const getSeedContract = () => {
     if (!provider) {
       return;
     }
     const signer = provider.getSigner(account);
-    const contract = new ethers.Contract(
-      SEED_CONTRACT_BSC_TESTNET,
-      [
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "account",
-              type: "address",
-            },
-          ],
-          name: "balanceOf",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "claimWithPoints",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-      ],
-      signer,
-    );
+    const contract = new ethers.Contract(SEED_CONTRACT, ABI, signer);
     setSeedContract(contract);
   };
 
@@ -145,7 +118,7 @@ export default function SeedCard() {
 
   const getSCR = async () => {
     const provider = new ethers.providers.StaticJsonRpcProvider(
-      "https://endpoints.omniatech.io/v1/bsc/testnet/public",
+      "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
     );
     try {
       const contract = new ethers.Contract(
@@ -186,20 +159,39 @@ export default function SeedCard() {
 
   useEffect(() => {
     account && getSCR();
-    chainId === 97 && account && getSeedContract();
+    chainId === 11155111 && account && getSeedContract();
   }, [chainId, account]);
 
   const checkIfinWhiteList = () => {
     return WhiteListData.find((d) => d.address === account);
   };
+  console.log("checkIfinWhiteList:", checkIfinWhiteList());
 
   const goMint = async () => {
+    // setLoading(true);
+    // setTimeout(() => {
+    //   console.log("mint done");
+    //   setHasSeed(true);
+    //   setShowSeedModal({
+    //     image:
+    //       "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
+    //     tokenId: "2000",
+    //     name: "lala",
+    //     attrs: [
+    //       { name: "background", value: "#fff" },
+    //       { name: "color", value: "#fff" },
+    //       { name: "height", value: "90cm" },
+    //     ],
+    //   });
+    //   setLoading(false);
+    //   setShowMintModal(false);
+    // }, 3000);
     if (!seedContract) {
       return;
     }
     // check network
-    if (chainId !== 97) {
-      await connector.activate({ ...Chain.BSC_TESTNET });
+    if (chainId !== Chain.SEPOLIA.chaiId) {
+      await connector.activate({ ...Chain.SEPOLIA });
     }
     // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -268,25 +260,7 @@ export default function SeedCard() {
               </SeedAttr>
             </SeedDetail>
           ) : (
-            <SeedDetail>
-              <SeedImg>
-                <img src={NFT_02} alt="" />
-              </SeedImg>
-              <SeedAttr>
-                <div className="name">Seed # 2584</div>
-                <ul>
-                  {GALLERY_ATTRS.map((item, i) => (
-                    <li key={i}>
-                      <img src={item.icon} alt="" />
-                      <div>
-                        <p className="name">{item.display}</p>
-                        <p className="value">BlackBlack</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </SeedAttr>
-            </SeedDetail>
+            selectSeed && <SeedDisplay seed={selectSeed} />
           )}
 
           <CardBottomInnerRight>

@@ -2,6 +2,7 @@ declare interface INFT {
   image: string;
   tokenId: string;
   name?: string;
+  tokenIdFormat?: string;
   attrs: { name: string; value: string }[];
   thumb?: string;
 }
