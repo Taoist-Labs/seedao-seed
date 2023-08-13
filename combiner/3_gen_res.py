@@ -29,7 +29,8 @@ def get_res_json(path, save_path, img_base_url='./'):
     for root, _, files in os.walk(path):
         for fileName in files:
             sufix = fileName.rsplit('.')[1]
-            if sufix == 'png':
+            prefix = os.path.splitext(os.path.basename(fileName))[0]
+            if sufix == 'png' and not prefix.startswith('thumb-'):
                 name = os.path.splitext(os.path.basename(fileName))[
                     0].split('-', 1)[1]
                 n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
@@ -93,7 +94,7 @@ def get_res_json(path, save_path, img_base_url='./'):
 
 def main():
 
-    scale_images('./output', 750, './.tmp/result')
+    # scale_images('./output', 750, './.tmp/result')
 
     get_res_json('./.tmp/result', './.tmp/',
                  'https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/')
