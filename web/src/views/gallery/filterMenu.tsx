@@ -5,13 +5,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import FilterAttrItem from "./filterAttrItem";
 
-export interface IAttrGroup {
-  name: string;
-  values: string[];
-  icon: string;
-  valueNumbers: { [key: string]: number };
-}
-
 export type SelectAttr = {
   name: string;
   values: string[];

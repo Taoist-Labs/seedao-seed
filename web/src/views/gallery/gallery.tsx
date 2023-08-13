@@ -8,40 +8,15 @@ import SeedModal from "components/modals/seedModal";
 import { useTranslation } from "react-i18next";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import GalleryFilterMenu, { IAttrGroup, SelectAttr } from "./filterMenu";
+import GalleryFilterMenu, { SelectAttr } from "./filterMenu";
 import FilterSvg from "assets/images/filter.svg";
 import RefreshSvg from "assets/images/refresh.svg";
 import { CenterBox } from "style";
-import AttrValuesData from "data/att_values.json";
-import NFTsData from "data/nfts.json";
-import BannerImg from "assets/images/home/banner.png";
-import { ATTR_ICON_MAP } from "utils/constant";
 import Header from "components/layout/header";
+import NftData from "data/nfts.json";
+import { handleNfts } from "utils/handler";
 
-type AttrValuesType = {
-  [k: string]: {
-    [k: string]: number;
-  };
-};
-
-type AttrT = keyof typeof AttrValuesData;
-
-const formatAttrValues = (): IAttrGroup[] => {
-  const result: IAttrGroup[] = [];
-  for (const key in AttrValuesData as AttrValuesType) {
-    const element = AttrValuesData[key as AttrT];
-    result.push({
-      name: key,
-      values: Object.keys(element),
-      icon: ATTR_ICON_MAP[key] || "",
-      valueNumbers: element,
-    });
-  }
-  return result;
-};
-
-const attrGroups = formatAttrValues();
-const AllNFTs = NFTsData.map((item) => ({ ...item, image: BannerImg } as INFT));
+const { attrGroups, nfts: AllNFTs } = handleNfts(NftData);
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
