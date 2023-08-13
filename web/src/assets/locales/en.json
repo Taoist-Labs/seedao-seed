@@ -38,7 +38,8 @@
         "volume": "VOLUME",
         "avg7d": "AVG.SALES. 7D",
         "owners": "OWNERS",
-        "floorPrice": "FLOOR PRICE"
+        "floorPrice": "FLOOR PRICE",
+        "points": "{{num}} points"
     },
     "gallery": {
         "filter": "FILTER",

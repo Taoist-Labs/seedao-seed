@@ -26,11 +26,11 @@ const DynamicNFTs = [
     levels: [
       {
         title: "L0",
-        points: "0-5k points",
+        points: "0-5k",
       },
       {
         title: "L1",
-        points: "5k-20k points",
+        points: "5k-20k",
       },
     ],
   },
@@ -40,12 +40,12 @@ const DynamicNFTs = [
     color: "#5939D9",
     levels: [
       {
-        title: "L0",
-        points: "0-5k points",
+        title: "L2",
+        points: "20k-100k",
       },
       {
-        title: "L1",
-        points: "5k-20k points",
+        title: "L3",
+        points: "100k-300k",
       },
     ],
   },
@@ -55,12 +55,12 @@ const DynamicNFTs = [
     color: "#6BE393",
     levels: [
       {
-        title: "L0",
-        points: "0-5k points",
+        title: "L4",
+        points: "300k-1m",
       },
       {
-        title: "L1",
-        points: "5k-20k points",
+        title: "L5",
+        points: "1m-3m",
       },
     ],
   },
@@ -70,12 +70,12 @@ const DynamicNFTs = [
     color: "#EF36A9",
     levels: [
       {
-        title: "L0",
-        points: "0-5k points",
+        title: "L6",
+        points: "3m-10m",
       },
       {
-        title: "L1",
-        points: "5k-20k points",
+        title: "L7",
+        points: "10m-30m",
       },
     ],
   },
@@ -85,12 +85,12 @@ const DynamicNFTs = [
     color: "#10D4FF",
     levels: [
       {
-        title: "L0",
-        points: "0-5k points",
+        title: "L8",
+        points: "30m-1t",
       },
       {
-        title: "L1",
-        points: "5k-20k points",
+        title: "L9",
+        points: "1t",
       },
     ],
   },
@@ -132,11 +132,13 @@ export default function DynamicNFT({ color }: { color: string }) {
             <NFTCardItem key={i} color={item.color}>
               <div className="content">
                 <p>
-                  <span>{item.levels[0].title}</span> ({item.levels[0].points})
+                  <span>{item.levels[0].title}</span> (
+                  {t("home.points", { num: item.levels[0].points })})
                 </p>
                 <div className="line"></div>
                 <p>
-                  <span>{item.levels[1].title}</span> ({item.levels[1].points})
+                  <span>{item.levels[1].title}</span>(
+                  {t("home.points", { num: item.levels[1].points })})
                 </p>
               </div>
               <div className="img-box">
@@ -222,6 +224,7 @@ const NFTCardItem = styled.li`
   justify-content: space-between;
   color: ${(props) => props.color};
   position: relative;
+  flex: 1;
 
   img {
     vertical-align: bottom;

@@ -38,7 +38,8 @@
         "volume": "市值",
         "avg7d": "七日均价",
         "owners": "持有人",
-        "floorPrice": "地板价"
+        "floorPrice": "地板价",
+        "points": "{{num}} 分"
     },
     "gallery": {
         "filter" : "筛选",
