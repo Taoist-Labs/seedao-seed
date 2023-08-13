@@ -5,6 +5,7 @@ import Dynamic from "./dynamic";
 import How2 from "./how2";
 import FQA from "./FQA";
 import { useMemo } from "react";
+import Header from "components/layout/header";
 
 export default function Home() {
   const color = useMemo(() => {
@@ -12,13 +13,18 @@ export default function Home() {
     return f ? "#A6A2F9" : "#F9D9FB";
   }, []);
   return (
-    <HomePageStyle>
-      <Banner color={color} />
-      <Utility />
-      <Dynamic color={color} />
-      <How2 />
-      <FQA color={color} />
-    </HomePageStyle>
+    <>
+      <Header />
+      <div className="mainContent">
+        <HomePageStyle>
+          <Banner color={color} />
+          <Utility />
+          <Dynamic color={color} />
+          <How2 />
+          <FQA color={color} />
+        </HomePageStyle>
+      </div>
+    </>
   );
 }
 const HomePageStyle = styled.div``;

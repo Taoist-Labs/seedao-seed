@@ -1,14 +1,20 @@
 import styled from "@emotion/styled";
 import SeedCard from "./seedCard";
 import { CenterBox } from "style";
+import Header from "components/layout/header";
 
 export default function UserPage() {
   return (
-    <UserPageStyle>
-      <PageRight>
-        <SeedCard />
-      </PageRight>
-    </UserPageStyle>
+    <>
+      <Header />
+      <div className="mainContent">
+        <UserPageStyle>
+          <PageRight>
+            <SeedCard />
+          </PageRight>
+        </UserPageStyle>
+      </div>
+    </>
   );
 }
 

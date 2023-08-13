@@ -16,6 +16,7 @@ import AttrValuesData from "data/att_values.json";
 import NFTsData from "data/nfts.json";
 import BannerImg from "assets/images/home/banner.png";
 import { ATTR_ICON_MAP } from "utils/constant";
+import Header from "components/layout/header";
 
 type AttrValuesType = {
   [k: string]: {
@@ -138,103 +139,111 @@ export default function GalleryPage() {
   }, [keyword]);
 
   return (
-    <GalleryPageStyle>
-      {matches ? (
-        <>
-          {showLeft && (
-            <GalleryMenuBox>
-              <div className="mask" onClick={() => setshowLeft(false)} />
-              <GalleryFilterMenu
-                sm={matches}
-                selectAttrs={selectAttrs}
-                attrGroups={attrGroups}
-                serialKeyword={keyword}
-                onChangeSerialKeyword={(v) => setKeyword(v)}
-                onSelectValue={onSelectValue}
-                handleClose={() => setshowLeft(false)}
-              />
-            </GalleryMenuBox>
-          )}
-        </>
-      ) : (
-        <GalleryFilterMenu
-          sm={matches}
-          selectAttrs={selectAttrs}
-          attrGroups={attrGroups}
-          serialKeyword={keyword}
-          onChangeSerialKeyword={(v) => setKeyword(v)}
-          onSelectValue={onSelectValue}
-        />
-      )}
-
-      <GalleryRight>
-        <GalleryContent>
-          <FilterHead>
-            <span className="title">{t("gallery.filters")}</span>
-            <span className="num">{keyword ? 1 : selectAttrs.length}</span>
-            <FilterTags>
-              <ul className="tag-container">
-                {keyword ? (
-                  <Tag onClick={() => setKeyword("")}>
-                    <span>{t("gallery.serialTag", { keyword })}</span>
-                    <CloseIcon fontSize="small" className="remove-tag" />
-                  </Tag>
-                ) : (
-                  selectAttrs.map((item, idx) => {
-                    return item.values.map((v, jdx) => (
-                      <Tag
-                        key={`${idx}_${jdx}`}
-                        onClick={() => removeAttr(item.name, v)}
-                      >
-                        <span>
-                          {item.name}:{v}
-                        </span>
-                        <CloseIcon fontSize="small" />
-                      </Tag>
-                    ));
-                  })
-                )}
-              </ul>
-            </FilterTags>
-            <FilterHeadRight>
-              <span className="result">{list.length}</span>
-              <img src={RefreshSvg} className="refresh" />
-              {matches && (
-                <img
-                  src={FilterSvg}
-                  onClick={() => setshowLeft(true)}
-                  className="filter-icon"
-                />
+    <>
+      <Header />
+      <div className="mainContent">
+        <GalleryPageStyle>
+          {matches ? (
+            <>
+              {showLeft && (
+                <GalleryMenuBox>
+                  <div className="mask" onClick={() => setshowLeft(false)} />
+                  <GalleryFilterMenu
+                    sm={matches}
+                    selectAttrs={selectAttrs}
+                    attrGroups={attrGroups}
+                    serialKeyword={keyword}
+                    onChangeSerialKeyword={(v) => setKeyword(v)}
+                    onSelectValue={onSelectValue}
+                    handleClose={() => setshowLeft(false)}
+                  />
+                </GalleryMenuBox>
               )}
-            </FilterHeadRight>
-          </FilterHead>
-          {list.length > 0 ? (
-            <NFTList
-              container
-              spacing={matches ? "10px" : 3}
-              style={{ width: "100%" }}
-              className="nft-container"
-            >
-              {list.map((item, idx) => (
-                <NFTCard
-                  key={idx}
-                  data={item}
-                  onClick={() => setShowSeed(item)}
-                />
-              ))}
-            </NFTList>
+            </>
           ) : (
-            <EmptyBox>
-              <p>{t("gallery.emptyResult")}</p>
-              <ClearButton>{t("gallery.clearFilters")}</ClearButton>
-            </EmptyBox>
+            <GalleryFilterMenu
+              sm={matches}
+              selectAttrs={selectAttrs}
+              attrGroups={attrGroups}
+              serialKeyword={keyword}
+              onChangeSerialKeyword={(v) => setKeyword(v)}
+              onSelectValue={onSelectValue}
+            />
           )}
-        </GalleryContent>
-      </GalleryRight>
-      {showSeed && (
-        <SeedModal seed={showSeed} handleClose={() => setShowSeed(undefined)} />
-      )}
-    </GalleryPageStyle>
+
+          <GalleryRight>
+            <GalleryContent>
+              <FilterHead>
+                <span className="title">{t("gallery.filters")}</span>
+                <span className="num">{keyword ? 1 : selectAttrs.length}</span>
+                <FilterTags>
+                  <ul className="tag-container">
+                    {keyword ? (
+                      <Tag onClick={() => setKeyword("")}>
+                        <span>{t("gallery.serialTag", { keyword })}</span>
+                        <CloseIcon fontSize="small" className="remove-tag" />
+                      </Tag>
+                    ) : (
+                      selectAttrs.map((item, idx) => {
+                        return item.values.map((v, jdx) => (
+                          <Tag
+                            key={`${idx}_${jdx}`}
+                            onClick={() => removeAttr(item.name, v)}
+                          >
+                            <span>
+                              {item.name}:{v}
+                            </span>
+                            <CloseIcon fontSize="small" />
+                          </Tag>
+                        ));
+                      })
+                    )}
+                  </ul>
+                </FilterTags>
+                <FilterHeadRight>
+                  <span className="result">{list.length}</span>
+                  <img src={RefreshSvg} className="refresh" />
+                  {matches && (
+                    <img
+                      src={FilterSvg}
+                      onClick={() => setshowLeft(true)}
+                      className="filter-icon"
+                    />
+                  )}
+                </FilterHeadRight>
+              </FilterHead>
+              {list.length > 0 ? (
+                <NFTList
+                  container
+                  spacing={matches ? "10px" : 3}
+                  style={{ width: "100%" }}
+                  className="nft-container"
+                >
+                  {list.map((item, idx) => (
+                    <NFTCard
+                      key={idx}
+                      data={item}
+                      onClick={() => setShowSeed(item)}
+                    />
+                  ))}
+                </NFTList>
+              ) : (
+                <EmptyBox>
+                  <p>{t("gallery.emptyResult")}</p>
+                  <ClearButton>{t("gallery.clearFilters")}</ClearButton>
+                </EmptyBox>
+              )}
+            </GalleryContent>
+          </GalleryRight>
+          {showSeed && (
+            <SeedModal
+              seed={showSeed}
+              handleClose={() => setShowSeed(undefined)}
+            />
+          )}
+        </GalleryPageStyle>
+      </div>
+    </>
   );
 }
 
