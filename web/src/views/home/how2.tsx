@@ -9,9 +9,27 @@ import NFT_05 from "assets/images/home/nfts/5.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { CenterBox } from "style";
 import { useTranslation } from "react-i18next";
+import { useWeb3React } from "@web3-react/core";
+import { useAppContext, AppActionType } from "providers/appProvider";
+import { useNavigate } from "react-router-dom";
 
 const CardPart = () => {
   const { t } = useTranslation();
+  const { account } = useWeb3React();
+  const { dispatch } = useAppContext();
+  const navigate = useNavigate();
+
+  const onClickView = () => {
+    if (account) {
+      navigate("/my");
+    } else {
+      dispatch({
+        type: AppActionType.SET_LOGIN_MODAL,
+        payload: true,
+      });
+    }
+  };
+
   return (
     <CardPartStyle>
       <Title>{t("home.howToObtain")}</Title>
@@ -19,7 +37,17 @@ const CardPart = () => {
         <CardItem>
           <img src={PurchaseIcon} alt="" />
           <div className="title">{t("home.purchase")}</div>
-          <div className="desc">{t("home.buyOnOpensea")}</div>
+          <div
+            className="desc"
+            onClick={() =>
+              window.open(
+                "https://opensea.io/collection/seedaogenesis",
+                "_blank",
+              )
+            }
+          >
+            {t("home.buyOnOpensea")}
+          </div>
           <div>
             <span className="btn">{t("home.buy")}</span>
           </div>
@@ -29,7 +57,9 @@ const CardPart = () => {
           <div className="title">{t("home.powMint")}</div>
           <div className="desc">{t("home.powMintDesc")}</div>
           <div>
-            <span className="btn">{t("home.viewPoints")}</span>
+            <span className="btn" onClick={onClickView}>
+              {t("home.viewPoints")}
+            </span>
           </div>
         </CardItem>
       </CardsBox>
