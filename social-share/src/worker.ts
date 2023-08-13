@@ -42,12 +42,12 @@ export default {
 
 function parseParams(request: Request) {
   const { searchParams } = new URL(request.url);
-  let url = searchParams.get('url');
+  let url = searchParams.get('url') || 'https://seed.seedao.tech/';
   let title = searchParams.get('title');
   let desc = searchParams.get('desc');
   let image = searchParams.get('image');
-  let style = searchParams.get('style') || 'summary'; // support `summary` and `summary_large_image`
-  console.log(url, title, desc, image, style);
+  let style = searchParams.get('style') || 'summary_large_image'; // support `summary` and `summary_large_image`
+  // console.log(url, title, desc, image, style);
 
   return { url, title, desc, image, style };
 }
