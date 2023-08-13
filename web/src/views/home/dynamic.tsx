@@ -139,13 +139,8 @@ export default function DynamicNFT({ color }: { color: string }) {
                   <span>{item.levels[1].title}</span> ({item.levels[1].points})
                 </p>
               </div>
-              <div
-                className="img-box"
-                style={{
-                  backgroundImage: matches ? `url(${item.rimg})` : "unset",
-                }}
-              >
-                <img src={item.img} alt="" />
+              <div className="img-box">
+                <img src={matches ? item.rimg : item.img} alt="" />
               </div>
             </NFTCardItem>
           ))}
@@ -251,12 +246,8 @@ const NFTCardItem = styled.li`
       position: absolute;
       right: 0;
       height: 100%;
-      width: 50%;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: right;
       img {
-        display: none;
+        height: 100%;
       }
     }
   }
