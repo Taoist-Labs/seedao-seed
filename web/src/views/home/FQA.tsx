@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { CenterBox } from "style";
-import { FQA_LIST } from "data/fqa";
+import { FQA_LIST_ZH, FQA_LIST_EN, SGN_FQA_LIST } from "data/fqa";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
@@ -10,9 +10,21 @@ import DiscordIcon from "assets/images/home/discord.svg";
 import TwitterIcon from "assets/images/home/twitter.svg";
 import OpenseaIcon from "assets/images/home/opensea.svg";
 
-const QuestionItem = ({ data }: { data: { name: string; answer: any } }) => {
+interface IProps {
+  idx: number;
+  data: { name: string; answer: any };
+  onHandle: (idx: number, v: boolean) => void;
+  expandIdx?: number;
+}
+
+const QuestionItem = ({ idx, data, onHandle, expandIdx }: IProps) => {
   const [content, setContent] = useState("");
   const [show, setShow] = useState(false);
+
+  const handleClick = () => {
+    setShow(!show);
+    onHandle(idx, !show);
+  };
 
   useEffect(() => {
     const readMd = (_path: string) => {
@@ -23,9 +35,13 @@ const QuestionItem = ({ data }: { data: { name: string; answer: any } }) => {
     readMd(data.answer);
   }, []);
 
+  useEffect(() => {
+    setShow(idx === expandIdx);
+  }, [expandIdx]);
+
   return (
     <QuestionItemStyle>
-      <div className="q" onClick={() => setShow(!show)}>
+      <div className="q" onClick={handleClick}>
         <span className="name">{data.name}</span>
         {show ? <RemoveIcon className="btn" /> : <AddIcon className="btn" />}
       </div>
@@ -39,22 +55,42 @@ const QuestionItem = ({ data }: { data: { name: string; answer: any } }) => {
 };
 
 export default function FQA({ color }: { color: string }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [expandIdx, setExpandIdx] = useState<number>();
+  const [sgnExpandIdx, setSgnExpandIdx] = useState<number>();
+
   return (
     <FQAStyle color={color}>
       <CenterBox>
         <Title>FQA</Title>
         <div className="question-box">
-          {FQA_LIST.map((q, i) => (
-            <QuestionItem key={i} data={q} />
+          {(i18n.language === "zh" ? FQA_LIST_ZH : FQA_LIST_EN).map((q, i) => (
+            <QuestionItem
+              key={i}
+              data={q}
+              idx={i}
+              onHandle={(idx, v) => setExpandIdx(v ? idx : undefined)}
+              expandIdx={expandIdx}
+            />
           ))}
         </div>
-        <div className="subject">{t("home.sgnRelated")}</div>
-        <div className="question-box">
-          {FQA_LIST.map((q, i) => (
-            <QuestionItem key={i} data={q} />
-          ))}
-        </div>
+        {i18n.language === "zh" && (
+          <>
+            <div className="subject">{t("home.sgnRelated")}</div>
+            <div className="question-box">
+              {SGN_FQA_LIST.map((q, i) => (
+                <QuestionItem
+                  key={i}
+                  data={q}
+                  idx={i}
+                  onHandle={(idx, v) => setSgnExpandIdx(v ? idx : undefined)}
+                  expandIdx={sgnExpandIdx}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
         <a
           className="more"
           href="https://www.notion.so/seedao/Seed-FQA-282e394974db4c87a6031ebe85203a8e?pvs=4"
@@ -162,6 +198,19 @@ const QuestionItemStyle = styled.li`
     margin-top: 17px;
     padding: 10px;
     line-height: 30px;
+    p {
+      margin-bottom: 10px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+    ul li {
+      list-style: disc;
+    }
+    a {
+      text-decoration: underline;
+      color: unset;
+    }
   }
   @media (max-width: 750px) {
     .q {
