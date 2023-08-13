@@ -22,7 +22,7 @@ export default function RouterLink() {
           <Route path="/" element={<Home />} index />
           <Route path="/gallery" element={<GalleryPage />} />
           {/* <Route path="/license" element={<LicensePage />} /> */}
-          <Route path="/user" element={<UserPage />} />
+          <Route path="/my" element={<UserPage />} />
           {/* <Route path="/shop" element={<ShopPage />} /> */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

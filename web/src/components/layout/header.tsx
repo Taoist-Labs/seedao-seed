@@ -74,7 +74,7 @@ const LoginBox = ({ account }: { account?: string }) => {
       </React.Fragment>
     );
   }
-  return <LoginStyle to="/user">{addressToShow(account)}</LoginStyle>;
+  return <LoginStyle to="/my">{addressToShow(account)}</LoginStyle>;
 };
 
 const EnterAppButton = () => {
