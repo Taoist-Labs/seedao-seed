@@ -10,10 +10,10 @@ import { useAppContext, AppActionType } from "providers/appProvider";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-import GreenStarIcon from "assets/images/home/green_star.svg";
+// import GreenStarIcon from "assets/images/home/green_star.svg";
 import MenuIcon from "assets/images/home/menu.svg";
 import LanguageIcon from "assets/images/home/language.svg";
 import { useTranslation } from "react-i18next";
@@ -27,14 +27,15 @@ const SEED_OPTIONS = [
 
 const SmNav = ({ handleClose }: { handleClose: () => void }) => {
   const { t } = useTranslation();
-  const [expand, setExpand] = useState(false);
+  const [expand] = useState(false);
   return (
     <SmMenu>
       <div className="content">
         <div className="top">
-          <div className="seed-menu" onClick={() => setExpand(!expand)}>
-            <span>{t("header.seed")}</span>
-            {expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          <div className="seed-menu">
+            {/* <span>{t("header.seed")}</span> */}
+            <Link to="/gallery">{t("header.gallery")}</Link>
+            {/* {expand ? <ExpandLessIcon /> : <ExpandMoreIcon />} */}
           </div>
           {expand && (
             <ul className="sub-menu">
@@ -50,7 +51,7 @@ const SmNav = ({ handleClose }: { handleClose: () => void }) => {
         </div>
         <div className="bottom">
           <Languagebutton />
-          <EnterAppButton />
+          {/* <EnterAppButton /> */}
         </div>
       </div>
       <div className="mask" onClick={handleClose}></div>
@@ -77,16 +78,16 @@ const LoginBox = ({ account }: { account?: string }) => {
   return <LoginStyle to="/my">{addressToShow(account)}</LoginStyle>;
 };
 
-const EnterAppButton = () => {
-  return (
-    <EnterButton
-      onClick={() => window.open("https://app.seedao.xyz/", "_blank")}
-    >
-      <img src={GreenStarIcon} alt="" />
-      <span>Enter App</span>
-    </EnterButton>
-  );
-};
+// const EnterAppButton = () => {
+//   return (
+//     <EnterButton
+//       onClick={() => window.open("https://app.seedao.xyz/", "_blank")}
+//     >
+//       <img src={GreenStarIcon} alt="" />
+//       <span>Enter App</span>
+//     </EnterButton>
+//   );
+// };
 
 const Languagebutton = () => {
   const { i18n } = useTranslation();
@@ -139,12 +140,13 @@ export default function Header({ color }: { color?: string }) {
         <NavStyle>
           <SelectBox
             id="seed-select"
-            onClick={(event: React.MouseEvent<HTMLElement>) =>
-              setAnchorEl(event.currentTarget)
-            }
+            // onClick={(event: React.MouseEvent<HTMLElement>) =>
+            //   setAnchorEl(event.currentTarget)
+            // }
           >
-            <span>{t("header.seed")}</span>
-            <ExpandMoreIcon />
+            <Link to="/gallery">{t("header.gallery")}</Link>
+            {/* <span>{t("header.seed")}</span> */}
+            {/* <ExpandMoreIcon /> */}
           </SelectBox>
           <Menu
             anchorEl={anchorEl}
@@ -168,7 +170,7 @@ export default function Header({ color }: { color?: string }) {
           </Menu>
           <LoginBox account={account} />
           <Languagebutton />
-          <EnterAppButton />
+          {/* <EnterAppButton /> */}
         </NavStyle>
       </HeaderContainer>
       {showMenu && <SmNav handleClose={() => setShowMenu(false)} />}
@@ -180,9 +182,9 @@ const SmMenu = styled.div`
   position: fixed;
   z-index: 99;
   left: 0;
-  top: 102px;
+  top: 60px;
   width: 100vw;
-  height: calc(100vh - 102px);
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
 
@@ -303,22 +305,26 @@ const SelectBox = styled.div`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  a {
+    color: unset;
+    text-decoration: none;
+  }
 `;
 
-const EnterButton = styled.div`
-  height: 44px;
-  line-height: 44px;
-  border-radius: 4px;
-  background: #000;
-  padding-inline: 10px;
-  color: #a8e100;
-  font-size: 20px;
-  font-family: "Inter-Semibold";
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  cursor: pointer;
-`;
+// const EnterButton = styled.div`
+//   height: 44px;
+//   line-height: 44px;
+//   border-radius: 4px;
+//   background: #000;
+//   padding-inline: 10px;
+//   color: #a8e100;
+//   font-size: 20px;
+//   font-family: "Inter-Semibold";
+//   display: flex;
+//   align-items: center;
+//   gap: 9px;
+//   cursor: pointer;
+// `;
 
 const LanguageBox = styled.div`
   display: flex;
