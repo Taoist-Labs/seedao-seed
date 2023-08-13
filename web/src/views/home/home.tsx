@@ -14,7 +14,7 @@ export default function Home() {
   }, []);
   return (
     <>
-      <Header />
+      <Header color={color} />
       <div className="mainContent">
         <HomePageStyle>
           <Banner color={color} />

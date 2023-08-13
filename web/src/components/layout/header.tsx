@@ -114,7 +114,7 @@ const Languagebutton = () => {
   );
 };
 
-export default function Header() {
+export default function Header({ color }: { color?: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { account } = useWeb3React();
@@ -128,7 +128,7 @@ export default function Header() {
   };
 
   return (
-    <HeaderStyle>
+    <HeaderStyle style={{ background: color || "#fff" }}>
       <HeaderContainer>
         <LogoLink to="/">
           <img src={LogoIcon} alt="" />
@@ -185,7 +185,6 @@ const SmMenu = styled.div`
   height: calc(100vh - 102px);
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 8px 1px rgba(0, 0, 0, 0.1);
 
   .content {
     background-color: #fff;
