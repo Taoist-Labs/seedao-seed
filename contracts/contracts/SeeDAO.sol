@@ -389,6 +389,8 @@ contract SeeDAO is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
+  receive() external payable {}
+
   /// @dev 将合约 native token 余额全都提取到 owner 地址
   function withdraw() external onlyOwner {
     uint256 balance = address(this).balance;
