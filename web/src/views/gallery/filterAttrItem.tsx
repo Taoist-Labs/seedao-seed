@@ -96,7 +96,7 @@ const FilterAttrName = styled.div`
   padding-block: 10px;
   font-size: 24px;
   font-style: normal;
-  font-weight: 600;
+  font-family: "Inter-Semibold";
   .left {
     display: flex;
     align-items: center;

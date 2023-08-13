@@ -204,7 +204,7 @@ const SmMenu = styled.div`
       .sub-menu li {
         line-height: 44px;
         padding-inline: 30p;
-        font-weight: 600;
+        font-family: "Inter-Semibold";
         cursor: pointer;
         a {
           color: unset;
@@ -314,7 +314,7 @@ const EnterButton = styled.div`
   padding-inline: 10px;
   color: #a8e100;
   font-size: 20px;
-  font-weight: 600;
+  font-family: "Inter-Semibold";
   display: flex;
   align-items: center;
   gap: 9px;

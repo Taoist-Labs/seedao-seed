@@ -160,7 +160,7 @@ const Title = styled.div`
   font-family: Inter;
   font-size: 48px;
   font-style: normal;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   line-height: 50px;
   margin-bottom: 40px;
   @media (max-width: 750px) {
@@ -183,7 +183,7 @@ const Content = styled.div`
   }
   p.second {
     margin-top: 20px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     span {
       color: #d9393b;
     }
@@ -232,7 +232,7 @@ const NFTCardItem = styled.li`
   font-family: Inter;
   p span {
     font-size: 36px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
   }
   @media (max-width: 680px) {
     .img-box {
@@ -278,7 +278,7 @@ const ViewButton = styled.div`
   margin-top: 64px;
   text-align: center;
   font-size: 20px;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   cursor: pointer;
   @media (max-width: 960px) {
     width: 80%;

@@ -89,7 +89,7 @@ const UtilityTitle = styled.div`
   font-family: Inter;
   font-size: 48px;
   font-style: normal;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   line-height: 50px;
   margin-bottom: 80px;
   @media (max-width: 412px) {
@@ -119,7 +119,7 @@ const Box = styled.ul`
       text-align: center;
       font-size: 32px;
       font-style: normal;
-      font-weight: 700;
+      font-family: "Inter-Bold";
       line-height: 34px;
       margin-block: 34px;
     }
@@ -127,7 +127,7 @@ const Box = styled.ul`
       color: #9e9e9e;
       font-size: 18px;
       font-style: normal;
-      font-weight: 700;
+      font-family: "Inter-Bold";
       line-height: 25px;
       text-decoration-line: underline;
       margin-top: 40px;
@@ -177,7 +177,7 @@ const JoinButton = styled.a`
   flex-shrink: 0;
   font-size: 20px;
   font-style: normal;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   line-height: 54px;
   text-align: center;
   background-color: #c3f237;
@@ -189,11 +189,13 @@ const JoinButton = styled.a`
   @media (max-width: 960px) {
     width: 80%;
     margin-top: 0;
-    height: 28px;
-    line-height: 28px;
-    font-size: 12px;
     img {
       display: none;
     }
+  }
+  @media (max-width: 412px) {
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
   }
 `;

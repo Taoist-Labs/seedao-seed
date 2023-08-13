@@ -79,7 +79,7 @@ const ActiveLevelStyle = styled.div`
 `;
 const LeftPart = styled.div`
   font-size: 48px;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   display: flex;
   align-items: center;
   gap: 7px;
@@ -94,7 +94,7 @@ const RightPart = styled.div`
     font-size: 16px;
   }
   .percent {
-    font-weight: 700;
+    font-family: "Inter-Bold";
   }
 `;
 interface IProcessProps {
@@ -115,7 +115,7 @@ const ProcessBar = styled.div<IProcessProps>`
 `;
 const LevelStyle = styled.div`
   font-size: 20px;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   display: flex;
   align-items: center;
   gap: 2px;

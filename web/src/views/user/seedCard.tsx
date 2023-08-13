@@ -381,7 +381,7 @@ const SeedAttr = styled.div`
   width: 390px;
   .name {
     font-size: 18px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
   }
   .not-name {
     color: #929191;
@@ -413,7 +413,7 @@ const SeedAttr = styled.div`
     }
     .value {
       font-size: 16px;
-      font-weight: 600;
+      font-family: "Inter-Semibold";
     }
   }
 `;
@@ -429,7 +429,7 @@ const RightTopBox = styled.div`
     box-sizing: border-box;
     padding-inline: 14px;
     font-size: 24px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     display: flex;
     gap: 10px;
     align-items: center;

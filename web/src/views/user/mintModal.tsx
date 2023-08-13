@@ -68,5 +68,5 @@ const MintButton = styled.span`
   padding-inline: 30px;
   color: #060606;
   font-size: 24px;
-  font-weight: 700;
+  font-family: "Inter-Bold";
 `;

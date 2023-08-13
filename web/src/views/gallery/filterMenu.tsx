@@ -130,7 +130,7 @@ const GalleryLeft = styled.div<{ sm: boolean }>`
 const LeftTitle = styled.div`
   font-size: 40px;
   font-style: normal;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   line-height: 64px;
   .close {
     top: 20px;

@@ -43,7 +43,7 @@ const SeedContent = styled.div`
   .title {
     color: #040404;
     font-size: 40px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     text-align: center;
   }
   .num {
@@ -53,7 +53,7 @@ const SeedContent = styled.div`
     text-align: center;
     margin-bottom: 46px;
     span {
-      font-weight: 700;
+      font-family: "Inter-Bold";
     }
   }
 `;
@@ -81,7 +81,7 @@ const AttrBox = styled.ul`
     }
     .value {
       font-size: 22px;
-      font-weight: 600;
+      font-family: "Inter-Semibold";
     }
   }
 `;

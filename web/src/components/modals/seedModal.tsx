@@ -79,7 +79,7 @@ const ModalContainer = styled(Box)`
   .sm-title {
     color: #040404;
     font-size: 30px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     display: none;
     line-height: 90px;
     padding-inline: 30px;
@@ -133,7 +133,7 @@ const ModalRight = styled.div`
 
   .title {
     font-size: 32px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     margin-bottom: 20px;
   }
   .share {
@@ -188,7 +188,7 @@ const AttrBox = styled.ul`
     }
     .value {
       font-size: 16px;
-      font-weight: 600;
+      font-family: "Inter-Semibold";
       line-height: 19px;
     }
   }

@@ -82,12 +82,11 @@ const BannerContent = styled(CenterBox)`
 
 const BannerTitle = styled.div`
   font-size: 56px;
-  font-weight: 700;
+  font-family: "Inter-Black";
   line-height: 80px;
   @media (max-width: 960px) {
     font-size: 48px;
     line-height: 66px;
-    font-weight: 900;
   }
   @media (max-width: 412px) {
     font-size: 24px;
@@ -129,7 +128,7 @@ const Button = styled.div`
   border-radius: 8px;
   font-size: 20px;
   font-style: normal;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   @media (max-width: 412px) {
     font-size: 12px;
     height: 28px;

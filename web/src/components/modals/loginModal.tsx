@@ -117,7 +117,7 @@ const ModalContainer = styled(Box)`
 
 const Title = styled.div`
   font-size: 18px;
-  font-weight: 600;
+  font-family: "Inter-Semibold";
   text-align: center;
   margin-bottom: 16px;
 `;
@@ -135,7 +135,7 @@ const WalletOption = styled.li`
   border: 1px solid #f1f1f1;
   background: rgb(191, 239, 45);
   color: #fff;
-  font-weight: 600;
+  font-family: "Inter-Semibold";
   font-size: 16px;
   &:hover {
     background-color: rgb(201, 251, 48);

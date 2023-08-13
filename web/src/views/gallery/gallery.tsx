@@ -333,7 +333,7 @@ const FilterHead = styled.div`
     color: #fff;
     text-align: center;
     line-height: 24px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     font-size: 14px;
   }
   @media (max-width: 412px) {
@@ -352,7 +352,7 @@ const FilterHeadRight = styled.div`
   .result {
     text-align: right;
     font-size: 36px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
   }
   .refresh {
     margin-left: 34px;

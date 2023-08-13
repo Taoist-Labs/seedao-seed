@@ -100,7 +100,7 @@ const Title = styled.div`
   text-align: center;
   font-size: 40px;
   font-style: normal;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   line-height: normal;
   margin-bottom: 80px;
   @media (max-width: 750px) {
@@ -151,13 +151,13 @@ const CardItem = styled.div`
     height: 44px;
     font-size: 20px;
     font-style: normal;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     line-height: 44px;
     cursor: pointer;
   }
   .title {
     font-size: 32px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     line-height: 28px;
   }
   .desc {
@@ -230,7 +230,7 @@ const InfoBoxStyle = styled.ul`
     }
     .value {
       font-size: 22px;
-      font-weight: 700;
+      font-family: "Inter-Bold";
     }
     .name {
       font-size: 14px;

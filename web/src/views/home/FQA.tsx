@@ -96,14 +96,14 @@ const FQAStyle = styled.section`
   }
   .subject {
     font-size: 18px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     margin-block: 38px;
     text-align: center;
     color: #000;
   }
   .more {
     font-size: 20px;
-    font-weight: 700;
+    font-family: "Inter-Bold";
     color: #000;
     margin-top: 43px;
     display: block;
@@ -127,7 +127,7 @@ const Title = styled.div`
   font-family: Inter;
   font-size: 48px;
   font-style: normal;
-  font-weight: 700;
+  font-family: "Inter-Bold";
   line-height: 50px;
   margin-bottom: 17px;
   color: #000;
