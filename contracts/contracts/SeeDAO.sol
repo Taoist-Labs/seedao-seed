@@ -33,6 +33,7 @@ contract SeeDAO is
   uint256 public maxSupply;
 
   string public baseURI;
+  uint256[] public uriLevelRanges;
 
   address public pointsToken;
   uint256 public pointsCondi;
@@ -72,8 +73,15 @@ contract SeeDAO is
   }
 
   function initialize() public initializer {
+    // set default max supply
     maxSupply = 100_000;
+    // set default minter
     minter = msg.sender;
+    // set default uri level ranges
+    uriLevelRanges.push(20_000);
+    uriLevelRanges.push(300_000);
+    uriLevelRanges.push(3_000_000);
+    uriLevelRanges.push(30_000_000);
 
     __ERC721_init("SeeDAO Seed NFT", "SEED");
     __ERC721Enumerable_init();
@@ -256,6 +264,21 @@ contract SeeDAO is
     maxSupply = maxSupply_;
   }
 
+  /// @dev 设置 NFT URI 的等级范围
+  /// URI 的格式：ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/{tokenID}_{level}.json
+  /// 例如：
+  /// level1: < 20_000
+  /// level2: >=20_000 && < 300_000
+  /// level3: >=300_000 && < 3_000_000
+  /// level4: >=3_000_000 && < 30_000_000
+  /// level5: >=30_000_000
+  /// 则传入的参数为：[20_000, 300_000, 3_000_000, 30_000_000]
+  function setURILevelRange(
+    uint256[] calldata uriLevelRanges_
+  ) external onlyOwner {
+    uriLevelRanges = uriLevelRanges_;
+  }
+
   /// @dev 设置 NFT URI 的基础部分
   /// 如：ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD
   function setBaseURI(string memory baseURI_) public onlyOwner {
@@ -299,41 +322,14 @@ contract SeeDAO is
   /// @dev get level by owner's points amount
   function _parseLevel(uint256 tokenId) internal view returns (uint256) {
     uint256 de = 10 ** IERC20MetadataUpgradeable(pointsToken).decimals();
-    uint256 points = IERC20Upgradeable(pointsToken).balanceOf(ownerOf(tokenId)) * de;
+    uint256 points = IERC20Upgradeable(pointsToken).balanceOf(ownerOf(tokenId));
 
-//    if (points < 5_000 * de) { // L0 (0-5000分)
-//      return 0;
-//    } else if (points >= 5_000 * de && points < 20_000 * de) { // L1 (5000-20000分)
-//      return 1;
-//    } else if (points >= 20_000 * de && points < 100_000 * de) { // L2 (2万-10万分)
-//      return 2;
-//    } else if (points >= 100_000 * de && points < 300_000 * de) { // L3 (10万-30万分)
-//      return 3;
-//    } else if (points >= 300_000 * de && points < 1_000_000 * de) { // L4 (30万-100万分)
-//      return 4;
-//    } else if (points >= 1_000_000 * de && points < 3_000_000 * de) { // L5 (100万-300万分)
-//      return 5;
-//    } else if (points >= 3_000_000 * de && points < 10_000_000 * de) { // L6 (300-1000万分)
-//      return 6;
-//    } else if (points >= 10_000_000 * de && points < 30_000_000 * de) { // L7 (1000万-3000万分)
-//      return 7;
-//    } else if (points >= 30_000_000 * de && points < 100_000_000 * de) { // L8 (3000万-1亿分)
-//      return 8;
-//    } else { // L9 (1亿以上分)
-//      return 9;
-//    }
-
-    if (points < 20_000 * de) { // L0~L1 -> 1
-      return 1;
-    } else if (points >= 20_000 * de && points < 300_000 * de) { // L2~L3 -> 2
-      return 2;
-    } else if (points >= 300_000 * de && points < 3_000_000 * de) { // L4~L5 -> 3
-      return 3;
-    } else if (points >= 3_000_000 * de && points < 30_000_000 * de) { // L6~L7 -> 4
-      return 4;
-    } else { // L8~L9 -> 5
-      return 5;
+    for (uint i = 0; i < uriLevelRanges.length; i++) {
+      if (points < uriLevelRanges[i] * de) {
+        return i + 1;
+      }
     }
+    return uriLevelRanges.length + 1;
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------

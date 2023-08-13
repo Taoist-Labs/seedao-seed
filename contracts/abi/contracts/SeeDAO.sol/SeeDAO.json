@@ -764,6 +764,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256[]",
+        "name": "uriLevelRanges_",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setURILevelRange",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "whiteListId",
         "type": "uint256"
@@ -971,6 +984,25 @@
         "type": "uint256"
       }
     ],
+    "name": "uriLevelRanges",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "whiteListIds",
     "outputs": [
       {
@@ -1007,5 +1039,9 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
   }
 ]

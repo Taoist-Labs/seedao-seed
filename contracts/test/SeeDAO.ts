@@ -779,5 +779,110 @@ describe("SeeDAO", function () {
     // });
   });
 
-  describe("Function tokenURI", function () {});
+  describe("Function tokenURI", function () {
+    describe("Validations", function () {
+      it("Use default uri level ranges", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mockERC20, owner } = await loadFixture(deployMockERC20Fixture);
+
+        const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
+
+        const mockERC20Decimals = await mockERC20.decimals();
+
+        // secondAccount mint nft #0
+        await seeDAO.unpauseMint();
+        await seeDAO.setPrice(ethers.parseEther("1"));
+        await seeDAO
+          .connect(secondAccount)
+          .mint(ethers.getBigInt(1), { value: ethers.parseEther("1") });
+
+        // set token uri
+        await seeDAO.setBaseURI(baseURI);
+
+        // set points token address firstly
+        await seeDAO.setPointsTokenAddress(mockERC20);
+
+        // [20_000, 300_000, 3_000_000, 30_000_000]
+        // case1: mint 100 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("100", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("100", mockERC20Decimals));
+        // with 100 points, nft uri level is 1
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_1.json`);
+        // case2: mint 20_000 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("20000", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("20100", mockERC20Decimals));
+        // with 20_000 points, nft uri level is 2
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_2.json`);
+        // case3: mint 300_000 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("300000", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("320100", mockERC20Decimals));
+        // with 300_000 points, nft uri level is 3
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_3.json`);
+        // case4: mint 3_000_000 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("3000000", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("3320100", mockERC20Decimals));
+        // with 3_000_000 points, nft uri level is 4
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_4.json`);
+        // case5: mint 30_000_000 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("30000000", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("33320100", mockERC20Decimals));
+        // with 30_000_000 points, nft uri level is 5
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_5.json`);
+      });
+
+      it("Use custom uri level ranges", async function () {
+        const { seeDAO, secondAccount } = await loadFixture(
+          deploySeeDAOFixture
+        );
+        const { mockERC20, owner } = await loadFixture(deployMockERC20Fixture);
+
+        const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
+
+        const mockERC20Decimals = await mockERC20.decimals();
+
+        // secondAccount mint nft #0
+        await seeDAO.unpauseMint();
+        await seeDAO.setPrice(ethers.parseEther("1"));
+        await seeDAO.connect(secondAccount).mint(ethers.getBigInt(1), { value: ethers.parseEther("1") });
+
+        // set token uri
+        await seeDAO.setBaseURI(baseURI);
+
+        // set points token address firstly
+        await seeDAO.setPointsTokenAddress(mockERC20);
+
+        // set custom uri level ranges: [100, 1_000, 10_000, 100_000]
+        await seeDAO.setURILevelRange([ethers.getBigInt(100), ethers.getBigInt(1_000), ethers.getBigInt(10_000), ethers.getBigInt(100_000), ]);
+
+        // [100, 1_000, 10_000, 100_000]
+        // case1: mint 10 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("10", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("10", mockERC20Decimals));
+        // with 10 points, nft uri level is 1
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_1.json`);
+        // case2: mint 100 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("100", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("110", mockERC20Decimals));
+        // with 100 points, nft uri level is 2
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_2.json`);
+        // case3: mint 1_000 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("1000", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("1110", mockERC20Decimals));
+        // with 1_000 points, nft uri level is 3
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_3.json`);
+        // case4: mint 10_000 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("10000", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("11110", mockERC20Decimals));
+        // with 10_000 points, nft uri level is 4
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_4.json`);
+        // case5: mint 100_000 points to secondAccount
+        await mockERC20.connect(owner).mint(secondAccount.address, ethers.parseUnits("100000", mockERC20Decimals));
+        expect(await mockERC20.balanceOf(secondAccount.address)).to.equal(ethers.parseUnits("111110", mockERC20Decimals));
+        // with 100_000 points, nft uri level is 5
+        expect(await seeDAO.tokenURI(ethers.getBigInt(0))).to.equal(`${baseURI}/0_5.json`);
+      });
+    });
+  });
 });
