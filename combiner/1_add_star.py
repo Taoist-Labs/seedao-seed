@@ -21,13 +21,13 @@ def load_images(path):
     return images
 
 
-def load_stars(path):
+def load_stars(path, filer='-'):
     images = []
     for root, _, files in os.walk(path):
         for fileName in files:
             sufix = fileName.rsplit('.')[1]
             # directory = fileName.rsplit('.')[0]
-            if sufix == 'png' and fileName.contain('-') and not fileName.startswith('W.png'):
+            if sufix == 'png' and fileName.contain(filer) and not fileName.startswith('W.png'):
                 f = os.path.join(root, fileName)
                 # images.append((os.path.basename(fileName), Image.open(f)))
                 img = Image.open(f)
@@ -74,7 +74,8 @@ def gen_comp(nfts, star_, directory):
         name = os.path.splitext(n_nft)[0].split('-')[1]
         print(name)
 
-        n_background, n_body, n_eye, _, n_head, n_ring, n_cloth = name.split('#')
+        n_background, n_body, n_eye, _, n_head, n_ring, n_cloth = name.split(
+            '#')
 
         name = '#'.join(list(map(lambda n: os.path.splitext(os.path.basename(n))
                         [0], [n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth])))

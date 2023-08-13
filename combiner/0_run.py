@@ -51,49 +51,67 @@ def load_7_cloth():
 
 
 def merge_nft(params):
-    merge_metadata(params)
+    # merge_metadata(params)
     merge_img(params)
     pass
 
 
 def merge_metadata(params):
-    save_name, combination = params
+    save_name, _ = params
     name = os.path.splitext(os.path.basename(save_name))[0].split('-', 1)[1]
+    print(name)
     n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
         '#')
     # todo: save metadata
-    metadata = {'attributes': [
-        {
+    metadata = {'attributes': [], 'image': "ipfs://"}
+
+    if len(n_background) > 0:
+        metadata['attributes'].append({
             "trait_type": "Background",
             "value": n_background
-        },
-        {
+        })
+
+    if len(n_body) > 0:
+        metadata['attributes'].append({
             "trait_type": "Body",
             "value": n_body
-        },
-        {
-            "trait_type": "Eye",
+        })
+
+    if len(n_eye) > 0:
+        metadata['attributes'].append({
+            "trait_type": "Eyes",
             "value": n_eye
-        },
-        {
-            "trait_type": "Star",
+        })
+
+    if len(n_star) > 0:
+        metadata['attributes'].append({
+            "trait_type": "Tai Chi Star",
             "value": n_star
-        },
-        {
+        })
+
+    if len(n_head) > 0:
+        metadata['attributes'].append({
             "trait_type": "Head",
             "value": n_head
-        },
-        {
-            "trait_type": "Cloth",
+        })
+
+    if len(n_ring) > 0:
+        metadata['attributes'].append({
+            "trait_type": "Ear",
+            "value": n_ring
+        })
+
+    if len(n_cloth) > 0:
+        metadata['attributes'].append({
+            "trait_type": "Style",
             "value": n_cloth
-        }],
-        "image": "ipfs://"
-    }
+        })
+
     # print(metadata)
 
     with open(f'{save_name}'.replace('.png', '.json'), 'w') as f:
-        js = json.dumps(metadata)
-        print(js)
+        js = json.dumps(metadata, indent=4)
+        # print(js)
         f.write(js)
     pass
 
@@ -231,7 +249,7 @@ def main():
 
     # backgrounds, bodys, eyes, starts, heads, rings, clothes
     combinations = gen_random_comb(
-        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 100)
+        backgrounds, bodys, eyes, stars, heads, rings, clothes, './output', 30)
 
     print(len(combinations))
     merge(combinations)

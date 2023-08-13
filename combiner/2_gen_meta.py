@@ -89,7 +89,7 @@ def gen(items):
 
 
 def main():
-    nfts = load_images('./.tmp/08.13-final-with-stars-added/')
+    nfts = load_images('./output')
 
     print(len(nfts))
 
