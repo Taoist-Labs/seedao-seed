@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 import NFTCard from "./nft";
 import Grid from "@mui/system/Unstable_Grid/Grid";
@@ -113,6 +113,17 @@ export default function GalleryPage() {
     }
   }, [keyword]);
 
+  const filterNums = useMemo(() => {
+    if (keyword) {
+      return 1;
+    }
+    let count = 0;
+    selectAttrs.forEach((item) => {
+      count += item.values.length;
+    });
+    return count;
+  }, [selectAttrs, keyword]);
+
   return (
     <>
       <Header />
@@ -150,7 +161,7 @@ export default function GalleryPage() {
             <GalleryContent>
               <FilterHead>
                 <span className="title">{t("gallery.filters")}</span>
-                <span className="num">{keyword ? 1 : selectAttrs.length}</span>
+                <span className="num">{filterNums}</span>
                 <FilterTags>
                   <ul className="tag-container">
                     {keyword ? (
