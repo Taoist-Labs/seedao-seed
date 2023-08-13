@@ -267,9 +267,9 @@ contract SeeDAO is
 
   /// @dev 获取 NFT URI，方法内部会根据 `tokenId` 拥有者地址拥有的积分数量或其他 Token、NFT 的不同而返回不同的 NFT URI，从而实现实现 Dynamic NFT
   /// 如：
-  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_L1.json
-  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_L2.json
-  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/disable_mint.json
+  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_1.json
+  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_2.json
+  /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/404.json
   function tokenURI(
     uint256 tokenId
   ) public view override returns (string memory) {
@@ -278,21 +278,21 @@ contract SeeDAO is
     if (onMint) {
       uint256 level = _parseLevel(tokenId);
 
-      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_L1.json
+      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_1.json
       return
         string(
           abi.encodePacked(
             baseURI,
             "/",
             tokenId.toString(),
-            "_L",
+            "_",
             level.toString(),
             ".json"
           )
         );
     } else {
-      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/disable_mint.json
-      return string(abi.encodePacked(baseURI, "/disable_mint.json"));
+      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/404.json
+      return string(abi.encodePacked(baseURI, "/404.json"));
     }
   }
 
@@ -301,26 +301,38 @@ contract SeeDAO is
     uint256 de = 10 ** IERC20MetadataUpgradeable(pointsToken).decimals();
     uint256 points = IERC20Upgradeable(pointsToken).balanceOf(ownerOf(tokenId)) * de;
 
-    if (points < 5_000 * de) {
-      return 0;
-    } else if (points >= 5_000 * de && points < 20_000 * de) {
+//    if (points < 5_000 * de) { // L0 (0-5000分)
+//      return 0;
+//    } else if (points >= 5_000 * de && points < 20_000 * de) { // L1 (5000-20000分)
+//      return 1;
+//    } else if (points >= 20_000 * de && points < 100_000 * de) { // L2 (2万-10万分)
+//      return 2;
+//    } else if (points >= 100_000 * de && points < 300_000 * de) { // L3 (10万-30万分)
+//      return 3;
+//    } else if (points >= 300_000 * de && points < 1_000_000 * de) { // L4 (30万-100万分)
+//      return 4;
+//    } else if (points >= 1_000_000 * de && points < 3_000_000 * de) { // L5 (100万-300万分)
+//      return 5;
+//    } else if (points >= 3_000_000 * de && points < 10_000_000 * de) { // L6 (300-1000万分)
+//      return 6;
+//    } else if (points >= 10_000_000 * de && points < 30_000_000 * de) { // L7 (1000万-3000万分)
+//      return 7;
+//    } else if (points >= 30_000_000 * de && points < 100_000_000 * de) { // L8 (3000万-1亿分)
+//      return 8;
+//    } else { // L9 (1亿以上分)
+//      return 9;
+//    }
+
+    if (points < 20_000 * de) { // L0~L1 -> 1
       return 1;
-    } else if (points >= 20_000 * de && points < 100_000 * de) {
+    } else if (points >= 20_000 * de && points < 300_000 * de) { // L2~L3 -> 2
       return 2;
-    } else if (points >= 100_000 * de && points < 300_000 * de) {
+    } else if (points >= 300_000 * de && points < 3_000_000 * de) { // L4~L5 -> 3
       return 3;
-    } else if (points >= 300_000 * de && points < 1_000_000 * de) {
+    } else if (points >= 3_000_000 * de && points < 30_000_000 * de) { // L6~L7 -> 4
       return 4;
-    } else if (points >= 1_000_000 * de && points < 3_000_000 * de) {
+    } else { // L8~L9 -> 5
       return 5;
-    } else if (points >= 3_000_000 * de && points < 10_000_000 * de) {
-      return 6;
-    } else if (points >= 10_000_000 * de && points < 30_000_000 * de) {
-      return 7;
-    } else if (points >= 30_000_000 * de && points < 100_000_000 * de) {
-      return 8;
-    } else {
-      return 9;
     }
   }
 
