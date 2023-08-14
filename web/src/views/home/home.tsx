@@ -19,7 +19,7 @@ const BANNER_IMGS = [BannerBg01, BannerBg02, BannerBg03];
 
 export default function Home() {
   const { color, bg } = useMemo(() => {
-    const i = Math.floor(Math.random() * 4);
+    const i = Math.floor(Math.random() * 3);
     return { color: COLORS[i], bg: BANNER_IMGS[i] };
   }, []);
   return (

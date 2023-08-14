@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import { useWeb3React } from "@web3-react/core";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getNftCollection } from "utils/request";
 
 const CardPart = () => {
   const { t } = useTranslation();
@@ -79,14 +81,32 @@ const AvatarsBox = () => {
 
 const InfoBox = () => {
   const { t } = useTranslation();
+  const [data, setData] = useState<any>();
+
+  useEffect(() => {
+    process.env.NODE_ENV !== "development" &&
+      getNftCollection()
+        .then((res) => res.json())
+        .then((res) => {
+          const d = res.data;
+          setData({
+            items: d.items_total,
+            volume: d.total_volume,
+            floorPrice: d.floor_price,
+            avg: d.average_price_24h,
+            owners: d.owners_total,
+          });
+        });
+  }, []);
+
   return (
     <InfoBoxStyle>
       {[
-        { name: t("home.items"), value: "0" },
-        { name: t("home.volume"), value: "0 ETH" },
-        { name: t("home.avg7d"), value: "0" },
-        { name: t("home.owners"), value: "0 ETH" },
-        { name: t("home.floorPrice"), value: "0" },
+        { name: t("home.items"), value: data?.items || "0" },
+        { name: t("home.volume"), value: data?.volume || "0" },
+        { name: t("home.avg7d"), value: data?.avg || "0" },
+        { name: t("home.owners"), value: data?.owners || "0" },
+        { name: t("home.floorPrice"), value: data?.floorPrice || "0" },
       ].map((item, idx) => (
         <li key={idx}>
           <div className="value">{item.value}</div>
