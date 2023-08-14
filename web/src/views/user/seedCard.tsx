@@ -24,6 +24,7 @@ import {
 } from "utils/contract";
 import SeedABI from "data/abi/Seed.json";
 import SeedMgrABI from "data/abi/SeedManager.json";
+import ScrABI from "data/abi/SCR.json";
 
 const LEVELS = [
   {
@@ -173,27 +174,7 @@ export default function SeedCard() {
     try {
       const contract = new ethers.Contract(
         SCR_CONTRACTS.POLYGON,
-        [
-          {
-            inputs: [
-              {
-                internalType: "address",
-                name: "account",
-                type: "address",
-              },
-            ],
-            name: "balanceOf",
-            outputs: [
-              {
-                internalType: "uint256",
-                name: "",
-                type: "uint256",
-              },
-            ],
-            stateMutability: "view",
-            type: "function",
-          },
-        ],
+        ScrABI,
         provider,
       );
       const data = await contract.balanceOf(account);
