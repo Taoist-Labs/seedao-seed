@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import Grid from "@mui/system/Unstable_Grid/Grid";
+import Fade from "@mui/material/Fade";
 import EmptyIcon from "assets/images/user/empty.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IProps {
   data: INFT;
@@ -10,20 +11,26 @@ interface IProps {
 
 export default function NFTCard({ data, onClick }: IProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    setShow(true);
+  }, []);
   return (
     <NFTStyle xs={6} sm={3} onClick={() => onClick && onClick(data)}>
-      <div className={imgLoaded ? "" : "loading"}>
-        <img src={EmptyIcon} alt="" />
-        <img
-          src={data.thumb}
-          title={data.name}
-          alt=""
-          onLoad={() => setImgLoaded(true)}
-          className="nft-img"
-          style={{ visibility: imgLoaded ? "visible" : "hidden" }}
-        />
-        <Intro>{data.tokenId ? data.tokenIdFormat : data.name}</Intro>
-      </div>
+      <Fade in={show}>
+        <div className={imgLoaded ? "" : "loading"}>
+          <img src={EmptyIcon} alt="" />
+          <img
+            src={data.thumb}
+            title={data.name}
+            alt=""
+            onLoad={() => setImgLoaded(true)}
+            className="nft-img"
+            style={{ visibility: imgLoaded ? "visible" : "hidden" }}
+          />
+          <Intro>{data.tokenId ? data.tokenIdFormat : data.name}</Intro>
+        </div>
+      </Fade>
     </NFTStyle>
   );
 }

@@ -215,7 +215,7 @@ export default function GalleryPage() {
                 >
                   {list.map((item, idx) => (
                     <NFTCard
-                      key={idx}
+                      key={`${idx}_${Math.random()}`}
                       data={item}
                       onClick={() => setShowSeed(item)}
                     />
