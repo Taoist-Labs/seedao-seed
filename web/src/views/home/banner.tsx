@@ -1,19 +1,15 @@
 import styled from "@emotion/styled";
-import BannerBg from "assets/images/home/banner.png";
-import BannerBg01 from "assets/images/home/banner1.jpeg";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTranslation } from "react-i18next";
 import { CenterBox } from "style";
 
-export default function Banner({ color }: { color: string }) {
+export default function Banner({ color, bg }: { color: string; bg: string }) {
   const matches = useMediaQuery("(max-width:960px)");
   const { t } = useTranslation();
   return (
-    <BannerStyle color={color}>
+    <BannerStyle color={color} bg={bg}>
       <BannerContent>
-        {matches && (
-          <img src={color === "#F9D9FB" ? BannerBg : BannerBg01} alt="" />
-        )}
+        {matches && <img src={bg} alt="" />}
         <BannerTitle>{t("home.bannerTitle")}</BannerTitle>
         <BannerText>
           <p>{t("home.bannerContent01")}</p>
@@ -41,14 +37,13 @@ export default function Banner({ color }: { color: string }) {
   );
 }
 
-const BannerStyle = styled.section`
+const BannerStyle = styled.section<{ bg: string }>`
   height: calc(100vh - 102px);
   min-height: 664px;
   padding: 113px 0 0 80px;
   box-sizing: border-box;
   background: ${(props) => props.color};
-  background-image: ${(props) =>
-    props.color === "#F9D9FB" ? `url(${BannerBg})` : `url(${BannerBg01})`};
+  background-image: ${(props) => `url(${props.bg})`};
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right bottom;

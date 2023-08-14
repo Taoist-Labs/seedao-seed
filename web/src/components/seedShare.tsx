@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import BannerImg from "assets/images/home/banner.png";
 import LogoIcon from "assets/images/logo.png";
 import { useTranslation } from "react-i18next";
 import { ATTR_ICON_MAP } from "utils/constant";
@@ -14,7 +13,7 @@ export default function SeedShare({
   const { t } = useTranslation();
   return (
     <SeedShareBox id="SEED">
-      <img src={BannerImg} alt="" className="nft" onLoad={handleLoaded} />
+      <img src={seed.image} alt="" className="nft" onLoad={handleLoaded} />
       <SeedContent>
         <div className="title">
           {seed.tokenId ? seed.tokenIdFormat : seed.name}
