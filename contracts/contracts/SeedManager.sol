@@ -19,7 +19,7 @@ contract SeedManager is
   address public seed;
 
   // seed NFT sale price of native token
-  uint256 private price;
+  uint256 public price;
   // points token address
   address public pointsToken;
   // points token amount condition of free claim
