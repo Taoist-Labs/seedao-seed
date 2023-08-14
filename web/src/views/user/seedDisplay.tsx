@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
 import { ATTR_ICON_MAP } from "utils/constant";
 
+import SeedImg from "components/seedImg";
 export default function SeedDisplay({ seed }: { seed: INFT }) {
   return (
     <SeedDetail>
-      <SeedImg>
-        <img src={seed.image} alt="" />
-      </SeedImg>
+      <SeedImgBox>
+        <SeedImg src={seed.image} name={seed.name} />
+      </SeedImgBox>
       <SeedAttr>
         <div className="name">
           {seed.tokenId ? seed.tokenIdFormat : seed.name}
@@ -32,7 +33,7 @@ const SeedDetail = styled.div`
   gap: 14px;
 `;
 
-const SeedImg = styled.div`
+const SeedImgBox = styled.div`
   width: 240px;
   height: 240px;
   img {
