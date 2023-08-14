@@ -14,6 +14,8 @@ import { injected, uniPassWallet } from "wallet/connector";
 import MetamaskIcon from "assets/images/wallet/metamask.png";
 import UnipassIcon from "assets/images/wallet/unipass.svg";
 import { useTranslation } from "react-i18next";
+import useSelectAccount from "hooks/useSelectAccout";
+import Chain from "utils/chain";
 
 enum LoginStatus {
   Default = 0,
@@ -55,25 +57,27 @@ export default function LoginModal() {
     dispatch,
   } = useAppContext();
 
-  const [loginStatus, setLoginStatus] = useState<LoginStatus>(
-    LoginStatus.Default,
-  );
-  const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
+  // const [loginStatus, setLoginStatus] = useState<LoginStatus>(
+  //   LoginStatus.Default,
+  // );
+  // const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
+
+  const { chainId, connector } = useSelectAccount();
 
   const handleClose = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
   };
 
   const handleFailed = () => {
-    setLoginStatus(LoginStatus.Default);
-    setChooseWallet(undefined);
+    // setLoginStatus(LoginStatus.Default);
+    // setChooseWallet(undefined);
     localStorage.removeItem(SELECT_WALLET);
   };
 
   const connect = async (w: LoginWallet) => {
-    setChooseWallet(w);
+    // setChooseWallet(w);
     const connector = w.connector;
-    setLoginStatus(LoginStatus.Pending);
+    // setLoginStatus(LoginStatus.Pending);
     try {
       await connector.activate();
       localStorage.setItem(SELECT_WALLET, w.value);
@@ -84,8 +88,10 @@ export default function LoginModal() {
     }
   };
   useEffect(() => {
-    // TODO
-  }, [loginStatus, chooseWallet]);
+    if (connector && chainId && chainId !== Chain.SEPOLIA.chainId) {
+      connector.activate(Chain.SEPOLIA);
+    }
+  }, [chainId, connector]);
   return (
     <Modal
       open={!!show_login_modal}
