@@ -28,9 +28,13 @@ export default function GalleryPage() {
   const [showSeed, setShowSeed] = useState<INFT>();
   const [keyword, setKeyword] = useState<string>("");
 
+  const randomList = (arr: INFT[]) => {
+    setList([...arr.sort(() => Math.random() - 0.5)]);
+  };
+
   const handleFilter = () => {
-    setList([
-      ...AllNFTs.filter((item) => {
+    randomList(
+      AllNFTs.filter((item) => {
         return selectAttrs.every((attr) => {
           if (!attr.values.length) {
             return true;
@@ -39,7 +43,7 @@ export default function GalleryPage() {
           }
         });
       }),
-    ]);
+    );
   };
 
   const onSelectValue = (name: string, value: string, selected: boolean) => {
@@ -188,7 +192,11 @@ export default function GalleryPage() {
                 </FilterTags>
                 <FilterHeadRight>
                   <span className="result">{list.length}</span>
-                  <img src={RefreshSvg} className="refresh" />
+                  <img
+                    src={RefreshSvg}
+                    className="refresh"
+                    onClick={() => randomList(list)}
+                  />
                   {matches && (
                     <img
                       src={FilterSvg}

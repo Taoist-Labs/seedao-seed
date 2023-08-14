@@ -23,7 +23,7 @@ export default function SeedModal({
   const { t } = useTranslation();
 
   const seedTitle = useMemo(() => {
-    return `SEED NO.${seed.tokenId}`;
+    return seed.tokenId ? seed.tokenIdFormat : seed.name;
   }, [seed]);
 
   return (
