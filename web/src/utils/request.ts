@@ -43,13 +43,13 @@ const handleRequest = (url: string) => {
 
 export const getNftCollection = () => {
   return handleRequest(
-    `https://restapi.nftscan.com/api/v2/statistics/collection/${SEED_CONTRACTS.SEPOLIA}`,
+    `https://restapi.nftscan.com/api/v2/statistics/collection/${SEED_CONTRACTS.POLYGON}`,
   );
 };
 
 export const getNftByAccount = (account: string) => {
   return fetch(
-    `https://restapi.nftscan.com/api/v2/account/own/${account}?erc_type=erc721&show_attribute=true&sort_field=&sort_direction=&contract_address=${SEED_CONTRACTS.SEPOLIA}`,
+    `https://restapi.nftscan.com/api/v2/account/own/${account}?erc_type=erc721&show_attribute=true&sort_field=&sort_direction=&contract_address=${SEED_CONTRACTS.POLYGON}`,
     {
       method: "GET",
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

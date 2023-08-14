@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 
 import { ethers, Contract } from "ethers";
 import { useEffect, useMemo, useState } from "react";
-import { useWeb3React } from "@web3-react/core";
 import Chain from "utils/chain";
 
 import LevelItem from "./levelItem";
@@ -13,15 +12,18 @@ import MintModal from "./mintModal";
 import ShareModal from "./shareModal";
 import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
-import ABI from "data/SeeDAO.json";
 import SeedDisplay from "./seedDisplay";
 import { getNftByAccount } from "utils/request";
 import { GALLERY_ATTRS } from "data/gallery";
 import OpeningModal from "./opening";
 import useSelectAccount from "hooks/useSelectAccout";
-
-const SCR_CONTRACT = "0x27D4539d19b292b68369Ed588d682Db3aF679005";
-const SEED_CONTRACT = "0xdC46E9b8658CEFA4690751Aad513c5e7Cca131b4";
+import {
+  SCR_CONTRACTS,
+  SEED_CONTRACTS,
+  SEED_MANAGER_CONTRACTS,
+} from "utils/contract";
+import SeedABI from "data/abi/Seed.json";
+import SeedMgrABI from "data/abi/SeedManager.json";
 
 const LEVELS = [
   {
@@ -100,6 +102,7 @@ export default function SeedCard() {
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
   const [seedContract, setSeedContract] = useState<Contract>();
+  const [seedMgrContract, setSeedMgrContract] = useState<Contract>();
   const [showSeedModal, setShowSeedModal] = useState(false);
   const [showMintModal, setShowMintModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -127,14 +130,30 @@ export default function SeedCard() {
   }, [t]);
 
   console.log("points:", points);
+  const getSeedManagerContract = () => {
+    if (!provider) {
+      return;
+    }
+    const signer = provider.getSigner(account);
+    const contract = new ethers.Contract(
+      SEED_MANAGER_CONTRACTS.POLYGON,
+      SeedMgrABI,
+      signer,
+    );
+
+    setSeedMgrContract(contract);
+  };
 
   const getSeedContract = () => {
     if (!provider) {
       return;
     }
 
-    const signer = provider.getSigner(account);
-    const contract = new ethers.Contract(SEED_CONTRACT, ABI, signer);
+    const contract = new ethers.Contract(
+      SEED_CONTRACTS.POLYGON,
+      SeedABI,
+      provider,
+    );
 
     setSeedContract(contract);
   };
@@ -149,11 +168,11 @@ export default function SeedCard() {
 
   const getSCR = async () => {
     const provider = new ethers.providers.StaticJsonRpcProvider(
-      "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+      Chain.POLYGON.rpcUrls[0],
     );
     try {
       const contract = new ethers.Contract(
-        SCR_CONTRACT,
+        SCR_CONTRACTS.POLYGON,
         [
           {
             inputs: [
@@ -193,7 +212,11 @@ export default function SeedCard() {
   }, [account]);
 
   useEffect(() => {
-    chainId === Chain.SEPOLIA.chainId && account && getSeedContract();
+    chainId === Chain.POLYGON.chainId && getSeedContract();
+  }, [chainId, provider]);
+
+  useEffect(() => {
+    chainId === Chain.POLYGON.chainId && account && getSeedManagerContract();
   }, [chainId, account, provider]);
 
   const checkIfinWhiteList = () => {
@@ -226,8 +249,8 @@ export default function SeedCard() {
     // }, 3000);
 
     // check network
-    if (chainId !== Chain.SEPOLIA.chainId) {
-      await connector.activate(Chain.SEPOLIA);
+    if (chainId !== Chain.POLYGON.chainId) {
+      await connector.activate(Chain.POLYGON);
       return;
     }
     if (!seedContract) {

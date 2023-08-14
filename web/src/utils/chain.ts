@@ -20,5 +20,15 @@ const CHAIN: { [key: string]: AddEthereumChainParameter } = {
     },
     rpcUrls: ["https://rpc.sepolia.io"],
   },
+  POLYGON: {
+    chainId: 137,
+    chainName: "Polygon",
+    nativeCurrency: {
+      name: "MATIC",
+      symbol: "MATIC",
+      decimals: 18,
+    },
+    rpcUrls: ["https://rpc-mainnet.maticvigil.com"],
+  },
 };
 export default CHAIN;
