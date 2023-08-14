@@ -394,33 +394,30 @@ export default function SeedCard() {
   useEffect(() => {
     const getMySeeds = () => {
       if (!account) return;
-      // account &&
-      //   getNftByAccount(account)
-      //     .then((res) => res.json())
-      //     .then((res) => {
-      //       console.log("getMySeeds res:", res);
-      //       // TODO
-      //       // res.data.data;
-      //     })
-      //     .catch((err) => console.log(err));
-      const lst: INFT[] = testresp.data.content.map((item: any) => ({
-        tokenId: item.token_id,
-        tokenIdFormat: `SEED No.${item.token_id}`,
-        attrs: item.attributes?.length
-          ? item.attributes.map((attr: any) => ({
-              name: attr.attribute_name,
-              value: attr.attribute_value,
-            }))
-          : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
-        image: item.image_uri,
-      }));
-      setNfts(lst);
-      if (lst.length) {
-        setSelectSeedIdx(0);
-      }
+      account &&
+        getNftByAccount(account)
+          .then((res) => res.json())
+          .then((res) => {
+            console.log("getMySeeds res:", res);
+            const lst: INFT[] = testresp.data.content.map((item: any) => ({
+              tokenId: item.token_id,
+              tokenIdFormat: `SEED No.${item.token_id}`,
+              attrs: item.attributes?.length
+                ? item.attributes.map((attr: any) => ({
+                    name: attr.attribute_name,
+                    value: attr.attribute_value,
+                  }))
+                : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
+              image: item.image_uri,
+            }));
+            setNfts(lst);
+            if (lst.length) {
+              setSelectSeedIdx(0);
+            }
+          })
+          .catch((err) => console.log(err));
     };
-    // process.env.NODE_ENV !== "development" &&
-    getMySeeds();
+    process.env.NODE_ENV !== "development" && getMySeeds();
   }, [account]);
   return (
     <Card>
