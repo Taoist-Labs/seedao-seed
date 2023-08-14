@@ -81,7 +81,7 @@ const SmLeftStyle = css`
   right: 0;
   top: 0;
   height: 100%;
-  width: 680px;
+  width: 340px;
   max-width: 100%;
   animation-name: slide;
   animation-duration: 0.4s;
