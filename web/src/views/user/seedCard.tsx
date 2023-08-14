@@ -145,10 +145,7 @@ const testresp = {
 export default function SeedCard() {
   const { t } = useTranslation();
   const { account, provider, chainId, connector } = useSelectAccount();
-  const {
-    state: { loading: gloading },
-    dispatch,
-  } = useAppContext();
+  const { dispatch } = useAppContext();
 
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
