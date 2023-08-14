@@ -147,7 +147,9 @@ interface IProcessProps {
 const ProcessBar = styled.div<IProcessProps>`
   width: 293px;
   height: 30px;
+  box-sizing: border-box;
   border-radius: 36px;
+  border: 1px solid #4b4b4b;
   background: #d9d9d9;
   overflow: hidden;
   .inner {
