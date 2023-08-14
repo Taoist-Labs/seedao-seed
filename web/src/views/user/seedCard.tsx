@@ -25,6 +25,7 @@ import {
 import SeedABI from "data/abi/Seed.json";
 import SeedMgrABI from "data/abi/SeedManager.json";
 import ScrABI from "data/abi/SCR.json";
+import { useAppContext, AppActionType } from "providers/appProvider";
 
 const LEVELS = [
   {
@@ -144,6 +145,10 @@ const testresp = {
 export default function SeedCard() {
   const { t } = useTranslation();
   const { account, provider, chainId, connector } = useSelectAccount();
+  const {
+    state: { loading: gloading },
+    dispatch,
+  } = useAppContext();
 
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
@@ -394,37 +399,51 @@ export default function SeedCard() {
   useEffect(() => {
     const getMySeeds = () => {
       if (!account) return;
-      account &&
-        getNftByAccount(account)
-          .then((res) => res.json())
-          .then((res) => {
-            console.log("getMySeeds res:", res);
-            const lst: INFT[] = testresp.data.content.map((item: any) => ({
-              tokenId: item.token_id,
-              tokenIdFormat: `SEED No.${item.token_id}`,
-              attrs: item.attributes?.length
-                ? item.attributes.map((attr: any) => ({
-                    name: attr.attribute_name,
-                    value: attr.attribute_value,
-                  }))
-                : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
-              image: item.image_uri,
-            }));
-            setNfts(lst);
-            if (lst.length) {
-              setSelectSeedIdx(0);
-            }
-          })
-          .catch((err) => console.log(err));
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      getNftByAccount(account)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("getMySeeds res:", res);
+          const lst: INFT[] = testresp.data.content.map((item: any) => ({
+            tokenId: item.token_id,
+            tokenIdFormat: `SEED No.${item.token_id}`,
+            attrs: item.attributes?.length
+              ? item.attributes.map((attr: any) => ({
+                  name: attr.attribute_name,
+                  value: attr.attribute_value,
+                }))
+              : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
+            image: item.image_uri,
+          }));
+          setNfts(lst);
+          if (lst.length) {
+            setSelectSeedIdx(0);
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        });
     };
     process.env.NODE_ENV !== "development" && getMySeeds();
   }, [account]);
+
+  const onClickUnlockButton = async () => {
+    if (!connector) {
+      return;
+    }
+    // check network
+    if (chainId !== Chain.POLYGON.chainId) {
+      await connector.activate(Chain.POLYGON);
+      return;
+    }
+    setShowMintModal(true);
+  };
   return (
     <Card>
       <CardTop>
         {LEVELS.map((item, i) => (
-          <LevelItem key={i} data={item} points={15000500} />
-          // <LevelItem key={i} data={item} points={Number(points)} />
+          <LevelItem key={i} data={item} points={Number(points)} />
         ))}
       </CardTop>
       <CardBottom>
@@ -445,7 +464,7 @@ export default function SeedCard() {
                   <div>
                     <span
                       className="btn mint-btn"
-                      onClick={() => setShowMintModal(true)}
+                      onClick={onClickUnlockButton}
                     >
                       <label>{t("user.unlockMint")}</label>
                     </span>
