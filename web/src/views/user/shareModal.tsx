@@ -9,7 +9,6 @@ import DownloadIcon from "assets/images/user/download.svg";
 import SeedShare from "components/seedShare";
 import * as htmlToImage from "html-to-image";
 import { useEffect, useMemo, useState } from "react";
-import { uploadByFetch } from "utils/request";
 import CopyBox from "components/common/copy";
 import QrcodeBox from "./qrcode";
 
@@ -26,14 +25,13 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
   const { t } = useTranslation();
   const [imgBlob, setImgBlob] = useState<Blob>();
   const [isRead, setIsRead] = useState(false);
-  const [ipfsHash, setIpfsHash] = useState(
-    "QmZ4z4LqRVJZVgEYYiNtLTvZJZ4C31ru3oZY7x7Hx1qJJq",
-  );
+  const [ipfsHash, setIpfsHash] = useState("");
   const [showQrcode, setShowQrcode] = useState(false);
-  console.log("ipfsHash:", ipfsHash);
 
   const shareLink = useMemo(() => {
-    return `https://social-share.xiaosongfu.workers.dev?url=&title=SEED&desc=ddd&image=https://gateway.pinata.cloud/ipfs/${ipfsHash}&style=summary_large_image`;
+    return encodeURIComponent(
+      `https://social-share.xiaosongfu.workers.dev?title=SeeDAO Seed NFT&desc=Seed Now, See the DAO&image=${ipfsHash}`,
+    );
   }, [ipfsHash]);
   console.log("sharelink:", shareLink);
 
@@ -68,14 +66,16 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
       });
   };
 
-  // useEffect(() => {
-  //   if (!imgBlob) return;
-  //   uploadByFetch(imgBlob)
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       setIpfsHash(res.Hash);
-  //     });
-  // }, [imgBlob]);
+  useEffect(() => {
+    if (!imgBlob) return;
+    // TODO upload
+    setIpfsHash("QmZ4z4LqRVJZVgEYYiNtLTvZJZ4C31ru3oZY7x7Hx1qJJq");
+    // uploadByFetch(imgBlob)
+    //   .then((res) => res.json())
+    //   .then((res) => {
+    //     setIpfsHash(res.Hash);
+    //   });
+  }, [imgBlob]);
 
   useEffect(() => {
     if (!isRead) {
