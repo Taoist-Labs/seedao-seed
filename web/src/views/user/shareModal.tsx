@@ -11,6 +11,7 @@ import * as htmlToImage from "html-to-image";
 import { useEffect, useMemo, useState } from "react";
 import { uploadByFetch } from "utils/request";
 import CopyBox from "components/common/copy";
+import QrcodeBox from "./qrcode";
 
 interface IProps {
   show: boolean;
@@ -28,6 +29,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
   const [ipfsHash, setIpfsHash] = useState(
     "QmZ4z4LqRVJZVgEYYiNtLTvZJZ4C31ru3oZY7x7Hx1qJJq",
   );
+  const [showQrcode, setShowQrcode] = useState(false);
   console.log("ipfsHash:", ipfsHash);
 
   const shareLink = useMemo(() => {
@@ -48,7 +50,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
     );
   };
   const share2wechat = () => {
-    // TODO generate qrcode
+    setShowQrcode(true);
   };
   const handleDownload = () => {
     const node = document.getElementById("SEED");
@@ -102,30 +104,39 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
             <SeedShare seed={seed} handleLoaded={() => setIsRead(true)} />
           </div>
         </div>
-        <RightBox>
-          <div className="content">
-            <div className="title">{t("user.shareTo")}</div>
-            <ul>
-              <li>
-                <img src={WechatIcon} alt="" onClick={share2wechat} />
-              </li>
-              <li>
-                <img src={TwitterIcon} alt="" onClick={share2twitter} />
-              </li>
-              <li>
-                <CopyBox text={discordShareText}>
-                  <img src={DiscordIcon} alt="" />
-                </CopyBox>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <span className="download" onClick={handleDownload}>
-              <img src={DownloadIcon} alt="" />
-              <span>{t("user.download")}</span>
-            </span>
-          </div>
-        </RightBox>
+        {showQrcode ? (
+          <RightBox>
+            <QrcodeBox
+              imgCode={ipfsHash}
+              handleClose={() => setShowQrcode(false)}
+            />
+          </RightBox>
+        ) : (
+          <RightBox>
+            <div className="content">
+              <div className="title">{t("user.shareTo")}</div>
+              <ul>
+                <li>
+                  <img src={WechatIcon} alt="" onClick={share2wechat} />
+                </li>
+                <li>
+                  <img src={TwitterIcon} alt="" onClick={share2twitter} />
+                </li>
+                <li>
+                  <CopyBox text={discordShareText}>
+                    <img src={DiscordIcon} alt="" />
+                  </CopyBox>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <span className="download" onClick={handleDownload}>
+                <img src={DownloadIcon} alt="" />
+                <span>{t("user.download")}</span>
+              </span>
+            </div>
+          </RightBox>
+        )}
       </ShareModalStyle>
     </Modal>
   );
