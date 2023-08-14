@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "assets/images/home/menu.svg";
 import LanguageIcon from "assets/images/home/language.svg";
 import { useTranslation } from "react-i18next";
+import useSelectAccount from "../../hooks/useSelectAccout";
 
 const SEED_OPTIONS = [
   // { path: "about", label: "About" },
@@ -71,7 +72,9 @@ const LoginBox = ({ account }: { account?: string }) => {
     return (
       <React.Fragment>
         <LoginModal />
-        <Button onClick={showLoginModal}>{t("header.connectWallet")}</Button>
+        <ConnectButton onClick={showLoginModal}>
+          {t("header.connectWallet")}
+        </ConnectButton>
       </React.Fragment>
     );
   }
@@ -118,15 +121,17 @@ const Languagebutton = () => {
 export default function Header({ color }: { color?: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { account } = useWeb3React();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openSelect = Boolean(anchorEl);
   const [showMenu, setShowMenu] = React.useState(false);
+  const { account } = useSelectAccount();
 
   const handleSelect = (path: string) => {
     navigate(path);
     setAnchorEl(null);
   };
+
+  console.log("header account:", account);
 
   return (
     <HeaderStyle color={color || "#fff"}>
@@ -168,8 +173,8 @@ export default function Header({ color }: { color?: string }) {
               </MenuItem>
             ))}
           </Menu>
-          <LoginBox account={account} />
           <Languagebutton />
+          <LoginBox account={account} />
           {/* <EnterAppButton /> */}
         </NavStyle>
       </HeaderContainer>
@@ -334,4 +339,11 @@ const LanguageBox = styled.div`
   align-items: center;
   gap: 5px;
   cursor: pointer;
+`;
+
+const ConnectButton = styled(Button)`
+  color: unset;
+  &:hover {
+    background-color: rgba(168, 225, 0, 0.2);
+  }
 `;

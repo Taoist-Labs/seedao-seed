@@ -29,6 +29,9 @@ const Web3Provider: React.FC<{ children: React.ReactNode }> = (props) => {
       case Wallet.METAMASK:
         wallet_type = WalletType.EOA;
         break;
+      case Wallet.UNIPASS:
+        wallet_type = WalletType.AA;
+        break;
     }
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
     selectWallet && connect(getConnectorForWallet(selectWallet));

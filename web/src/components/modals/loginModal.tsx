@@ -7,8 +7,11 @@ import { Wallet, WalletType } from "wallet/wallet";
 
 import { SELECT_WALLET } from "utils/constant";
 import { MetaMask } from "@web3-react/metamask";
-import { injected } from "wallet/connector";
-import MetamaskIcon from "assets/images/metamask.png";
+import { UniPass } from "@unipasswallet/web3-react";
+import { injected, uniPassWallet } from "wallet/connector";
+
+import MetamaskIcon from "assets/images/wallet/metamask.png";
+import UnipassIcon from "assets/images/wallet/unipass.svg";
 import { useTranslation } from "react-i18next";
 
 enum LoginStatus {
@@ -16,7 +19,7 @@ enum LoginStatus {
   Pending,
 }
 
-type Connector = MetaMask;
+type Connector = MetaMask | UniPass;
 
 type LoginWallet = {
   name: string;
@@ -34,10 +37,18 @@ const LOGIN_WALLETS: LoginWallet[] = [
     iconURL: MetamaskIcon,
     type: WalletType.EOA,
   },
+  {
+    name: "Unipass",
+    value: Wallet.UNIPASS,
+    connector: uniPassWallet,
+    iconURL: UnipassIcon,
+    type: WalletType.AA,
+  },
 ];
 
 export default function LoginModal() {
   const { t } = useTranslation();
+
   const {
     state: { show_login_modal },
     dispatch,
@@ -65,6 +76,8 @@ export default function LoginModal() {
     try {
       await connector.activate();
       localStorage.setItem(SELECT_WALLET, w.value);
+      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: w.type });
+      handleClose();
     } catch (error) {
       handleFailed();
     }
@@ -133,8 +146,8 @@ const WalletOption = styled.li`
   cursor: pointer;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   border: 1px solid #f1f1f1;
-  background: rgb(191, 239, 45);
-  color: #fff;
+  background: #c3f237;
+  /* color: #fff; */
   font-family: "Inter-Semibold";
   font-size: 16px;
   &:hover {
