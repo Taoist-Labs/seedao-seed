@@ -17,7 +17,7 @@ interface IProps {
 export default function LevelItem({ data, points }: IProps) {
   const { t } = useTranslation();
   const isCurrent = useMemo(() => {
-    if (data.maxPointes === -1 && points > data.minPoints) {
+    if (data.maxPointes === -1 && points >= data.minPoints) {
       return true;
     }
     return points >= data.minPoints && points <= data.maxPointes;
