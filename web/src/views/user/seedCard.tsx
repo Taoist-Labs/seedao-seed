@@ -113,6 +113,8 @@ export default function SeedCard() {
   const [selectSeedIdx, setSelectSeedIdx] = useState(-1);
   const [nfts, setNfts] = useState<INFT[]>([]);
 
+  const [isOpenMint, setIsOpenMint] = useState(false);
+
   const selectSeed = useMemo(() => {
     if (selectSeedIdx === -1) {
       return undefined;
@@ -199,6 +201,17 @@ export default function SeedCard() {
   useEffect(() => {
     chainId === Chain.POLYGON.chainId && account && getSeedManagerContract();
   }, [chainId, account, provider]);
+
+  useEffect(() => {
+    const getSwitch = async () => {
+      if (!seedMgrContract) {
+        return;
+      }
+      const _isOpenMint = await seedMgrContract.onClaimWithPoints();
+      setIsOpenMint(_isOpenMint);
+    };
+    getSwitch();
+  }, [seedMgrContract]);
 
   const checkIfinWhiteList = () => {
     return WhiteListData.find((d) => d.address === account);
@@ -340,43 +353,44 @@ export default function SeedCard() {
       </CardTop>
       <CardBottom>
         <CardBottomInner>
-          {Number(points) < 5000 ? (
+          {nfts.length === 0 ? (
             <SeedDisplay seed={emptySeed} />
           ) : selectSeed ? (
             <SeedDisplay seed={selectSeed} />
           ) : (
             <SeedDisplay seed={{ ...emptySeed, name: "SEED" }} />
           )}
-
-          <CardBottomInnerRight>
-            <RightTopBox>
-              {hasSeed ? (
-                <span className="minted">{t("user.hadMint")}</span>
-              ) : checkIfinWhiteList() || Number(points) >= 5000 ? (
-                <div>
-                  <span
-                    className="btn mint-btn"
-                    onClick={() => setShowMintModal(true)}
-                  >
-                    <label>{t("user.unlockMint")}</label>
-                  </span>
-                  <p className="tip">{t("user.unlockTip")}</p>
-                </div>
-              ) : (
-                <div>
-                  <span className="btn lock-btn">
-                    <label>{t("user.lockMint")}</label>
-                  </span>
-                  <p className="tip">{t("user.lockTip")}</p>
-                </div>
-              )}
-            </RightTopBox>
-            <SeedList
-              list={nfts}
-              selectedIdx={selectSeedIdx}
-              onSelect={(idx) => setSelectSeedIdx(idx)}
-            />
-          </CardBottomInnerRight>
+          {isOpenMint && (
+            <CardBottomInnerRight>
+              <RightTopBox>
+                {hasSeed ? (
+                  <span className="minted">{t("user.hadMint")}</span>
+                ) : checkIfinWhiteList() || Number(points) >= 5000 ? (
+                  <div>
+                    <span
+                      className="btn mint-btn"
+                      onClick={() => setShowMintModal(true)}
+                    >
+                      <label>{t("user.unlockMint")}</label>
+                    </span>
+                    <p className="tip">{t("user.unlockTip")}</p>
+                  </div>
+                ) : (
+                  <div>
+                    <span className="btn lock-btn">
+                      <label>{t("user.lockMint")}</label>
+                    </span>
+                    <p className="tip">{t("user.lockTip")}</p>
+                  </div>
+                )}
+              </RightTopBox>
+              <SeedList
+                list={nfts}
+                selectedIdx={selectSeedIdx}
+                onSelect={(idx) => setSelectSeedIdx(idx)}
+              />
+            </CardBottomInnerRight>
+          )}
         </CardBottomInner>
       </CardBottom>
       {/* before mint -- congrats */}
