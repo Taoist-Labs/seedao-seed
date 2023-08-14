@@ -3,6 +3,8 @@ import GreyStarIcon from "assets/images/user/grey_star.svg";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import LevelStar from "components/svg/levelStar";
+import LevelStrokeStar from "components/svg/levelStrokeStar";
+
 import { formatNumber } from "utils/index";
 
 interface IProps {
@@ -62,7 +64,11 @@ export default function LevelItem({ data, points }: IProps) {
         </RightPart>
         <LeftPart>
           <span>L{data.level}</span>
-          <LevelStar color={data.color} />
+          {data.color === "#FFFFFF" ? (
+            <LevelStrokeStar />
+          ) : (
+            <LevelStar color={data.color} />
+          )}
         </LeftPart>
         <RightPart style={{ marginLeft: "15px" }}>
           <span className="max">Max</span>
@@ -75,7 +81,11 @@ export default function LevelItem({ data, points }: IProps) {
     <ActiveLevelStyle>
       <LeftPart>
         <span>L{data.level}</span>
-        <LevelStar color={data.color} />
+        {data.color === "#FFFFFF" ? (
+          <LevelStrokeStar />
+        ) : (
+          <LevelStar color={data.color} />
+        )}
       </LeftPart>
       <RightPart>
         <div className="top">
