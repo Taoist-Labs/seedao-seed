@@ -26,27 +26,23 @@ import SGN_A_3 from "./sgn_fqa_zh/3.md";
 
 export const FQA_LIST_ZH = [
   {
-    name: "我在哪里可以获得 Seed NFT？",
-    answer: A1,
-  },
-  {
-    name: "没有 Seed NFT, 可以加入SeeDAO 吗？",
+    name: "没有Seed NFT, 可以加入SeeDAO 吗？",
     answer: A2,
   },
   {
-    name: "Seed NFT有多少类元素属性？",
+    name: "Seed NFT有多少特征？",
     answer: A3,
   },
   {
-    name: "艺术家是谁？",
+    name: "创作 Seed NFT 的艺术家是谁？",
     answer: A4,
   },
   {
-    name: "Seed NFT 出售后，等级段位还在吗？",
+    name: "Seed NFT 出售后段位还在吗？",
     answer: A5,
   },
   {
-    name: "Seed NFT 的版权属于我吗？",
+    name: "购买Seed NFT后，我拥有它的版权吗？",
     answer: A6,
   },
   {
@@ -54,59 +50,43 @@ export const FQA_LIST_ZH = [
     answer: A7,
   },
   {
-    name: "如何访问我的 Seed NFT 高清图？",
-    answer: A8,
-  },
-  {
-    name: "在哪里可以看到我的 Seed NFT？",
+    name: "如何访问我的 Seed NFT 4k 文件？",
     answer: A9,
   },
   {
-    name: "如何加入 SeeDAO 呢？",
-    answer: A10,
+    name: "在哪里可以看到我的Seed NFT？",
+    answer: A9,
   },
 ];
 
 export const FQA_LIST_EN = [
   {
-    name: "我在哪里可以获得 Seed NFT？",
-    answer: A1_EN,
-  },
-  {
-    name: "没有 Seed NFT, 可以加入SeeDAO 吗？",
+    name: "Can I join SeeDAO without a Seed NFT?",
     answer: A2_EN,
   },
   {
-    name: "Seed NFT有多少类元素属性？",
+    name: "How many attribute does a Seed NFT have?",
     answer: A3_EN,
   },
   {
-    name: "艺术家是谁？",
+    name: "Who is the artist behind the creation of Seed NFT?",
     answer: A4_EN,
   },
   {
-    name: "Seed NFT 出售后，等级段位还在吗？",
+    name: "Does the ranking persist after the sale of a Seed NFT?",
     answer: A5_EN,
   },
   {
-    name: "Seed NFT 的版权属于我吗？",
+    name: "Do I own the copyright to my Seed NFT?",
     answer: A6_EN,
   },
   {
     name: "Seed NFT是什么类型的 NFT？",
-    answer: A7_EN,
+    answer: A7,
   },
   {
-    name: "如何访问我的 Seed NFT 高清图？",
-    answer: A8_EN,
-  },
-  {
-    name: "在哪里可以看到我的 Seed NFT？",
+    name: "Where can I view my Seed NFT?",
     answer: A9_EN,
-  },
-  {
-    name: "如何加入 SeeDAO 呢？",
-    answer: A10_EN,
   },
 ];
 

@@ -93,7 +93,7 @@ export default function FQA({ color }: { color: string }) {
 
         <a
           className="more"
-          href="https://www.notion.so/seedao/Seed-FQA-282e394974db4c87a6031ebe85203a8e?pvs=4"
+          href="https://seedao.notion.site/Seed-FQA-282e394974db4c87a6031ebe85203a8e"
           target="_blank"
           rel="noreferrer"
         >
