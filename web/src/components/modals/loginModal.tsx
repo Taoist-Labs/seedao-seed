@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import styled from "@emotion/styled";
 import { Wallet, WalletType } from "wallet/wallet";
@@ -94,7 +95,7 @@ export default function LoginModal() {
     >
       <ModalContainer>
         <span className="icon-close" onClick={handleClose}>
-          {/* <EvaIcon name="close-outline" /> */}
+          <CloseOutlinedIcon />
         </span>
 
         <Title>{t("header.connectWallet")}</Title>
@@ -119,20 +120,27 @@ const ModalContainer = styled(Box)`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 370px;
-  height: 160px;
+  height: 200px;
   background-color: #fff;
-  padding: 30px 20px;
+  padding: 40px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  .icon-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+  }
 `;
 
 const Title = styled.div`
   font-size: 18px;
   font-family: "Inter-Semibold";
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 26px;
+  margin-top: 15px;
 `;
 
 const WalletOption = styled.li`

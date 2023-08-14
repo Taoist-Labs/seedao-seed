@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { Link, useNavigate } from "react-router-dom";
 import LogoIcon from "assets/images/logo.png";
-import { useWeb3React } from "@web3-react/core";
 import { Button } from "@mui/material";
 import { addressToShow } from "utils/index";
 import LoginModal from "components/modals/loginModal";
