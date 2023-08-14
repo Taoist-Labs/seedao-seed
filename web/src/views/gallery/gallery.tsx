@@ -128,6 +128,10 @@ export default function GalleryPage() {
     return count;
   }, [selectAttrs, keyword]);
 
+  const removeFilters = () => {
+    setSelectAttrs([]);
+  };
+
   return (
     <>
       <Header />
@@ -224,7 +228,9 @@ export default function GalleryPage() {
               ) : (
                 <EmptyBox>
                   <p>{t("gallery.emptyResult")}</p>
-                  <ClearButton>{t("gallery.clearFilters")}</ClearButton>
+                  <ClearButton onClick={removeFilters}>
+                    {t("gallery.clearFilters")}
+                  </ClearButton>
                 </EmptyBox>
               )}
             </GalleryContent>
@@ -383,17 +389,19 @@ const EmptyBox = styled.div`
   justify-content: center;
   align-items: center;
   min-height: calc(80vh - 100px);
+  text-align: center;
+  font-size: 20px;
+  @media (max-width: 412px) {
+    font-size: 14px;
+  }
 `;
 
 const ClearButton = styled.span`
   border-radius: 8px;
   background: #c3f237;
-  padding: 10px;
-  font-size: 20px;
   margin-top: 36px;
   cursor: pointer;
-  padding-inline: 10px;
-  line-height: 44px;
+  padding: 10px;
 `;
 
 const GalleryMenuBox = styled.div`
