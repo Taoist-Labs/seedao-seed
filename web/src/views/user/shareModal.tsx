@@ -11,6 +11,7 @@ import * as htmlToImage from "html-to-image";
 import { useEffect, useMemo, useState } from "react";
 import CopyBox from "components/common/copy";
 import QrcodeBox from "./qrcode";
+import { uploadImage } from "utils/request";
 
 interface IProps {
   show: boolean;
@@ -19,31 +20,33 @@ interface IProps {
 }
 
 const SHARE_TEXT =
-  "🌱 Proudly unveiling my Seed NFT avatar, a testament to 500K points earned through creativity and collaboration within SeeDAO! 🚀 Join me in celebrating this achievement and our vibrant community. Let's spread the joy together! 🌟 #SeeDAO #SeedNFT #500KPoints";
+  "🌱 Proudly unveiling my Seed NFT avatar, a testament to 500K points earned through creativity and collaboration within SeeDAO! 🚀 Join me in celebrating this achievement and our vibrant community. 🌟";
+const HASH_TAGS = ["SeeDAO", "SeedNFT", "500KPoints"];
 
 export default function ShareModal({ show, seed, handleClose }: IProps) {
   const { t } = useTranslation();
   const [imgBlob, setImgBlob] = useState<Blob>();
   const [isRead, setIsRead] = useState(false);
-  const [ipfsHash, setIpfsHash] = useState("");
+  const [imgCode, setImgCode] = useState("");
   const [showQrcode, setShowQrcode] = useState(false);
 
   const shareLink = useMemo(() => {
-    return encodeURIComponent(
-      `https://social-share.xiaosongfu.workers.dev?title=SeeDAO Seed NFT&desc=Seed Now, See the DAO&image=${ipfsHash}`,
-    );
-  }, [ipfsHash]);
+    return `https://social-share.fn-labs.workers.dev?image=${imgCode}`;
+  }, [imgCode]);
   console.log("sharelink:", shareLink);
 
   const discordShareText = useMemo(() => {
-    return `${SHARE_TEXT} ${shareLink}}`;
+    return `${SHARE_TEXT} ${HASH_TAGS.map((t) => "#" + t).join(
+      " ",
+    )} ${shareLink}`;
   }, [shareLink]);
 
   console.log("discordShareText: ", discordShareText);
   const share2twitter = () => {
-    // TODO
     window.open(
-      `https://twitter.com/intent/tweet?text=${SHARE_TEXT}&url=${shareLink}`,
+      `https://twitter.com/intent/tweet?text=${SHARE_TEXT}&hashtags=${HASH_TAGS.join(
+        ",",
+      )}&url=${shareLink}`,
       "_blank",
     );
   };
@@ -68,13 +71,13 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
 
   useEffect(() => {
     if (!imgBlob) return;
-    // TODO upload
-    setIpfsHash("QmZ4z4LqRVJZVgEYYiNtLTvZJZ4C31ru3oZY7x7Hx1qJJq");
-    // uploadByFetch(imgBlob)
-    //   .then((res) => res.json())
-    //   .then((res) => {
-    //     setIpfsHash(res.Hash);
-    //   });
+    // setImgCode("11");
+    uploadImage(imgBlob)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        setImgCode(res.name);
+      });
   }, [imgBlob]);
 
   useEffect(() => {
@@ -107,7 +110,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
         {showQrcode ? (
           <RightBox>
             <QrcodeBox
-              imgCode={ipfsHash}
+              imgCode={imgCode}
               handleClose={() => setShowQrcode(false)}
             />
           </RightBox>
