@@ -11,13 +11,13 @@ import { useTranslation } from "react-i18next";
 import SeedList from "./seedList";
 import MintModal from "./mintModal";
 import ShareModal from "./shareModal";
-import Opening from "components/common/opening";
 import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
 import ABI from "data/SeeDAO.json";
 import SeedDisplay from "./seedDisplay";
 import { getNftByAccount } from "utils/request";
 import { GALLERY_ATTRS } from "data/gallery";
+import OpeningModal from "./opening";
 
 const SCR_CONTRACT = "0x27D4539d19b292b68369Ed588d682Db3aF679005";
 const SEED_CONTRACT = "0xdC46E9b8658CEFA4690751Aad513c5e7Cca131b4";
@@ -189,6 +189,8 @@ export default function SeedCard() {
 
   const goMint = async () => {
     // setLoading(true);
+    // setShowMintModal(false);
+
     // setTimeout(() => {
     //   console.log("mint done");
     //   setHasSeed(true);
@@ -203,9 +205,8 @@ export default function SeedCard() {
     //       { name: "Background", value: "90cm" },
     //     ],
     //   });
-    //   setShowSeedModal(true);
     //   setLoading(false);
-    //   setShowMintModal(false);
+    //   setShowSeedModal(true);
     // }, 3000);
     if (!seedContract) {
       return;
@@ -217,6 +218,7 @@ export default function SeedCard() {
     // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       setLoading(true);
+      setShowMintModal(false);
       let res: any;
       const find = checkIfinWhiteList();
       if (find) {
@@ -240,7 +242,6 @@ export default function SeedCard() {
           { name: "height", value: "90cm" },
         ],
       });
-      setShowMintModal(false);
     } catch (error) {
       console.error("goMint error", error);
     } finally {
@@ -338,7 +339,7 @@ export default function SeedCard() {
           handleClose={() => setShowShareModal(false)}
         />
       )}
-      {loading && <Opening />}
+      {loading && <OpeningModal />}
     </Card>
   );
 }
