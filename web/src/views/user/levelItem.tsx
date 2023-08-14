@@ -17,6 +17,9 @@ interface IProps {
 export default function LevelItem({ data, points }: IProps) {
   const { t } = useTranslation();
   const isCurrent = useMemo(() => {
+    if (data.maxPointes === -1 && points > data.minPoints) {
+      return true;
+    }
     return points >= data.minPoints && points <= data.maxPointes;
   }, [points, data]);
 
@@ -43,20 +46,22 @@ export default function LevelItem({ data, points }: IProps) {
         <span>L{data.level}</span>
         <LevelStar color={data.color} />
       </LeftPart>
-      <RightPart>
-        <div className="top">
-          <span className="num">
-            {t("user.levelProgress", {
-              points: leftPoints,
-              level: `L${data.level + 1}`,
-            })}
-          </span>
-          <span className="percent">{percent}%</span>
-        </div>
-        <ProcessBar color={data.color} percent={percent}>
-          <div className="inner" />
-        </ProcessBar>
-      </RightPart>
+      {isCurrent && data.maxPointes !== -1 && (
+        <RightPart>
+          <div className="top">
+            <span className="num">
+              {t("user.levelProgress", {
+                points: leftPoints,
+                level: `L${data.level + 1}`,
+              })}
+            </span>
+            <span className="percent">{percent}%</span>
+          </div>
+          <ProcessBar color={data.color} percent={percent}>
+            <div className="inner" />
+          </ProcessBar>
+        </RightPart>
+      )}
     </ActiveLevelStyle>
   ) : (
     <LevelItemStyle>

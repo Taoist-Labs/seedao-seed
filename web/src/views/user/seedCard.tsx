@@ -336,6 +336,8 @@ const Card = styled.div`
   border-radius: 20px;
   background: #fff;
   box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.18);
+  max-width: 1100px;
+  margin: 0 auto;
 `;
 
 const CardTop = styled.div`
