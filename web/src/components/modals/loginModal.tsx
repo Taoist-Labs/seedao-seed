@@ -88,8 +88,8 @@ export default function LoginModal() {
     }
   };
   useEffect(() => {
-    if (connector && chainId && chainId !== Chain.SEPOLIA.chainId) {
-      connector.activate(Chain.SEPOLIA);
+    if (connector && chainId && chainId !== Chain.POLYGON.chainId) {
+      connector.activate(Chain.POLYGON);
     }
   }, [chainId, connector]);
   return (
