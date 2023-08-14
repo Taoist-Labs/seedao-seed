@@ -22,7 +22,7 @@ const DynamicNFTs = [
   {
     img: DynamicIcon01,
     rimg: RowDynamicIcon01,
-    color: "#FC6162",
+    color: "#FF0000",
     levels: [
       {
         title: "L0",
@@ -37,7 +37,7 @@ const DynamicNFTs = [
   {
     img: DynamicIcon02,
     rimg: RowDynamicIcon02,
-    color: "#5939D9",
+    color: "#01B492",
     levels: [
       {
         title: "L2",
@@ -52,7 +52,7 @@ const DynamicNFTs = [
   {
     img: DynamicIcon03,
     rimg: RowDynamicIcon03,
-    color: "#6BE393",
+    color: "#D4CBF3",
     levels: [
       {
         title: "L4",
@@ -67,7 +67,7 @@ const DynamicNFTs = [
   {
     img: DynamicIcon04,
     rimg: RowDynamicIcon04,
-    color: "#EF36A9",
+    color: "#FF0091",
     levels: [
       {
         title: "L6",
@@ -82,7 +82,7 @@ const DynamicNFTs = [
   {
     img: DynamicIcon05,
     rimg: RowDynamicIcon05,
-    color: "#10D4FF",
+    color: "#00B1FF",
     levels: [
       {
         title: "L8",
