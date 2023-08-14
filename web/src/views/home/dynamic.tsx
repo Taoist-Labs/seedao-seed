@@ -121,7 +121,7 @@ export default function DynamicNFT({ color }: { color: string }) {
           <p className="second">
             <Trans
               i18nKey="home.dynamicPolaris"
-              components={{ span: <span>Polaris star colors</span> }}
+              components={{ span: <span>Tai Chi Star colors</span> }}
             >
               {/* <span>Polaris star colors</span> for different points/Level: */}
             </Trans>
