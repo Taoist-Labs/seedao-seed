@@ -129,7 +129,7 @@ export default function Header({ color }: { color?: string }) {
   };
 
   return (
-    <HeaderStyle style={{ background: color || "#fff" }}>
+    <HeaderStyle color={color || "#fff"}>
       <HeaderContainer>
         <LogoLink to="/">
           <img src={LogoIcon} alt="" />
@@ -231,12 +231,15 @@ const SmMenu = styled.div`
   }
 `;
 
-const HeaderStyle = styled.header`
+const HeaderStyle = styled.header<{ color: string }>`
   height: 102px;
   line-height: 104px;
   padding: 10px 30px;
   box-sizing: border-box;
   background-color: #fff;
+  @media (max-width: 750px) {
+    background-color: ${(props) => props.color};
+  }
   @media (max-width: 412px) {
     height: 60px;
     line-height: 60px;
