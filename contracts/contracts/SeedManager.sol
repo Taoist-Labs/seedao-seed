@@ -58,31 +58,31 @@ contract SeedManager is
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev 用于限制只有 minter 地址才能调用的方法
+  /// @dev used to restrict methods that only minter address can call
   modifier onlyMinter() {
     require(_msgSender() == minter, "Only minter can call this method");
     _;
   }
 
-  /// @dev 限制每个用户只能领取一次，无论是通过白名单条件还是通过积分条件都只能免费领取一次
+  /// @dev used to restrict that each user can only claim once, whether it is through the whitelist condition or the points condition, they can only claim for free once
   modifier noClaimed() {
     require(!claimed[_msgSender()], "You have claimed");
     _;
   }
 
-  /// @dev 用于限制只有合约开启 mint 功能时才能调用的方法
+  /// @dev used to restrict methods that only can call when mint feature gate is open
   modifier enableMint() {
     require(onMint, "Mint is not open");
     _;
   }
 
-  /// @dev 用于限制只有合约开启使用白名单 claim 功能时才能调用的方法
+  /// @dev used to restrict methods that only can call when claim with whitelist feature gate is open
   modifier enableClaimWithWhiteList() {
     require(onClaimWithWhiteList, "Claim with white list is not open");
     _;
   }
 
-  /// @dev 用于限制只有合约开启使用积分 claim 功能时才能调用的方法
+  /// @dev used to restrict methods that only can call when claim with points feature gate is open
   modifier enableClaimWithPoints() {
     require(onClaimWithPoints, "Claim with point is not open");
     _;
@@ -109,10 +109,10 @@ contract SeedManager is
     __ReentrancyGuard_init();
   }
 
-  /// @dev 白名单用户免费领取，调用时需要指定白名单 ID 和 Merkle Proof
-  /// enableClaimWithWhiteList 修饰器用于限制只有合约开启 claim 功能时才能调用当前方法
-  /// noClaimed 修饰器用于限制每个用户只能领取一次，无论是通过白名单还是通过积分都只能免费领取一次
-  /// nonReentrant 修饰器用于限制当前方法不能重入
+  /// @dev claim for free with whitelist, need to specify white list ID and Merkle Proof when calling
+  /// `enableClaimWithWhiteList` modifier is used to restrict methods that only can call when claim with whitelist feature gate is open
+  /// `noClaimed` modifier is used to restrict that each user can only claim once, whether it is through the whitelist condition or the points condition, they can only claim for free once
+  /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function claimWithWhiteList(
     uint256 whiteListId,
     bytes32[] calldata proof
@@ -126,10 +126,10 @@ contract SeedManager is
     _mint(_msgSender());
   }
 
-  /// @dev 使用积分数量免费 claim
-  /// enableClaimWithPoints 修饰器用于限制只有合约开启 claim 功能时才能调用当前方法
-  /// noClaimed 修饰器用于限制每个用户只能领取一次，无论是通过白名单还是通过积分都只能免费领取一次
-  /// nonReentrant 修饰器用于限制当前方法不能重入
+  /// claim for free with points
+  /// `enableClaimWithPoints` modifier is used to restrict methods that only can call when claim with points feature gate is open
+  /// `noClaimed` modifier is used to restrict that each user can only claim once, whether it is through the whitelist condition or the points condition, they can only claim for free once
+  /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function claimWithPoints()
     external
     enableClaimWithPoints
@@ -148,15 +148,15 @@ contract SeedManager is
     _mint(_msgSender());
   }
 
-  /// @dev 批量 mint NFT，必须是 minter 才能调用，调用时需要指定接收地址，可用于批量空投
+  /// batch mint NFT, only minter can call, need to specify the receiving addresses, can be used for batch airdrop
   function batchMint(address[] calldata to) external onlyMinter {
     _batchMint(to);
   }
 
-  /// @dev 直接购买 NFT，支持一次购买多个
-  /// payable 修饰器说明当前方法可以接收 native token
-  /// enableMint 修饰器用于限制只有合约开启 mint 功能时才能调用当前方法
-  /// nonReentrant 修饰器用于限制当前方法不能重入
+  /// @dev direct buy NFT, support buy multiple NFTs at once
+  /// `payable` modifier indicates that the current method can receive native token
+  /// `enableMint` modifier is used to restrict methods that only can call when mint feature gate is open
+  /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function mint(uint256 amount) external payable enableMint nonReentrant {
     require(amount > 0, "Mint amount must bigger than zero");
 
@@ -177,7 +177,7 @@ contract SeedManager is
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev 验证某个地址是否在白名单中
+  /// @dev verify whether an address is in the whitelist
   function _verifyWhiteList(
     uint256 whiteListId,
     bytes32[] calldata proof,
@@ -205,20 +205,20 @@ contract SeedManager is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev 修改 minter 地址，minter 具有 mint 权限
+  /// @dev change minter address
   function changeMinter(address minter_) external onlyOwner {
     address oldMinter = minter;
     minter = minter_;
     emit MinterChanged(oldMinter, minter_);
   }
 
-  /// @dev 设置积分 ERC20 token 合约地址
+  /// @dev set points token contract address
   function setPointsTokenAddress(address pointsToken_) external onlyOwner {
     pointsToken = pointsToken_;
   }
 
-  /// @dev 设置积分兑换 NFT 的积分数量条件
-  /// 如：条件是需要 50_000 积分就传入整数 50_000
+  /// @dev set the points count condition for free claim NFT
+  /// for example: if the condition is `50_000` points, then pass in the integer `50_000`
   function setPointsCountCondition(
     uint256 pointsCountCondi_
   ) external onlyOwner {
@@ -229,8 +229,8 @@ contract SeedManager is
       10 ** IERC20Metadata(pointsToken).decimals();
   }
 
-  /// @dev 设置白名单的，调用时需要传入白名单 ID 和 Merkle Tree Root Hash
-  /// 白名单分不同的批次，需要新增白名单时，需要使用新的白名单 ID
+  /// @dev set whitelist, need to pass in whitelist ID and Merkle Tree Root Hash when calling
+  /// the whitelist has different batches, when adding a new whitelist, a new whitelist ID is required
   function setWhiteList(
     uint256 whiteListId,
     bytes32 rootHash
@@ -238,7 +238,7 @@ contract SeedManager is
     whiteListRootHashes[whiteListId] = rootHash;
   }
 
-  /// @dev 设置 NFT 价格，价格的精度与链 native token 的精度相同
+  /// @dev set NFT price, the decimals of the price is the same as the decimals of the chain native token
   function setPrice(uint256 price_) external onlyOwner {
     price = price_;
   }
@@ -246,37 +246,37 @@ contract SeedManager is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev 暂停 mint 功能，暂停后无法再 mint 新的 NFT
+  /// @dev pause mint feature, after paused, can't mint new NFT
   function pauseMint() public onlyOwner {
     onMint = false;
     emit MintDisabled(_msgSender());
   }
 
-  /// @dev 取消暂停 mint 功能，取消暂停后，可以继续 mint 新的 NFT
+  /// @dev unpause mint feature, after unpaused, can mint new NFT
   function unpauseMint() public onlyOwner {
     onMint = true;
     emit MintEnabled(_msgSender());
   }
 
-  /// @dev 暂停使用白名单 claim 功能，暂停后无法再使用白名单 claim 新的 NFT
+  /// @dev pause free claim with whitelist feature, after paused, can't free claim new NFT with whitelist
   function pauseClaimWithWhiteList() public onlyOwner {
     onClaimWithWhiteList = false;
     emit ClaimWithWhiteListDisabled(_msgSender());
   }
 
-  /// @dev 取消暂停使用白名单 claim 功能，取消暂停后，可以继续使用白名单 claim 新的 NFT
+  /// @dev unpause free claim with whitelist feature, after unpaused, can free claim new NFT with whitelist
   function unpauseClaimWithWhiteList() public onlyOwner {
     onClaimWithWhiteList = true;
     emit ClaimWithWhiteListEnabled(_msgSender());
   }
 
-  /// @dev 暂停使用积分 claim 功能，暂停后无法再使用积分 claim 新的 NFT
+  /// @dev pause free claim with points feature, after paused, can't free claim new NFT with points
   function pauseClaimWithPoints() public onlyOwner {
     onClaimWithPoints = false;
     emit ClaimWithPointsDisabled(_msgSender());
   }
 
-  /// @dev 取消暂停使用积分 claim 功能，取消暂停后，可以继续使用积分 claim 新的 NFT
+  /// @dev unpause free claim with points feature, after unpaused, can free claim new NFT with points
   function unpauseClaimWithPoints() public onlyOwner {
     onClaimWithPoints = true;
     emit ClaimWithPointsEnabled(_msgSender());
@@ -287,7 +287,7 @@ contract SeedManager is
 
   receive() external payable {}
 
-  /// @dev 将合约 native token 余额全都提取到 owner 地址
+  /// @dev transfer all native token balance of this contract to the owner address
   function withdraw() external onlyOwner {
     uint256 balance = address(this).balance;
     payable(owner()).transfer(balance);
