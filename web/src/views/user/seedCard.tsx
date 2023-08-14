@@ -360,8 +360,8 @@ export default function SeedCard() {
           ) : (
             <SeedDisplay seed={{ ...emptySeed, name: "SEED" }} />
           )}
-          {isOpenMint && (
-            <CardBottomInnerRight>
+          <CardBottomInnerRight>
+            {isOpenMint && (
               <RightTopBox>
                 {hasSeed ? (
                   <span className="minted">{t("user.hadMint")}</span>
@@ -384,13 +384,15 @@ export default function SeedCard() {
                   </div>
                 )}
               </RightTopBox>
+            )}
+            {(nfts.length > 1 || isOpenMint) && (
               <SeedList
                 list={nfts}
                 selectedIdx={selectSeedIdx}
                 onSelect={(idx) => setSelectSeedIdx(idx)}
               />
-            </CardBottomInnerRight>
-          )}
+            )}
+          </CardBottomInnerRight>
         </CardBottomInner>
       </CardBottom>
       {/* before mint -- congrats */}
