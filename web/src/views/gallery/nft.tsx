@@ -47,6 +47,18 @@ const NFTStyle = styled(Grid)`
     position: absolute;
     left: 0;
     top: 0;
+    cursor: pointer;
+    &:hover {
+      animation: scaleanim 0.2s ease-in-out forwards;
+    }
+    @keyframes scaleanim {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(1.01);
+      }
+    }
   }
 `;
 
