@@ -100,13 +100,26 @@ export default function FQA({ color }: { color: string }) {
           {t("home.moreQuestions")}
         </a>
         <SocialBox>
-          <a href="http://" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://discord.gg/seedao"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src={DiscordIcon} alt="" />
           </a>
-          <a href="http://" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://twitter.com/see_dao"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src={TwitterIcon} alt="" />
           </a>
-          <a href="http://" target="_blank" rel="noopener noreferrer">
+          {/* TODO opensea is to be checked */}
+          <a
+            href="https://opensea.io/collection/seednft"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src={OpenseaIcon} alt="" />
           </a>
         </SocialBox>
