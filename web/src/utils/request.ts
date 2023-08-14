@@ -22,17 +22,9 @@ export const uploadByFetch = (fileData: any, headers = {}) => {
 };
 
 export const uploadImage = async (fileData: any) => {
-  const formData = new FormData();
-  formData.append("file", fileData);
-  formData.append("permission", "1");
-
-  return fetch("https://pnglog.com/api/v1/upload", {
+  return fetch("https://image-share.fn-labs.workers.dev ", {
     method: "POST",
-    body: formData,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "multipart/form-data",
-    },
+    body: fileData,
   });
 };
 
