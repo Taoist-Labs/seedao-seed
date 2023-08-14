@@ -33,12 +33,33 @@ const data = readSync();
 
 const deployd = {
   contracts: data,
-  setSeeDAOContract: function (addr: string) {
-    this.contracts["SeeDAO"] = addr;
+  setSeedContract: function (addr: string) {
+    this.contracts["Seed"] = addr;
     saveSync();
   },
-  getSeeDAOContract: function (): string {
-    return this.contracts["SeeDAO"];
+  getSeedContract: function (): string {
+    return this.contracts["Seed"];
+  },
+  setISeedContract: function (addr: string) {
+    this.contracts["SeedManager"] = addr;
+    saveSync();
+  },
+  getISeedContract: function (): string {
+    return this.contracts["SeedManager"];
+  },
+  setSeedManagerContract: function (addr: string) {
+    this.contracts["SeedManager"] = addr;
+    saveSync();
+  },
+  getSeedManagerContract: function (): string {
+    return this.contracts["SeedManager"];
+  },
+  setMockPointsContract: function (addr: string) {
+    this.contracts["mock"]["MockPoints"] = addr;
+    saveSync();
+  },
+  getMockPointsContract: function (): string {
+    return this.contracts["mock"]["MockPoints"];
   },
 };
 

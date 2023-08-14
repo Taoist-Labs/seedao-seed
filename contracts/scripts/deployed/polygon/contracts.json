@@ -1,3 +1,7 @@
 {
-  "SeeDAO": "_"
+  "Seed": "_",
+  "SeedManager": "_",
+  "mock": {
+    "MockPoints": "_"
+  }
 }
