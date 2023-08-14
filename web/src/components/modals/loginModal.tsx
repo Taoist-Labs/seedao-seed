@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -17,10 +17,10 @@ import { useTranslation } from "react-i18next";
 import useSelectAccount from "hooks/useSelectAccout";
 import Chain from "utils/chain";
 
-enum LoginStatus {
-  Default = 0,
-  Pending,
-}
+// enum LoginStatus {
+//   Default = 0,
+//   Pending,
+// }
 
 type Connector = MetaMask | UniPass;
 
