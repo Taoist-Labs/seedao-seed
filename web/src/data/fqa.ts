@@ -1,24 +1,17 @@
-import A1 from "./fqa_zh/1.md";
 import A2 from "./fqa_zh/2.md";
 import A3 from "./fqa_zh/3.md";
 import A4 from "./fqa_zh/4.md";
 import A5 from "./fqa_zh/5.md";
 import A6 from "./fqa_zh/6.md";
 import A7 from "./fqa_zh/7.md";
-import A8 from "./fqa_zh/8.md";
 import A9 from "./fqa_zh/9.md";
-import A10 from "./fqa_zh/10.md";
 
-import A1_EN from "./fqa_en/1.md";
 import A2_EN from "./fqa_en/2.md";
 import A3_EN from "./fqa_en/3.md";
 import A4_EN from "./fqa_en/4.md";
 import A5_EN from "./fqa_en/5.md";
 import A6_EN from "./fqa_en/6.md";
-import A7_EN from "./fqa_en/7.md";
-import A8_EN from "./fqa_en/8.md";
 import A9_EN from "./fqa_en/9.md";
-import A10_EN from "./fqa_en/10.md";
 
 import SGN_A_1 from "./sgn_fqa_zh/1.md";
 import SGN_A_2 from "./sgn_fqa_zh/2.md";

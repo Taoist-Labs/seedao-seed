@@ -82,11 +82,11 @@ const InfoBox = () => {
   return (
     <InfoBoxStyle>
       {[
-        { name: t("home.items"), value: "5K" },
-        { name: t("home.volume"), value: "82K ETH" },
-        { name: t("home.avg7d"), value: "5K" },
-        { name: t("home.owners"), value: "82K ETH" },
-        { name: t("home.floorPrice"), value: "5K" },
+        { name: t("home.items"), value: "0" },
+        { name: t("home.volume"), value: "0 ETH" },
+        { name: t("home.avg7d"), value: "0" },
+        { name: t("home.owners"), value: "0 ETH" },
+        { name: t("home.floorPrice"), value: "0" },
       ].map((item, idx) => (
         <li key={idx}>
           <div className="value">{item.value}</div>
@@ -283,8 +283,18 @@ const InfoBoxStyle = styled.ul`
     flex-wrap: wrap;
     height: unset;
     padding-block: 20px;
+    li {
+      padding-inline: 8px;
+    }
+    li .value,
+    li .name {
+      font-size: 10px;
+    }
   }
   @media (max-width: 412px) {
     margin-block: 28px;
+    li {
+      padding-inline: 6px;
+    }
   }
 `;
