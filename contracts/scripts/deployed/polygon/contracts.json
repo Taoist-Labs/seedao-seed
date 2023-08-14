@@ -1,7 +1,7 @@
 {
-  "Seed": "_",
-  "SeedManager": "_",
+  "Seed": "0xE8Feb3A8Ad2CF5A7E74E7c48BeFa8fA43162a210",
+  "SeedManager": "0x6c9774155D095471C69251E91481D73BA5024473",
   "mock": {
-    "MockPoints": "_"
+    "MockPoints": "0x5485715fedED2D3398f8bb922695e7d8bE86B242"
   }
 }

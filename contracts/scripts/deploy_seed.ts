@@ -5,11 +5,10 @@ async function main() {
   const [signer] = await ethers.getSigners();
   console.log("current signer: ", signer.address);
 
-  console.log("Deploying [Seed]...");
-
   // TODO WARNING: check me when deploying !!!
   const pointsTokenAddress = deployed.getMockPointsContract();
 
+  console.log(`Deploying [Seed] with params (${pointsTokenAddress}) ...`);
   const seed = await ethers.deployContract("Seed", [pointsTokenAddress]);
   await seed.waitForDeployment();
 
