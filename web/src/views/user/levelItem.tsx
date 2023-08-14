@@ -3,13 +3,14 @@ import GreyStarIcon from "assets/images/user/grey_star.svg";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import LevelStar from "components/svg/levelStar";
+import { formatNumber } from "utils/index";
 
 interface IProps {
   points: number;
   data: {
     level: number;
     minPoints: number;
-    maxPointes: number;
+    maxPoints: number;
     color: string;
   };
 }
@@ -17,19 +18,18 @@ interface IProps {
 export default function LevelItem({ data, points }: IProps) {
   const { t } = useTranslation();
   const isCurrent = useMemo(() => {
-    if (data.maxPointes === -1 && points >= data.minPoints) {
+    if (data.maxPoints === -1 && points >= data.minPoints) {
       return true;
     }
-    return points >= data.minPoints && points <= data.maxPointes;
+    return points >= data.minPoints && points <= data.maxPoints;
   }, [points, data]);
 
   const { leftPoints, percent } = useMemo(() => {
     if (isCurrent) {
       return {
-        leftPoints: data.maxPointes - points + 1,
+        leftPoints: data.maxPoints - points + 1,
         percent: Math.floor(
-          ((points - data.minPoints) * 100) /
-            (data.maxPointes - data.minPoints),
+          ((points - data.minPoints) * 100) / (data.maxPoints - data.minPoints),
         ),
       };
     } else {
@@ -40,28 +40,57 @@ export default function LevelItem({ data, points }: IProps) {
     }
   }, [isCurrent, points, data]);
 
+  const isCurrentAndLast = useMemo(() => {
+    return isCurrent && data.maxPoints === -1;
+  }, [isCurrent, data.maxPoints]);
+
+  if (isCurrentAndLast) {
+    return (
+      <ActiveLevelStyle>
+        <RightPart style={{ marginLeft: 0, marginRight: "20px" }}>
+          <div className="top">
+            <span className="num">
+              {t("home.points", {
+                num: formatNumber(points),
+              })}
+            </span>
+            <span className="percent">100%</span>
+          </div>
+          <ProcessBar color={data.color} percent={percent}>
+            <div className="inner" />
+          </ProcessBar>
+        </RightPart>
+        <LeftPart>
+          <span>L{data.level}</span>
+          <LevelStar color={data.color} />
+        </LeftPart>
+        <RightPart style={{ marginLeft: "15px" }}>
+          <span className="max">Max</span>
+        </RightPart>
+      </ActiveLevelStyle>
+    );
+  }
+
   return isCurrent ? (
     <ActiveLevelStyle>
       <LeftPart>
         <span>L{data.level}</span>
         <LevelStar color={data.color} />
       </LeftPart>
-      {isCurrent && data.maxPointes !== -1 && (
-        <RightPart>
-          <div className="top">
-            <span className="num">
-              {t("user.levelProgress", {
-                points: leftPoints,
-                level: `L${data.level + 1}`,
-              })}
-            </span>
-            <span className="percent">{percent}%</span>
-          </div>
-          <ProcessBar color={data.color} percent={percent}>
-            <div className="inner" />
-          </ProcessBar>
-        </RightPart>
-      )}
+      <RightPart>
+        <div className="top">
+          <span className="num">
+            {t("user.levelProgress", {
+              points: formatNumber(leftPoints),
+              level: `L${data.level + 1}`,
+            })}
+          </span>
+          <span className="percent">{percent}%</span>
+        </div>
+        <ProcessBar color={data.color} percent={percent}>
+          <div className="inner" />
+        </ProcessBar>
+      </RightPart>
     </ActiveLevelStyle>
   ) : (
     <LevelItemStyle>
@@ -75,12 +104,12 @@ export default function LevelItem({ data, points }: IProps) {
 
 const LevelItemStyle = styled.div`
   display: flex;
-  align-items: end;
+  align-items: center;
 `;
 
 const ActiveLevelStyle = styled.div`
   display: flex;
-  align-items: end;
+  align-items: center;
 `;
 const LeftPart = styled.div`
   font-size: 48px;
@@ -91,7 +120,11 @@ const LeftPart = styled.div`
 `;
 const RightPart = styled.div`
   margin-left: 20px;
+  position: relative;
   .top {
+    position: absolute;
+    top: -26px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -99,6 +132,11 @@ const RightPart = styled.div`
     font-size: 16px;
   }
   .percent {
+    font-family: "Inter-Bold";
+  }
+  .max {
+    font-size: 16px;
+    font-weight: 700;
     font-family: "Inter-Bold";
   }
 `;

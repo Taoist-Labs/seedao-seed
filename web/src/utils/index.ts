@@ -8,3 +8,7 @@ export const addressToShow = (address: string, num?: number) => {
 
   return `${frontStr}...${afterStr}`;
 };
+
+export const formatNumber = (num: number) => {
+  return num.toLocaleString("en-US");
+};

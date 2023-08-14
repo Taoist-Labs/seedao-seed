@@ -30,61 +30,61 @@ const LEVELS = [
   {
     level: 0,
     minPoints: 0,
-    maxPointes: 4999,
+    maxPoints: 4999,
     color: "#FC6162",
   },
   {
     level: 1,
     minPoints: 5000,
-    maxPointes: 19999,
+    maxPoints: 19999,
     color: "#FC6162",
   },
   {
     level: 2,
     minPoints: 20000,
-    maxPointes: 99999,
+    maxPoints: 99999,
     color: "#5939D9",
   },
   {
     level: 3,
     minPoints: 100000,
-    maxPointes: 299999,
+    maxPoints: 299999,
     color: "#5939D9",
   },
   {
     level: 4,
     minPoints: 300000,
-    maxPointes: 999999,
+    maxPoints: 999999,
     color: "#6BE393",
   },
   {
     level: 5,
     minPoints: 1000000,
-    maxPointes: 2999999,
+    maxPoints: 2999999,
     color: "#6BE393",
   },
   {
     level: 6,
     minPoints: 3000000,
-    maxPointes: 9999999,
+    maxPoints: 9999999,
     color: "#EF36A9",
   },
   {
     level: 7,
     minPoints: 10000000,
-    maxPointes: 29999999,
+    maxPoints: 29999999,
     color: "#EF36A9",
   },
   {
     level: 8,
     minPoints: 30000000,
-    maxPointes: 99999999,
+    maxPoints: 99999999,
     color: "#10D4FF",
   },
   {
     level: 9,
     minPoints: 100000000,
-    maxPointes: -1,
+    maxPoints: -1,
     color: "#10D4FF",
   },
 ];
@@ -95,6 +95,51 @@ const LEVELS = [
 //   const arr = name.split("_");
 //   return { tokenId: Number(arr[0]), level: Number(arr[1]) };
 // };
+
+const testresp = {
+  code: 200,
+  msg: null,
+  data: {
+    total: 1,
+    next: null,
+    content: [
+      {
+        contract_address: "0xe8feb3a8ad2cf5a7e74e7c48befa8fa43162a210",
+        contract_name: "Seed",
+        contract_token_id:
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+        token_id: "0",
+        erc_type: "erc721",
+        amount: "1",
+        minter: "0x183f09c3ce99c02118c570e03808476b22d63191",
+        owner: "0xebaef7c0f5bd0fa3e15d188a7545fceda76609c7",
+        own_timestamp: 1692034124000,
+        mint_timestamp: 1692034124000,
+        mint_transaction_hash:
+          "0x2ad7ef58c17dc4cb96f3d5be9d07c7ab43ebc2380bb0cf1441e4c400be4451e4",
+        mint_price: 0.0,
+        token_uri: null,
+        metadata_json: null,
+        name: null,
+        content_type: null,
+        content_uri: null,
+        description: null,
+        image_uri: null,
+        external_link: null,
+        latest_trade_price: null,
+        latest_trade_symbol: null,
+        latest_trade_token: null,
+        latest_trade_timestamp: null,
+        nftscan_id: "NS5ED2C8336D8BB12D",
+        nftscan_uri: null,
+        small_nftscan_uri: null,
+        attributes: [],
+        rarity_score: null,
+        rarity_rank: null,
+      },
+    ],
+  },
+};
 
 export default function SeedCard() {
   const { t } = useTranslation();
@@ -147,7 +192,7 @@ export default function SeedCard() {
     setSeedMgrContract(contract);
   };
 
-  const getSeedContract = () => {
+  const getSeedContract = async () => {
     if (!provider) {
       return;
     }
@@ -157,6 +202,12 @@ export default function SeedCard() {
       SeedABI,
       provider,
     );
+    try {
+      const uri = await contract.tokenURI(0);
+      console.log("uri: ", uri);
+    } catch (error) {
+      console.error("tokenURI error", error);
+    }
 
     setSeedContract(contract);
   };
@@ -342,21 +393,41 @@ export default function SeedCard() {
 
   useEffect(() => {
     const getMySeeds = () => {
-      account &&
-        getNftByAccount(account)
-          .then((res) => {
-            console.log(res);
-            // TODO
-          })
-          .catch((err) => console.log(err));
+      if (!account) return;
+      // account &&
+      //   getNftByAccount(account)
+      //     .then((res) => res.json())
+      //     .then((res) => {
+      //       console.log("getMySeeds res:", res);
+      //       // TODO
+      //       // res.data.data;
+      //     })
+      //     .catch((err) => console.log(err));
+      const lst: INFT[] = testresp.data.content.map((item: any) => ({
+        tokenId: item.token_id,
+        tokenIdFormat: `SEED No.${item.token_id}`,
+        attrs: item.attributes?.length
+          ? item.attributes.map((attr: any) => ({
+              name: attr.attribute_name,
+              value: attr.attribute_value,
+            }))
+          : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
+        image: item.image_uri,
+      }));
+      setNfts(lst);
+      if (lst.length) {
+        setSelectSeedIdx(0);
+      }
     };
-    process.env.NODE_ENV !== "development" && getMySeeds();
+    // process.env.NODE_ENV !== "development" &&
+    getMySeeds();
   }, [account]);
   return (
     <Card>
       <CardTop>
         {LEVELS.map((item, i) => (
-          <LevelItem key={i} data={item} points={Number(points)} />
+          <LevelItem key={i} data={item} points={15000500} />
+          // <LevelItem key={i} data={item} points={Number(points)} />
         ))}
       </CardTop>
       <CardBottom>
@@ -444,7 +515,7 @@ const Card = styled.div`
 const CardTop = styled.div`
   display: flex;
   gap: 19px;
-  padding: 40px 40px 45px;
+  padding: 60px 40px 30px;
   border-bottom: 1px solid #d9d9d9;
 `;
 
