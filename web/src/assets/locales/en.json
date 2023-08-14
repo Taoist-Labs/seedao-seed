@@ -3,7 +3,9 @@
     "header": {
         "seed": "SEED",
         "gallery": "GALLERY",
-        "connectWallet": "Connect Wallet"
+        "connectWallet": "Connect Wallet",
+        "disconnect": "DISCONNECT",
+        "myProfile": "MY PROFILE"
     },
     "home": {
         "bannerTitle": "Seed Now, See the DAO",

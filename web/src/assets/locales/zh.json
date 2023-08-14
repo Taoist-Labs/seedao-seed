@@ -3,7 +3,9 @@
     "header": {
         "seed": "SEED",
         "gallery": "画廊",
-        "connectWallet": "连接钱包"
+        "connectWallet": "连接钱包",
+        "disconnect": "断开连接",
+        "myProfile": "个人中心"
     },
     "home": {
         "bannerTitle": "Seed Now, See the DAO",

@@ -9,25 +9,26 @@ import { useAppContext, AppActionType } from "providers/appProvider";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 // import GreenStarIcon from "assets/images/home/green_star.svg";
 import MenuIcon from "assets/images/home/menu.svg";
 import LanguageIcon from "assets/images/home/language.svg";
 import { useTranslation } from "react-i18next";
 import useSelectAccount from "../../hooks/useSelectAccout";
+import { SELECT_WALLET } from "utils/constant";
 
-const SEED_OPTIONS = [
-  // { path: "about", label: "About" },
-  { path: "gallery", label: "header.gallery" },
-  // { path: "license", label: "License" },
-  // { path: "shop", label: "Shop" },
-];
-
-const SmNav = ({ handleClose }: { handleClose: () => void }) => {
+const SmNav = ({
+  handleClose,
+  account,
+}: {
+  handleClose: () => void;
+  account?: string;
+}) => {
   const { t } = useTranslation();
-  const [expand] = useState(false);
+  const [expand, setExpand] = useState(false);
+
   return (
     <SmMenu>
       <div className="content">
@@ -35,17 +36,24 @@ const SmNav = ({ handleClose }: { handleClose: () => void }) => {
           <div className="seed-menu">
             {/* <span>{t("header.seed")}</span> */}
             <Link to="/gallery">{t("header.gallery")}</Link>
+
             {/* {expand ? <ExpandLessIcon /> : <ExpandMoreIcon />} */}
           </div>
+          {account && (
+            <div className="seed-menu" onClick={() => setExpand(!expand)}>
+              <span>{addressToShow(account)}</span>
+              {expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </div>
+          )}
+
           {expand && (
             <ul className="sub-menu">
-              {SEED_OPTIONS.map((item, i) => (
-                <li key={i}>
-                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                  {/* @ts-ignore */}
-                  <Link to={item.path}>{t(item.label)}</Link>
-                </li>
-              ))}
+              <li>
+                <Link to="/my" className="my">
+                  {t("header.myProfile")}
+                </Link>
+              </li>
+              {/* <li onClick={handleDisconnect}>{t("header.disconnect")}</li> */}
             </ul>
           )}
         </div>
@@ -60,8 +68,32 @@ const SmNav = ({ handleClose }: { handleClose: () => void }) => {
 };
 
 const LoginBox = ({ account }: { account?: string }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { dispatch } = useAppContext();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openSelect = Boolean(anchorEl);
+  const { connector } = useSelectAccount();
+
+  const handleDisconnect = () => {
+    dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: "" });
+    localStorage.removeItem(SELECT_WALLET);
+    try {
+      console.log("connector:", connector);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      connector?.deactivate();
+    } catch (error) {
+      console.error("disconnect", error);
+    }
+
+    setAnchorEl(null);
+  };
+
+  const go2profile = () => {
+    navigate("/my");
+    setAnchorEl(null);
+  };
 
   const showLoginModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
@@ -77,7 +109,34 @@ const LoginBox = ({ account }: { account?: string }) => {
       </React.Fragment>
     );
   }
-  return <LoginStyle to="/my">{addressToShow(account)}</LoginStyle>;
+  return (
+    <>
+      <SelectBox
+        id="wallet-select"
+        onClick={(event: React.MouseEvent<HTMLElement>) =>
+          setAnchorEl(event.currentTarget)
+        }
+      >
+        <span>{addressToShow(account)}</span>
+        <ExpandMoreIcon />
+      </SelectBox>
+      <Menu
+        anchorEl={anchorEl}
+        open={openSelect}
+        onClose={() => setAnchorEl(null)}
+        MenuListProps={{
+          "aria-labelledby": "wallet-select",
+        }}
+      >
+        <MenuItemStyle value={1} onClick={go2profile}>
+          {t("header.myProfile")}
+        </MenuItemStyle>
+        <MenuItemStyle value={0} onClick={handleDisconnect}>
+          {t("header.disconnect")}
+        </MenuItemStyle>
+      </Menu>
+    </>
+  );
 };
 
 // const EnterAppButton = () => {
@@ -119,18 +178,9 @@ const Languagebutton = () => {
 
 export default function Header({ color }: { color?: string }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const openSelect = Boolean(anchorEl);
+
   const [showMenu, setShowMenu] = React.useState(false);
   const { account } = useSelectAccount();
-
-  const handleSelect = (path: string) => {
-    navigate(path);
-    setAnchorEl(null);
-  };
-
-  console.log("header account:", account);
 
   return (
     <HeaderStyle color={color || "#fff"}>
@@ -152,32 +202,14 @@ export default function Header({ color }: { color?: string }) {
             {/* <span>{t("header.seed")}</span> */}
             {/* <ExpandMoreIcon /> */}
           </SelectBox>
-          <Menu
-            anchorEl={anchorEl}
-            open={openSelect}
-            onClose={() => setAnchorEl(null)}
-            MenuListProps={{
-              "aria-labelledby": "seed-select",
-            }}
-          >
-            {SEED_OPTIONS.map((option, idx) => (
-              <MenuItem
-                value={idx}
-                key={idx}
-                onClick={() => handleSelect(option.path)}
-              >
-                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                {/* @ts-ignore */}
-                {t(option.label)}
-              </MenuItem>
-            ))}
-          </Menu>
           <Languagebutton />
           <LoginBox account={account} />
           {/* <EnterAppButton /> */}
         </NavStyle>
       </HeaderContainer>
-      {showMenu && <SmNav handleClose={() => setShowMenu(false)} />}
+      {showMenu && (
+        <SmNav handleClose={() => setShowMenu(false)} account={account} />
+      )}
     </HeaderStyle>
   );
 }
@@ -195,6 +227,8 @@ const SmMenu = styled.div`
   .content {
     background-color: #fff;
     .top {
+      padding-inline: 30px;
+
       .seed-menu {
         display: flex;
         align-items: center;
@@ -202,13 +236,10 @@ const SmMenu = styled.div`
       }
       .seed-menu,
       .sub-menu,
-      .sub-menu li {
-        padding-inline: 30px;
-      }
       .seed-menu,
       .sub-menu li {
         line-height: 44px;
-        padding-inline: 30p;
+        /* padding-inline: 30p; */
         font-family: "Inter-Semibold";
         cursor: pointer;
         a {
@@ -218,6 +249,10 @@ const SmMenu = styled.div`
       }
       .sub-menu li:hover {
         color: #a8e100;
+      }
+      .my {
+        padding-left: 20px;
+        display: block;
       }
     }
     .bottom {
@@ -280,11 +315,6 @@ const LogoLink = styled(Link)`
   }
 `;
 
-const LoginStyle = styled(Link)`
-  text-decoration: none;
-  color: unset;
-`;
-
 const NavStyle = styled.div`
   display: flex;
   align-items: center;
@@ -316,7 +346,6 @@ const SmNavStyle = styled.div`
 
 const SelectBox = styled.div`
   display: flex;
-  width: 80px;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
@@ -346,11 +375,20 @@ const LanguageBox = styled.div`
   align-items: center;
   gap: 5px;
   cursor: pointer;
+  line-height: unset;
 `;
 
 const ConnectButton = styled(Button)`
+  font-family: "Inter-Semibold";
+  font-size: 18px;
   color: unset;
   &:hover {
     background-color: rgba(168, 225, 0, 0.2);
   }
+`;
+
+const MenuItemStyle = styled(MenuItem)`
+  font-family: "Inter-Semibold";
+  font-size: 18px;
+  text-align: center;
 `;
