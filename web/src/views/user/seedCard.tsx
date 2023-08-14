@@ -18,6 +18,7 @@ import SeedDisplay from "./seedDisplay";
 import { getNftByAccount } from "utils/request";
 import { GALLERY_ATTRS } from "data/gallery";
 import OpeningModal from "./opening";
+import useSelectAccount from "hooks/useSelectAccout";
 
 const SCR_CONTRACT = "0x27D4539d19b292b68369Ed588d682Db3aF679005";
 const SEED_CONTRACT = "0xdC46E9b8658CEFA4690751Aad513c5e7Cca131b4";
@@ -85,9 +86,16 @@ const LEVELS = [
   },
 ];
 
+// const handleTokenUri = (uri: string) => {
+//   // uri: ipfs://xxxx/tokenId_level.json
+//   const name = uri.split(".")[0].split("/").reverse()[0];
+//   const arr = name.split("_");
+//   return { tokenId: Number(arr[0]), level: Number(arr[1]) };
+// };
+
 export default function SeedCard() {
   const { t } = useTranslation();
-  const { account, provider, chainId, connector } = useWeb3React();
+  const { account, provider, chainId, connector } = useSelectAccount();
 
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
@@ -99,7 +107,7 @@ export default function SeedCard() {
 
   const [newNft, setNewNft] = useState<INFT>();
   const [selectSeedIdx, setSelectSeedIdx] = useState(-1);
-  const [nfts] = useState<INFT[]>([]);
+  const [nfts, setNfts] = useState<INFT[]>([]);
 
   const selectSeed = useMemo(() => {
     if (selectSeedIdx === -1) {
@@ -124,8 +132,10 @@ export default function SeedCard() {
     if (!provider) {
       return;
     }
+
     const signer = provider.getSigner(account);
     const contract = new ethers.Contract(SEED_CONTRACT, ABI, signer);
+
     setSeedContract(contract);
   };
 
@@ -180,14 +190,20 @@ export default function SeedCard() {
 
   useEffect(() => {
     account && getSCR();
-    chainId === Chain.SEPOLIA.chaiId && account && getSeedContract();
-  }, [chainId, account]);
+  }, [account]);
+
+  useEffect(() => {
+    chainId === Chain.SEPOLIA.chainId && account && getSeedContract();
+  }, [chainId, account, provider]);
 
   const checkIfinWhiteList = () => {
     return WhiteListData.find((d) => d.address === account);
   };
 
   const goMint = async () => {
+    if (!connector) {
+      return;
+    }
     // setLoading(true);
     // setShowMintModal(false);
 
@@ -208,12 +224,14 @@ export default function SeedCard() {
     //   setLoading(false);
     //   setShowSeedModal(true);
     // }, 3000);
-    if (!seedContract) {
+
+    // check network
+    if (chainId !== Chain.SEPOLIA.chainId) {
+      await connector.activate(Chain.SEPOLIA);
       return;
     }
-    // check network
-    if (chainId !== Chain.SEPOLIA.chaiId) {
-      await connector.activate({ ...Chain.SEPOLIA });
+    if (!seedContract) {
+      return;
     }
     // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -226,27 +244,70 @@ export default function SeedCard() {
       } else {
         res = await seedContract.claimWithPoints();
       }
-      await res.wait();
+      const r = await res.wait();
+      console.log("r:", r);
       console.log("mint done");
+      const event = r.events.find((e: any) => e.name === "Transfer");
       setHasSeed(true);
-      // TODO handle event and get seed
-      setShowSeedModal(true);
-      setNewNft({
-        image:
-          "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-        tokenId: "2000",
-        name: "lala",
-        attrs: [
-          { name: "background", value: "#fff" },
-          { name: "color", value: "#fff" },
-          { name: "height", value: "90cm" },
-        ],
-      });
+      if (event) {
+        const tokenIdHex = event.topics[3];
+        // TODO handle 16 => 10;
+        const tokenId = tokenIdHex;
+        const uri = await seedContract.tokenURI(tokenId);
+        // if (uri.endsWith(".json")) {
+        //   const _new_nft: INFT = {
+        //     tokenId,
+        //     tokenIdFormat: `SEED No.${tokenId}`, // display tokenId ?
+        //     image: emptySeed.image,
+        //     attrs: emptySeed.attrs,
+        //   };
+        //   setNfts([...nfts, _new_nft]);
+        //   setLoading(false);
+        //   return;
+        // }
+        fetch(uri, { method: "GET" })
+          .then((res) => res.json())
+          .then((res: any) => {
+            const _new_nft: INFT = {
+              tokenId,
+              tokenIdFormat: `SEED No.${tokenId}`,
+              image: res.image, // TODO handle image url
+              attrs: res.attributes.map((attr: any) => ({
+                name: attr.trait_type,
+                value: attr.value,
+              })),
+            };
+            setNewNft(_new_nft);
+            setNfts([...nfts, _new_nft]);
+
+            setShowSeedModal(true);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.error("fetch new token uri error", err, uri);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+
+        // setNewNft({
+        //   image:
+        //     "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
+        //   tokenId: "2000",
+        //   name: "lala",
+        //   attrs: [
+        //     { name: "background", value: "#fff" },
+        //     { name: "color", value: "#fff" },
+        //     { name: "height", value: "90cm" },
+        //   ],
+        // });
+      }
+      setLoading(false);
     } catch (error) {
       console.error("goMint error", error);
+      setLoading(false);
     } finally {
       // dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      setLoading(false);
     }
   };
   const handleClickShare = () => {
