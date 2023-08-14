@@ -186,9 +186,9 @@ const SmMenu = styled.div`
   position: fixed;
   z-index: 99;
   left: 0;
-  top: 60px;
+  top: 90px;
   width: 100vw;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 90px);
   display: flex;
   flex-direction: column;
 
@@ -233,14 +233,19 @@ const SmMenu = styled.div`
     flex: 1;
     background-color: rgba(0, 0, 0, 0.5);
   }
+  @media (max-width: 412px) {
+    height: calc(100vh - 60px);
+    top: 60px;
+  }
 `;
 
 const HeaderStyle = styled.header<{ color: string }>`
-  height: 102px;
-  line-height: 104px;
+  height: 90px;
+  line-height: 90px;
   padding: 10px 30px;
   box-sizing: border-box;
   background-color: #fff;
+  font-size: 18px;
   @media (max-width: 750px) {
     background-color: ${(props) => props.color};
   }
@@ -248,6 +253,7 @@ const HeaderStyle = styled.header<{ color: string }>`
     height: 60px;
     line-height: 60px;
     padding: 0 15px;
+    font-size: 14px;
   }
 `;
 
@@ -282,7 +288,8 @@ const LoginStyle = styled(Link)`
 const NavStyle = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 40px;
+  font-family: "Inter-Semibold";
   @media (max-width: 750px) {
     display: none;
   }
@@ -295,6 +302,7 @@ const SmNavStyle = styled.div`
     top: 18px;
     cursor: pointer;
   }
+  font-family: "Inter-Semibold";
   @media (max-width: 750px) {
     display: block;
   }

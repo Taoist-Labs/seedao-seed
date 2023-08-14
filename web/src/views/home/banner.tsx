@@ -38,7 +38,7 @@ export default function Banner({ color, bg }: { color: string; bg: string }) {
 }
 
 const BannerStyle = styled.section<{ bg: string }>`
-  height: calc(100vh - 102px);
+  height: calc(100vh - 90px);
   min-height: 664px;
   padding: 113px 0 0 80px;
   box-sizing: border-box;
