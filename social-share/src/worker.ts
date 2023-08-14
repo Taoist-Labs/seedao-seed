@@ -28,11 +28,11 @@ export interface Env {
 export default {
   // http://127.0.0.1:8787?url=https://abc.com&title=ttt&desc=ddd&image=iii
   async fetch(
-    request: Request,
+    req: Request,
     env: Env,
     ctx: ExecutionContext,
   ): Promise<Response> {
-    return new Response(renderTemplate(parseParams(request)), {
+    return new Response(renderTemplate(parseParams(req)), {
       headers: {
         'Content-Type': 'text/html',
       },
@@ -46,6 +46,7 @@ function parseParams(request: Request) {
   let title = searchParams.get('title');
   let desc = searchParams.get('desc');
   let image = searchParams.get('image');
+  image = `https://image-share.fn-labs.workers.dev/${image}.png`
   let style = searchParams.get('style') || 'summary_large_image'; // support `summary` and `summary_large_image`
   // console.log(url, title, desc, image, style);
 
