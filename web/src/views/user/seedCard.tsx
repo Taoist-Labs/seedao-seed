@@ -311,7 +311,7 @@ export default function SeedCard() {
       await connector.activate(Chain.POLYGON);
       return;
     }
-    if (!seedContract) {
+    if (!seedMgrContract || !seedContract) {
       return;
     }
     // dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -321,9 +321,9 @@ export default function SeedCard() {
       let res: any;
       const find = checkIfinWhiteList();
       if (find) {
-        res = await seedContract.claimWithWhiteList(find.no, find.proof);
+        res = await seedMgrContract.claimWithWhiteList(find.no, find.proof);
       } else {
-        res = await seedContract.claimWithPoints();
+        res = await seedMgrContract.claimWithPoints();
       }
       const r = await res.wait();
       console.log("r:", r);
@@ -428,17 +428,35 @@ export default function SeedCard() {
     process.env.NODE_ENV !== "development" && getMySeeds();
   }, [account]);
 
+  // check network
+  const checkNetwork = async () => {
+    if (connector && chainId && chainId !== Chain.POLYGON.chainId) {
+      try {
+        await connector.activate(Chain.POLYGON);
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const onClickUnlockButton = async () => {
     if (!connector) {
       return;
     }
     // check network
-    if (chainId !== Chain.POLYGON.chainId) {
-      await connector.activate(Chain.POLYGON);
+    const res = await checkNetwork();
+    if (!res) {
       return;
     }
     setShowMintModal(true);
   };
+
+  useEffect(() => {
+    checkNetwork();
+  }, [connector, chainId]);
   return (
     <Card>
       <CardTop>
@@ -466,14 +484,14 @@ export default function SeedCard() {
                       className="btn mint-btn"
                       onClick={onClickUnlockButton}
                     >
-                      <label>{t("user.unlockMint")}</label>
+                      <span>{t("user.unlockMint")}</span>
                     </span>
                     <p className="tip">{t("user.unlockTip")}</p>
                   </div>
                 ) : (
                   <div>
                     <span className="btn lock-btn">
-                      <label>{t("user.lockMint")}</label>
+                      <span>{t("user.lockMint")}</span>
                     </span>
                     <p className="tip">{t("user.lockTip")}</p>
                   </div>
@@ -567,7 +585,6 @@ const RightTopBox = styled.div`
   }
   .mint-btn {
     background: #a8e100;
-    cursor: pointer;
     cursor: pointer;
   }
   .minted {
