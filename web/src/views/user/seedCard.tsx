@@ -207,8 +207,12 @@ export default function SeedCard() {
       if (!seedMgrContract) {
         return;
       }
-      const _isOpenMint = await seedMgrContract.onClaimWithPoints();
-      setIsOpenMint(_isOpenMint);
+      try {
+        const _isOpenMint = await seedMgrContract.onClaimWithPoints();
+        setIsOpenMint(_isOpenMint);
+      } catch (error) {
+        console.error("getSwitch error", error);
+      }
     };
     getSwitch();
   }, [seedMgrContract]);
