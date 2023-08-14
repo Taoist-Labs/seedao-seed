@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import Divider from "@mui/material/Divider";
 import Checkbox from "components/common/checkbox";
 
@@ -53,7 +54,7 @@ export default function FilterAttrItem({
           <img src={icon} alt="" />
           {name}
         </div>
-        {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        {isOpen ? <RemoveIcon /> : <AddIcon />}
       </FilterAttrName>
       {isOpen && (
         <>
