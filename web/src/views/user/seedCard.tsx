@@ -165,8 +165,12 @@ export default function SeedCard() {
     if (!seedContract) {
       return;
     }
-    const data = await seedContract.balanceOf(account);
-    setHasSeed(data.eq(ethers.BigNumber.from(1)));
+    try {
+      const data = await seedContract.balanceOf(account);
+      setHasSeed(data.gte(ethers.BigNumber.from(1)));
+    } catch (error) {
+      console.error("getSeedBalance error", error);
+    }
   };
 
   const getSCR = async () => {
