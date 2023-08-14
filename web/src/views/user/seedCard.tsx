@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 import { ethers, Contract } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Chain from "utils/chain";
 
@@ -9,7 +9,6 @@ import LevelItem from "./levelItem";
 import SeedModal from "components/modals/seedModal";
 import { useTranslation } from "react-i18next";
 import SeedList from "./seedList";
-import { GALLERY_ATTRS } from "data/gallery";
 import MintModal from "./mintModal";
 import ShareModal from "./shareModal";
 import Opening from "components/common/opening";
@@ -17,7 +16,8 @@ import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
 import ABI from "data/SeeDAO.json";
 import SeedDisplay from "./seedDisplay";
-import { ATTR_ICON_MAP } from "utils/constant";
+import { getNftByAccount } from "utils/request";
+import { GALLERY_ATTRS } from "data/gallery";
 
 const SCR_CONTRACT = "0x27D4539d19b292b68369Ed588d682Db3aF679005";
 const SEED_CONTRACT = "0xdC46E9b8658CEFA4690751Aad513c5e7Cca131b4";
@@ -98,7 +98,25 @@ export default function SeedCard() {
   const [loading, setLoading] = useState(false);
 
   const [newNft, setNewNft] = useState<INFT>();
-  const [selectSeed] = useState<INFT>();
+  const [selectSeedIdx, setSelectSeedIdx] = useState(-1);
+  const [nfts] = useState<INFT[]>([]);
+
+  const selectSeed = useMemo(() => {
+    if (selectSeedIdx === -1) {
+      return undefined;
+    } else {
+      return nfts[selectSeedIdx];
+    }
+  }, [nfts, selectSeedIdx]);
+
+  const emptySeed: INFT = useMemo(() => {
+    return {
+      image: EmptyIcon,
+      tokenId: "",
+      name: t("user.notOwneSeed"),
+      attrs: GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
+    };
+  }, [t]);
 
   console.log("points:", points);
 
@@ -150,7 +168,7 @@ export default function SeedCard() {
         provider,
       );
       const data = await contract.balanceOf(account);
-      setPoints(ethers.utils.formatUnits(data, 6));
+      setPoints(ethers.utils.formatUnits(data, 18));
     } catch (error) {
       console.error("getSCR error", error);
     }
@@ -162,7 +180,7 @@ export default function SeedCard() {
 
   useEffect(() => {
     account && getSCR();
-    chainId === 11155111 && account && getSeedContract();
+    chainId === Chain.SEPOLIA.chaiId && account && getSeedContract();
   }, [chainId, account]);
 
   const checkIfinWhiteList = () => {
@@ -170,70 +188,83 @@ export default function SeedCard() {
   };
 
   const goMint = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      console.log("mint done");
-      setHasSeed(true);
-      setNewNft({
-        image:
-          "https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/seed-Beige%20Gray%23Stategrey%23Normal%23Red%20L0-L1%23Headband_1%23%23Waves%20and%20Peaks_4.png",
-        tokenId: "2000",
-        name: "lala",
-        attrs: [
-          { name: "Background", value: "#fff" },
-          { name: "Eyes", value: "#fff" },
-          { name: "Background", value: "90cm" },
-        ],
-      });
-      setShowSeedModal(true);
-      setLoading(false);
-      setShowMintModal(false);
-    }, 3000);
-    // if (!seedContract) {
-    //   return;
-    // }
-    // // check network
-    // if (chainId !== Chain.SEPOLIA.chaiId) {
-    //   await connector.activate({ ...Chain.SEPOLIA });
-    // }
-    // // dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    // try {
-    //   setLoading(true);
-    //   let res: any;
-    //   const find = checkIfinWhiteList();
-    //   if (find) {
-    //     res = await seedContract.claimWithWhiteList(find.no, find.proof);
-    //   } else {
-    //     res = await seedContract.claimWithPoints();
-    //   }
-    //   await res.wait();
+    // setLoading(true);
+    // setTimeout(() => {
     //   console.log("mint done");
     //   setHasSeed(true);
-    //   // TODO get seed and show modal
-    //   setShowSeedModal(true);
     //   setNewNft({
     //     image:
-    //       "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
+    //       "https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/seed-Beige%20Gray%23Stategrey%23Normal%23Red%20L0-L1%23Headband_1%23%23Waves%20and%20Peaks_4.png",
     //     tokenId: "2000",
     //     name: "lala",
     //     attrs: [
-    //       { name: "background", value: "#fff" },
-    //       { name: "color", value: "#fff" },
-    //       { name: "height", value: "90cm" },
+    //       { name: "Background", value: "#fff" },
+    //       { name: "Eyes", value: "#fff" },
+    //       { name: "Background", value: "90cm" },
     //     ],
     //   });
-    //   setShowMintModal(false);
-    // } catch (error) {
-    //   console.error("goMint error", error);
-    // } finally {
-    //   // dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    //   setShowSeedModal(true);
     //   setLoading(false);
-    // }
+    //   setShowMintModal(false);
+    // }, 3000);
+    if (!seedContract) {
+      return;
+    }
+    // check network
+    if (chainId !== Chain.SEPOLIA.chaiId) {
+      await connector.activate({ ...Chain.SEPOLIA });
+    }
+    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      setLoading(true);
+      let res: any;
+      const find = checkIfinWhiteList();
+      if (find) {
+        res = await seedContract.claimWithWhiteList(find.no, find.proof);
+      } else {
+        res = await seedContract.claimWithPoints();
+      }
+      await res.wait();
+      console.log("mint done");
+      setHasSeed(true);
+      // TODO handle event and get seed
+      setShowSeedModal(true);
+      setNewNft({
+        image:
+          "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
+        tokenId: "2000",
+        name: "lala",
+        attrs: [
+          { name: "background", value: "#fff" },
+          { name: "color", value: "#fff" },
+          { name: "height", value: "90cm" },
+        ],
+      });
+      setShowMintModal(false);
+    } catch (error) {
+      console.error("goMint error", error);
+    } finally {
+      // dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      setLoading(false);
+    }
   };
   const handleClickShare = () => {
     setShowSeedModal(false);
     setShowShareModal(true);
   };
+
+  useEffect(() => {
+    const getMySeeds = () => {
+      account &&
+        getNftByAccount(account)
+          .then((res) => {
+            console.log(res);
+            // TODO
+          })
+          .catch((err) => console.log(err));
+    };
+    process.env.NODE_ENV !== "development" && getMySeeds();
+  }, [account]);
   return (
     <Card>
       <CardTop>
@@ -244,31 +275,16 @@ export default function SeedCard() {
       <CardBottom>
         <CardBottomInner>
           {Number(points) < 5000 ? (
-            <SeedDetail>
-              <SeedImg>
-                <img src={EmptyIcon} alt="" />
-              </SeedImg>
-              <SeedAttr>
-                <div className="name not-name">{t("user.notOwneSeed")}</div>
-                <ul>
-                  {Object.keys(ATTR_ICON_MAP).map((key, i) => (
-                    <li key={i}>
-                      <img src={ATTR_ICON_MAP[key]} alt="" />
-                      <div>
-                        <p className="name">{key}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </SeedAttr>
-            </SeedDetail>
+            <SeedDisplay seed={emptySeed} />
+          ) : selectSeed ? (
+            <SeedDisplay seed={selectSeed} />
           ) : (
-            selectSeed && <SeedDisplay seed={selectSeed} />
+            <SeedDisplay seed={{ ...emptySeed, name: "SEED" }} />
           )}
 
           <CardBottomInnerRight>
             <RightTopBox>
-              {/* {hasSeed ? (
+              {hasSeed ? (
                 <span className="minted">{t("user.hadMint")}</span>
               ) : checkIfinWhiteList() || Number(points) >= 5000 ? (
                 <div>
@@ -287,18 +303,13 @@ export default function SeedCard() {
                   </span>
                   <p className="tip">{t("user.lockTip")}</p>
                 </div>
-              )} */}
-              <div>
-                <span
-                  className="btn mint-btn"
-                  onClick={() => setShowMintModal(true)}
-                >
-                  <label>{t("user.unlockMint")}</label>
-                </span>
-                <p className="tip">{t("user.unlockTip")}</p>
-              </div>
+              )}
             </RightTopBox>
-            <SeedList />
+            <SeedList
+              list={nfts}
+              selectedIdx={selectSeedIdx}
+              onSelect={(idx) => setSelectSeedIdx(idx)}
+            />
           </CardBottomInnerRight>
         </CardBottomInner>
       </CardBottom>
@@ -354,60 +365,6 @@ const CardBottom = styled.div`
 const CardBottomInner = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-const SeedImg = styled.div`
-  width: 240px;
-  height: 240px;
-  img {
-    width: 100%;
-    height: 100%;
-  }
-`;
-
-const SeedDetail = styled.div`
-  display: flex;
-  gap: 14px;
-`;
-const SeedAttr = styled.div`
-  width: 390px;
-  .name {
-    font-size: 18px;
-    font-family: "Inter-Bold";
-  }
-  .not-name {
-    color: #929191;
-  }
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  li {
-    width: 190px;
-    height: 42px;
-    border-radius: 8px;
-    border: 1px solid #000;
-    background: #fff;
-    padding: 4px 9px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    img {
-      width: 24px;
-    }
-    .name {
-      font-size: 12px;
-      font-weight: 400;
-      opacity: 0.5;
-    }
-    .value {
-      font-size: 16px;
-      font-family: "Inter-Semibold";
-    }
-  }
 `;
 
 const CardBottomInnerRight = styled.div``;

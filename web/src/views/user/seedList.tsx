@@ -1,17 +1,23 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
 
-export default function SeedList() {
-  const [selectId, setSelectId] = useState(0);
+interface IProps {
+  list: INFT[];
+  selectedIdx: number;
+  onSelect: (idx: number) => void;
+}
+
+export default function SeedList({ list, onSelect, selectedIdx }: IProps) {
   return (
     <RightBottomBox>
       <ul>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+        {list.map((item, idx) => (
           <li
-            onClick={() => setSelectId(item)}
-            key={item}
-            className={item === selectId ? "select" : ""}
-          ></li>
+            onClick={() => onSelect(idx)}
+            key={idx}
+            className={idx === selectedIdx ? "select" : ""}
+          >
+            {item.image}
+          </li>
         ))}
       </ul>
     </RightBottomBox>
