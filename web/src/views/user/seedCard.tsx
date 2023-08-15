@@ -29,6 +29,7 @@ import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
 
 const whiteList = WhiteListData as {
+  rootHash: string;
   proofs: [{ address: string; proof: string[] }];
 }[];
 
