@@ -47,7 +47,7 @@ Management methods supported by `Seed` contract:
 Please modify and confirm the address of the `Seed` contract in `scripts/deploy_seed_manager.ts` #9 line, and then execute the deployment command:
 
 ```bash
-$ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts 
+$ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts
 ```
 
 !! After the `SeedManger` contract is deployed successfully in the `scripts/deploy_seed_manager.ts` script, the `changeMinter(address)` method of the `Seed` contract is called to modify its minter address to the address of the `SeedManger` contract !!

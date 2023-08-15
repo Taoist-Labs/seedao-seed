@@ -1,6 +1,6 @@
 ## Run
 
-```
+```bash
 $ npx hardhat run --network mainnet scripts/snapshot/snapshot.ts
 ```
 

@@ -2,7 +2,7 @@
 
 first, fill whitelist addresses in `whitelist.txt` file, and then execute:
 
-```
+```bash
 $ npx hardhat run scripts/whitelist/generate_merkletree.ts
 ```
 

@@ -1,0 +1,200 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x790be9Ca0427fAa1474021303c2f8c40b13817E8",
+    "txHash": "0x3b8a2015871d36da8fb5c0049b9f5313ea3f21ffcfd10686ce5696301bf0169a"
+  },
+  "proxies": [
+    {
+      "address": "0xdD006C66E4279978F4c3A0A21cB9b0e548B22827",
+      "txHash": "0x70b0b45047d93eab2a27dbe020b4b24c79ebc84030f065c6bc160d314dc2dbc4",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "183fac3103cf58f3a76f84f83ebb0ae0e44f2fc33492012477c88305ec168ba9": {
+      "address": "0xDF43944b14F14B9d3f2d45F67180b314c5841082",
+      "txHash": "0x4cc893dc1eda7866e959d51816317d08bd1f0820e969ab25fd76bf31baac5576",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "seed",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:19"
+          },
+          {
+            "label": "price",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:22"
+          },
+          {
+            "label": "pointsToken",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:24"
+          },
+          {
+            "label": "pointsCountCondi",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:26"
+          },
+          {
+            "label": "whiteListRootHashes",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_mapping(t_uint256,t_bytes32)",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:28"
+          },
+          {
+            "label": "claimed",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:31"
+          },
+          {
+            "label": "onMint",
+            "offset": 0,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:34"
+          },
+          {
+            "label": "onClaimWithWhiteList",
+            "offset": 1,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:36"
+          },
+          {
+            "label": "onClaimWithPoints",
+            "offset": 2,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:38"
+          },
+          {
+            "label": "minter",
+            "offset": 3,
+            "slot": "157",
+            "type": "t_address",
+            "contract": "SeedManager",
+            "src": "contracts/SeedManager.sol:41"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bytes32)": {
+            "label": "mapping(uint256 => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

@@ -47,7 +47,7 @@ $ npx hardhat run --network mainnet scripts/deploy_seed.ts
 请先在 `scripts/deploy_seed_manager.ts` #9 行修改和确认 `Seed` 合约的地址，然后执行部署命令：
 
 ```bash
-$ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts 
+$ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts
 ```
 
 !! 在 `scripts/deploy_seed_manager.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `changeMinter(address)` 方法修改其 minter 的地址为 `SeedManger` 合约的地址 !!

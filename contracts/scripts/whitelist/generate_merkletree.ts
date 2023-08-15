@@ -21,7 +21,7 @@ async function main() {
     "scripts/whitelist/output.json",
     JSON.stringify({ rootHash: tree.root, proofs: proofs }, null, 2),
     {
-      flag: "a+",
+      flag: "w",
     }
   );
 }
