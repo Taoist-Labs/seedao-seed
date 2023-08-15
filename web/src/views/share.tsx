@@ -15,7 +15,10 @@ export default function SharePage() {
   return (
     <SharePageStyled>
       <div className="content">
-        <img src={`https://gateway.pinata.cloud/ipfs/${imgCode}`} alt="" />
+        <img
+          src={`https://image-share.fn-labs.workers.dev/${imgCode}.png`}
+          alt=""
+        />
       </div>
     </SharePageStyled>
   );
