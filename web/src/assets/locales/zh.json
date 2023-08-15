@@ -5,7 +5,9 @@
         "gallery": "画廊",
         "connectWallet": "连接钱包",
         "disconnect": "断开连接",
-        "myProfile": "个人中心"
+        "myProfile": "个人中心",
+        "about": "关于",
+        "mySeed": "我的 SEED"
     },
     "home": {
         "bannerTitle": "Seed Now, See the DAO",

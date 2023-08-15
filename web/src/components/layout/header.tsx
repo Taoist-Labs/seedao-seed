@@ -18,6 +18,7 @@ import LanguageIcon from "assets/images/home/language.svg";
 import { useTranslation } from "react-i18next";
 import useSelectAccount from "../../hooks/useSelectAccout";
 import { SELECT_WALLET } from "utils/constant";
+import MenuSeed from "./menu_seed";
 
 const SmNav = ({
   handleClose,
@@ -192,16 +193,7 @@ export default function Header({ color }: { color?: string }) {
           <img src={MenuIcon} alt="" />
         </SmNavStyle>
         <NavStyle>
-          <SelectBox
-            id="seed-select"
-            // onClick={(event: React.MouseEvent<HTMLElement>) =>
-            //   setAnchorEl(event.currentTarget)
-            // }
-          >
-            <Link to="/gallery">{t("header.gallery")}</Link>
-            {/* <span>{t("header.seed")}</span> */}
-            {/* <ExpandMoreIcon /> */}
-          </SelectBox>
+          <MenuSeed account={account} />
           <Languagebutton />
           <LoginBox account={account} />
           {/* <EnterAppButton /> */}
