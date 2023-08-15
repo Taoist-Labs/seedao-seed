@@ -26,6 +26,7 @@ import SeedABI from "data/abi/Seed.json";
 import SeedMgrABI from "data/abi/SeedManager.json";
 import ScrABI from "data/abi/SCR.json";
 import { useAppContext, AppActionType } from "providers/appProvider";
+import { toast } from "react-toastify";
 
 const LEVELS = [
   {
@@ -381,9 +382,10 @@ export default function SeedCard() {
         // });
       }
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("goMint error", error);
       setLoading(false);
+      toast.error(error?.reason || error?.data?.message || "unknown");
     } finally {
       // dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
