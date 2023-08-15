@@ -129,23 +129,23 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     _requireMinted(tokenId);
 
     if (paused()) {
+      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/404.json
+      return string(abi.encodePacked(baseURI, "/404.json"));
+    } else {
       uint256 level = _parseLevel(tokenId);
 
       // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_1.json
       return
         string(
-          abi.encodePacked(
-            baseURI,
-            "/",
-            tokenId.toString(),
-            "_",
-            level.toString(),
-            ".json"
-          )
-        );
-    } else {
-      // ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/404.json
-      return string(abi.encodePacked(baseURI, "/404.json"));
+        abi.encodePacked(
+          baseURI,
+          "/",
+          tokenId.toString(),
+          "_",
+          level.toString(),
+          ".json"
+        )
+      );
     }
   }
 

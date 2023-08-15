@@ -659,6 +659,26 @@ describe("SeedManager", function () {
           await seed.tokenOfOwnerByIndex(secondAccount.address, 2)
         ).to.equal(ethers.getBigInt(2));
       });
+
+      it("Should refund the extra native token", async function () {
+        const { seed, seedManager, secondAccount } = await loadFixture(
+            deploySeedManagerFixture
+        );
+
+        // enable mint
+        await seedManager.unpauseMint();
+
+        // set price
+        await seedManager.setPrice(ethers.parseEther("2"));
+
+        const balanceBefore = await ethers.provider.getBalance(secondAccount.address)
+        // just need pay 2ETH, in act
+        await seedManager
+            .connect(secondAccount)
+            .mint(ethers.getBigInt(1), { value: ethers.parseEther("3.5") }); // minted nft id: 0
+        const balanceAfter = await ethers.provider.getBalance(secondAccount.address)
+        expect(balanceBefore - balanceAfter == ethers.parseEther("1.5"));
+      });
     });
   });
 });

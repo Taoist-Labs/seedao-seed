@@ -260,20 +260,39 @@ describe("Seed", function () {
 
   describe("Function tokenURI", function () {
     describe("Validations", function () {
+      it("Should return 404.json when contract is paused", async function () {
+        const { seed, secondAccount } = await loadFixture(
+          deploySeedFixture
+        );
+
+        const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
+        // set token uri
+        await seed.setBaseURI(baseURI);
+
+        // secondAccount mint nft #0
+        await seed.mint(secondAccount.address);
+        // when contract is paused, should return 404.json
+        expect(await seed.tokenURI(ethers.getBigInt(0))).to.equal(
+            `${baseURI}/404.json`
+        );
+      });
+
       it("Use default uri level ranges", async function () {
         const { seed, mockPoints, secondAccount } = await loadFixture(
           deploySeedFixture
         );
 
         const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
+        // set token uri
+        await seed.setBaseURI(baseURI);
+
+        // unpause contract
+        await seed.unpause();
 
         const mockPointsDecimals = await mockPoints.decimals();
 
         // secondAccount mint nft #0
         await seed.mint(secondAccount.address);
-
-        // set token uri
-        await seed.setBaseURI(baseURI);
 
         // [20_000, 300_000, 3_000_000, 30_000_000]
         // case1: mint 100 points to secondAccount
@@ -309,14 +328,16 @@ describe("Seed", function () {
         );
 
         const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
+        // set token uri
+        await seed.setBaseURI(baseURI);
+
+        // unpause contract
+        await seed.unpause();
 
         const mockPointsDecimals = await mockPoints.decimals();
 
         // secondAccount mint nft #0
         await seed.mint(secondAccount.address);
-
-        // set token uri
-        await seed.setBaseURI(baseURI);
 
         // set custom uri level ranges: [100, 1_000, 10_000, 100_000]
         await seed.setURILevelRange([

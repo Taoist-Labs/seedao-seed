@@ -163,7 +163,7 @@ contract SeedManager is
     uint256 payValue = amount * price;
     require(price != 0 && msg.value >= payValue, "Insufficient payment");
 
-    // 退回多余的 native token
+    // refund the extra native token
     if (msg.value > payValue) {
       payable(_msgSender()).transfer(msg.value - payValue);
     }
