@@ -27,13 +27,13 @@ async function main() {
   deployed.setSeedManagerContract(seedManager.target.toString());
   console.log(`[SeedManager] deployed to ${seedManager.target}`);
 
-  // change Seed's minter to SeedManager contract
+  // transfer Seed's owner to SeedManager contract
   console.log(
-    `Changing [Seed]'s minter to [SeedManager]@${seedManager.target} ...`
+    `Transfer [Seed]'s owner to [SeedManager]@${seedManager.target} ...`
   );
   const seed = await ethers.getContractAt("Seed", deployed.getSeedContract());
-  await seed.changeMinter(seedManager.target.toString());
-  console.log("[Seed]'s minter changed");
+  await seed.transferOwnership(seedManager.target.toString());
+  console.log("[Seed]'s owner transferred");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

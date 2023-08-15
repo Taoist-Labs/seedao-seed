@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
 import "./ISeed.sol";
 
-contract SeedManager is
+contract SeedMinter is
   Initializable,
   ReentrancyGuardUpgradeable,
   OwnableUpgradeable
@@ -295,6 +295,13 @@ contract SeedManager is
   function unpauseClaimWithPoints() public onlyOwner {
     onClaimWithPoints = true;
     emit ClaimWithPointsEnabled(_msgSender());
+  }
+
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+  /// @dev transfer `Seed` contract's ownership
+  function transferSeedOwnership(address newOwner) external onlyOwner {
+    ISeed(seed).transferOwnership(newOwner);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------

@@ -21,15 +21,15 @@ $ REPORT_GAS=true npx hardhat test
 `MockPoints` 合约用于模拟积分 token 合约，仅用于测试，部署到主网时不需要部署。
 
 ```bash
-$ npx hardhat run --network sepolia scripts/deploy_mockpoints.ts
+$ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
 ```
 
 #### 3.2 部署 `Seed` 合约
 
-请先在 `scripts/deploy_seed.ts` #9 行修改和确认积分 token 合约的地址，然后执行部署命令：
+请先在 `scripts/1_deploy_seed.ts` #9 行修改和确认积分 token 合约的地址，然后执行部署命令：
 
 ```bash
-$ npx hardhat run --network mainnet scripts/deploy_seed.ts
+$ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 ```
 
 !! 在调用 `tokenURI(uint256)` 方法获取正确的 token URI 前还需要调用 `setBaseURI(string)` 方法设置 base URI !!
@@ -47,13 +47,13 @@ $ npx hardhat run --network mainnet scripts/deploy_seed.ts
 
 #### 3.3 部署 `SeedManger` 合约
 
-请先在 `scripts/deploy_seed_manager.ts` #9 #11 #13 行修改和确认 `Seed` 合约的地址、积分 token 合约的地址和积分数量条件的值，然后执行部署命令：
+请先在 `scripts/2_deploy_seedminter.ts` #9 #11 #13 行修改和确认 `Seed` 合约的地址、积分 token 合约的地址和积分数量条件的值，然后执行部署命令：
 
 ```bash
-$ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts
+$ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 ```
 
-!! 在 `scripts/deploy_seed_manager.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `changeMinter(address)` 方法修改其 minter 的地址为 `SeedManger` 合约的地址 !!
+!! 在 `scripts/2_deploy_seedminter.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `changeMinter(address)` 方法修改其 minter 的地址为 `SeedManger` 合约的地址 !!
 
 > 开启白名单免费 claim 功能，需要调用：
 
@@ -64,11 +64,9 @@ $ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts
 
 > 开启积分免费 claim 功能，需要调用：
 
-- `setPointsTokenAddress(address)` : 设置积分 token 合约地址
-- `setPointsCountCondition(uint256)` : 设置积分数量条件
 - `unpauseClaimWithPoints()` : 开启积分免费 claim 功能
 
-调用 `pauseClaimWithPoints()` 关闭积分免费 claim 功能。
+可以调用`setPointsTokenAddress(address)` 重新设置积分 token 合约地址，调用 `setPointsCountCondition(uint256)` 重新设置积分数量条件，调用 `pauseClaimWithPoints()` 关闭积分免费 claim 功能。
 
 > 开启付费 mint 功能，需要调用：
 
@@ -84,7 +82,7 @@ $ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts
 ## 4. 升级 `SeedManager` 合约
 
 ```bash
-$ npx hardhat run --network mainnet scripts/upgrade_seed_manager.ts
+$ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
 ```
 
 ## 5. 验证合约

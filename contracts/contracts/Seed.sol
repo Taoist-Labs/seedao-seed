@@ -25,21 +25,6 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   // points token address
   address public pointsToken;
 
-  // NFT minter address
-  address public minter;
-
-  // ------ ------ ------ ------ ------ ------ ------ ------ ------
-
-  event MinterChanged(address indexed oldMinter, address indexed newMinter);
-
-  // ------ ------ ------ ------ ------ ------ ------ ------ ------
-
-  /// @dev used to restrict methods that only minter address can call
-  modifier onlyMinter() {
-    require(_msgSender() == minter, "Only minter can call this method");
-    _;
-  }
-
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
@@ -48,8 +33,6 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
 
     // set default max supply
     maxSupply = 100_000;
-    // set default minter
-    minter = msg.sender;
     // set default uri level ranges
     uriLevelRanges.push(20_000);
     uriLevelRanges.push(300_000);
@@ -61,7 +44,7 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   }
 
   /// @dev mint NFT method
-  function mint(address to) public onlyMinter {
+  function mint(address to) public onlyOwner {
     require(tokenIndex < maxSupply, "Exceeds the maximum supply");
 
     _safeMint(to, tokenIndex);
@@ -69,7 +52,7 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   }
 
   /// @dev batch mint NFT method
-  function batchMint(address[] calldata to) public onlyMinter {
+  function batchMint(address[] calldata to) public onlyOwner {
     require(tokenIndex + to.length < maxSupply, "Exceeds the maximum supply");
 
     for (uint i = 0; i < to.length; i++) {
@@ -80,13 +63,6 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
-
-  /// @dev change minter address
-  function changeMinter(address minter_) external onlyOwner {
-    address oldMinter = minter;
-    minter = minter_;
-    emit MinterChanged(oldMinter, minter_);
-  }
 
   /// @dev set max supply
   function setMaxSupply(uint256 maxSupply_) external onlyOwner {
@@ -180,9 +156,7 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     uint256 batchSize
   ) internal override(ERC721, ERC721Enumerable) {
     // don't use `whenNotPaused` modifier, because minter can mint even contract is paused
-    if (paused()) {
-      require(from == address(0) && msg.sender == minter, "");
-    }
+    require(!paused() || msg.sender == owner(), "Pausable: paused");
 
     super._beforeTokenTransfer(from, to, tokenId, batchSize);
   }
