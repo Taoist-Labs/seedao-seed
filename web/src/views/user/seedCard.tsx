@@ -259,7 +259,7 @@ export default function SeedCard() {
         );
         if (proof_item) {
           res = await seedMgrContract.claimWithWhiteList(
-            findIdx + 1,
+            findIdx,
             proof_item.proof,
           );
         }
