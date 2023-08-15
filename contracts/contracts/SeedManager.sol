@@ -96,8 +96,17 @@ contract SeedManager is
     _disableInitializers();
   }
 
-  function initialize(address seed_) public initializer {
+  function initialize(
+    address seed_,
+    address pointsToken_,
+    uint256 pointsCountCondi_
+  ) public initializer {
     seed = seed_;
+
+    pointsToken = pointsToken_;
+    pointsCountCondi =
+      pointsCountCondi_ *
+      10 ** IERC20Metadata(pointsToken_).decimals();
 
     // set default minter
     minter = msg.sender;

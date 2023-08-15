@@ -21,6 +21,8 @@ describe("SeedManager", function () {
     const SeedManager = await ethers.getContractFactory("SeedManager");
     const seedManager = (await upgrades.deployProxy(SeedManager, [
       await seed.getAddress(),
+      await mockPoints.getAddress(),
+      ethers.getBigInt(5000),
     ])) as unknown as SeedManager;
 
     // change Seed's minter to SeedManager contract
@@ -171,16 +173,15 @@ describe("SeedManager", function () {
         deploySeedManagerFixture
       );
 
-      expect(await seedManager.pointsToken()).to.equal(ethers.ZeroAddress);
-      await seedManager.setPointsTokenAddress(mockPoints);
       expect(await seedManager.pointsToken()).to.equal(
         await mockPoints.getAddress()
       );
+      await seedManager.setPointsTokenAddress(ethers.ZeroAddress);
+      expect(await seedManager.pointsToken()).to.equal(ethers.ZeroAddress);
     });
   });
 
   describe("Function setPointsCondition", function () {
-    const zero = ethers.getBigInt(0);
     const Big5k = ethers.getBigInt(5_000);
 
     it("Should revert when caller is not owner", async function () {
@@ -198,6 +199,8 @@ describe("SeedManager", function () {
         deploySeedManagerFixture
       );
 
+      await seedManager.setPointsTokenAddress(ethers.ZeroAddress);
+
       await expect(
         seedManager.setPointsCountCondition(Big5k)
       ).to.be.revertedWith("Points token address is not set");
@@ -208,10 +211,9 @@ describe("SeedManager", function () {
         deploySeedManagerFixture
       );
 
-      // set points token address firstly
-      await seedManager.setPointsTokenAddress(mockPoints);
-
-      expect(await seedManager.pointsCountCondi()).to.equal(zero);
+      expect(await seedManager.pointsCountCondi()).to.equal(
+        bigInt(5_000, await mockPoints.decimals())
+      );
       await seedManager.setPointsCountCondition(Big5k);
       expect(await seedManager.pointsCountCondi()).to.equal(
         bigInt(5_000, await mockPoints.decimals())
@@ -395,6 +397,8 @@ describe("SeedManager", function () {
         // enable claim
         await seedManager.unpauseClaimWithPoints();
 
+        await seedManager.setPointsTokenAddress(ethers.ZeroAddress);
+
         await expect(
           seedManager.connect(secondAccount).claimWithPoints()
         ).to.be.revertedWith("Points token address is not set");
@@ -411,8 +415,6 @@ describe("SeedManager", function () {
 
         // enable claim
         await seedManager.unpauseClaimWithPoints();
-        // set points token address
-        await seedManager.setPointsTokenAddress(mockPoints);
 
         // revert because of `pointsCondi == 0`
         await expect(
@@ -444,9 +446,7 @@ describe("SeedManager", function () {
 
         // enable claim
         await seedManager.unpauseClaimWithPoints();
-        // set points token address and set condition to 5k
-        await seedManager.setPointsTokenAddress(mockPoints);
-        await seedManager.setPointsCountCondition(ethers.getBigInt(5_000));
+        // default points condition is 5k
         // mint 5k points
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt5k);
@@ -487,9 +487,7 @@ describe("SeedManager", function () {
 
         // enable claim
         await seedManager.unpauseClaimWithPoints();
-        // set points token address and set condition to 5k
-        await seedManager.setPointsTokenAddress(mockPoints);
-        await seedManager.setPointsCountCondition(ethers.getBigInt(5_000));
+        // default points condition is 5k
         // mint 5k points
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt5k);

@@ -209,6 +209,16 @@
         "internalType": "address",
         "name": "seed_",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "pointsToken_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "pointsCountCondi_",
+        "type": "uint256"
       }
     ],
     "name": "initialize",

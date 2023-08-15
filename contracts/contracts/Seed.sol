@@ -93,7 +93,7 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     maxSupply = maxSupply_;
   }
 
-  /// @dev set NFT URI base
+  /// @dev set NFT URI base, don't include the last "/"
   /// e.g：ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD
   function setBaseURI(string memory baseURI_) public onlyOwner {
     baseURI = baseURI_;

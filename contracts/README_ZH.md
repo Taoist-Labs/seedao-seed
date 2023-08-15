@@ -32,19 +32,22 @@ $ npx hardhat run --network sepolia scripts/deploy_mockpoints.ts
 $ npx hardhat run --network mainnet scripts/deploy_seed.ts
 ```
 
-!! 在调用 `tokenURI(uint256)` 方法获取正确的 token uri 前还需要调用 `setBaseURI(string)` 方法设置 base URI !!
+!! 在调用 `tokenURI(uint256)` 方法获取正确的 token URI 前还需要调用 `setBaseURI(string)` 方法设置 base URI !!
+
+!! 合约默认是 paused 的，开图前需要调用 `unpause()` 方法取消暂停合约才能返回正确的 token URI !!
 
 `Seed` 合约支持的管理方法：
-* `changeMinter(address)` : 修改 minter 地址
-* `setMaxSupply(uint256)` : 设置 NFT 的最大供应量
-* `setURILevelRange(uint256[])` : 设置 NFT 的 URI 等级参数规则
-* `setBaseURI(string)` : 设置 NFT 的 base URI
-* `pause()` : 暂停合约
-* `unpause()` : 取消暂停合约
+
+- `changeMinter(address)` : 修改 minter 地址
+- `setMaxSupply(uint256)` : 设置 NFT 的最大供应量
+- `setURILevelRange(uint256[])` : 设置 NFT 的 URI 等级参数规则
+- `setBaseURI(string)` : 设置 NFT 的 base URI
+- `pause()` : 暂停合约
+- `unpause()` : 取消暂停合约
 
 #### 3.3 部署 `SeedManger` 合约
 
-请先在 `scripts/deploy_seed_manager.ts` #9 行修改和确认 `Seed` 合约的地址，然后执行部署命令：
+请先在 `scripts/deploy_seed_manager.ts` #9 #11 #13 行修改和确认 `Seed` 合约的地址、积分 token 合约的地址和积分数量条件的值，然后执行部署命令：
 
 ```bash
 $ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts
@@ -53,26 +56,30 @@ $ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts
 !! 在 `scripts/deploy_seed_manager.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `changeMinter(address)` 方法修改其 minter 的地址为 `SeedManger` 合约的地址 !!
 
 > 开启白名单免费 claim 功能，需要调用：
-* `setWhiteList(uint256, bytes32)` : 设置白名单
-* `unpauseClaimWithWhiteList()` : 开启白名单免费 claim 功能
+
+- `setWhiteList(uint256, bytes32)` : 设置白名单
+- `unpauseClaimWithWhiteList()` : 开启白名单免费 claim 功能
 
 调用 `unpauseClaimWithWhiteList()` 关闭白名单免费 claim 功能。
 
 > 开启积分免费 claim 功能，需要调用：
-* `setPointsTokenAddress(address)` : 设置积分 token 合约地址
-* `setPointsCountCondition(uint256)` : 设置积分数量条件
-* `unpauseClaimWithPoints()` : 开启积分免费 claim 功能
+
+- `setPointsTokenAddress(address)` : 设置积分 token 合约地址
+- `setPointsCountCondition(uint256)` : 设置积分数量条件
+- `unpauseClaimWithPoints()` : 开启积分免费 claim 功能
 
 调用 `pauseClaimWithPoints()` 关闭积分免费 claim 功能。
 
 > 开启付费 mint 功能，需要调用：
-* `setPrice(uint256)` : 设置 NFT 售卖价格
-* `unpauseMint()` : 开启付费 mint 功能
+
+- `setPrice(uint256)` : 设置 NFT 售卖价格
+- `unpauseMint()` : 开启付费 mint 功能
 
 调用 `pauseMint()` 关闭付费 mint 功能。
 
 > 其他方法：
-* `changeMinter(address)` : 修改 minter 地址
+
+- `changeMinter(address)` : 修改 minter 地址
 
 ## 4. 升级 `SeedManager` 合约
 
@@ -87,5 +94,5 @@ $ npx hardhat run --network mainnet scripts/upgrade_seed_manager.ts
 $ npx hardhat verify --network mainnet [Seed 合约地址] [积分 token 合约地址]
 
 # 验证 `SeedManager` 合约
-$ npx hardhat verify --network mainnet []SeedManger 合约地址] [Seed 合约地址]
+$ npx hardhat verify --network mainnet []SeedManger 合约地址]
 ```
