@@ -283,59 +283,46 @@ export default function SeedCard() {
         console.log("[DEBUG] find event: ", event);
 
         const tokenId = ethers.BigNumber.from(event.topics[3]);
-        console.log("tokenId:", tokenId);
         console.log("[DEBUG] tokenId: ", tokenId);
 
         const uri = await seedContract.tokenURI(tokenId);
         console.log("[DEBUG] token uri:  ", uri);
 
-        // if (uri.endsWith(".json")) {
-        //   const _new_nft: INFT = {
-        //     tokenId,
-        //     tokenIdFormat: `SEED No.${tokenId}`, // display tokenId ?
-        //     image: emptySeed.image,
-        //     attrs: emptySeed.attrs,
-        //   };
-        //   setNfts([...nfts, _new_nft]);
-        //   setLoading(false);
-        //   return;
-        // }
-        fetch(uri, { method: "GET" })
-          .then((res) => res.json())
-          .then((res: any) => {
-            const _new_nft: INFT = {
-              tokenId: tokenId.toString(),
-              tokenIdFormat: `SEED No.${tokenId}`,
-              image: res.image, // TODO handle image url
-              attrs: res.attributes.map((attr: any) => ({
-                name: attr.trait_type,
-                value: attr.value,
-              })),
-            };
-            setNewNft(_new_nft);
-            setNfts([...nfts, _new_nft]);
+        const _new_nft: INFT = {
+          tokenId: tokenId.toString(),
+          tokenIdFormat: `SEED No.${tokenId.toString()}`, // display tokenId ?
+          image: emptySeed.image,
+          attrs: emptySeed.attrs,
+        };
+        setNewNft(_new_nft);
+        setNfts([...nfts, _new_nft]);
 
-            setShowSeedModal(true);
-            setLoading(false);
-          })
-          .catch((err) => {
-            console.error("fetch new token uri error", err, uri);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
+        setShowSeedModal(true);
+        setLoading(false);
+        // fetch(uri, { method: "GET" })
+        //   .then((res) => res.json())
+        //   .then((res: any) => {
+        //     const _new_nft: INFT = {
+        //       tokenId: tokenId.toString(),
+        //       tokenIdFormat: `SEED No.${tokenId.toString()}`,
+        //       image: res.image, // TODO handle image url
+        //       attrs: res.attributes.map((attr: any) => ({
+        //         name: attr.trait_type,
+        //         value: attr.value,
+        //       })),
+        //     };
+        //     setNewNft(_new_nft);
+        //     setNfts([...nfts, _new_nft]);
 
-        // setNewNft({
-        //   image:
-        //     "https://i.seadn.io/gcs/files/2cc49c2fefc90c12d21aaffd97de48df.png?auto=format&dpr=1&w=750",
-        //   tokenId: "2000",
-        //   name: "lala",
-        //   attrs: [
-        //     { name: "background", value: "#fff" },
-        //     { name: "color", value: "#fff" },
-        //     { name: "height", value: "90cm" },
-        //   ],
-        // });
+        //     setShowSeedModal(true);
+        //     setLoading(false);
+        //   })
+        //   .catch((err) => {
+        //     console.error("fetch new token uri error", err, uri);
+        //   })
+        //   .finally(() => {
+        //     setLoading(false);
+        //   });
       }
       setLoading(false);
     } catch (error: any) {
