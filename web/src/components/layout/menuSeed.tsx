@@ -39,17 +39,14 @@ export default function MenuSeed({ account }: { account?: string }) {
         anchorEl={anchorEl}
         open={openSelect}
         onClose={() => setAnchorEl(null)}
-        MenuListProps={{
-          "aria-labelledby": "wallet-select",
-        }}
       >
-        <MenuItemStyle value={1} onClick={() => navigate("/")}>
+        <MenuItemStyle onClick={() => navigate("/")}>
           {t("header.about")}
         </MenuItemStyle>
-        <MenuItemStyle value={0} onClick={() => navigate("/gallery")}>
+        <MenuItemStyle onClick={() => navigate("/gallery")}>
           {t("header.gallery")}
         </MenuItemStyle>
-        <MenuItemStyle value={1} onClick={onClickMySeed}>
+        <MenuItemStyle onClick={onClickMySeed}>
           {t("header.mySeed")}
         </MenuItemStyle>
       </Menu>
@@ -84,13 +81,13 @@ export const SmMenuSeed = ({ account }: { account?: string }) => {
       </div>
       {expand && (
         <ul className="sub-menu">
-          <li value={1} onClick={() => navigate("/")}>
+          <li value={0} onClick={() => navigate("/")}>
             {t("header.about")}
           </li>
-          <li value={0} onClick={() => navigate("/gallery")}>
+          <li value={1} onClick={() => navigate("/gallery")}>
             {t("header.gallery")}
           </li>
-          <li value={1} onClick={onClickMySeed}>
+          <li value={2} onClick={onClickMySeed}>
             {t("header.mySeed")}
           </li>
         </ul>
@@ -117,4 +114,10 @@ const MenuItemStyle = styled(MenuItem)`
   font-family: "Inter-Semibold";
   font-size: 18px;
   text-align: center;
+  &.Mui-focusVisible {
+    background-color: unset;
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
 `;

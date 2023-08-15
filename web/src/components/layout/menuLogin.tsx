@@ -165,4 +165,10 @@ const MenuItemStyle = styled(MenuItem)`
   font-family: "Inter-Semibold";
   font-size: 18px;
   text-align: center;
+  &.Mui-focusVisible {
+    background-color: unset;
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
 `;
