@@ -16,7 +16,7 @@ export const [uniPassWallet, uniPassHooks] = initializeConnector<UniPass>(
     new UniPass({
       actions,
       options: {
-        chainId: 1,
+        chainId: 137,
         returnEmail: true,
         rpcUrls: {
           mainnet:
