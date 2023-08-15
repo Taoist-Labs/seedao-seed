@@ -26,7 +26,7 @@ const HASH_TAGS = ["SeeDAO", "SeedNFT", "500KPoints"];
 export default function ShareModal({ show, seed, handleClose }: IProps) {
   const { t } = useTranslation();
   const [imgBlob, setImgBlob] = useState<Blob>();
-  const [isRead, setIsRead] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [imgCode, setImgCode] = useState("");
   const [showQrcode, setShowQrcode] = useState(false);
 
@@ -76,12 +76,12 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
-        setImgCode(res.name);
+        setImgCode(res.name.split(".")[0]);
       });
   }, [imgBlob]);
 
   useEffect(() => {
-    if (!isRead) {
+    if (!isReady) {
       return;
     }
     const node = document.getElementById("SEED");
@@ -94,7 +94,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
       .catch(function (error) {
         console.error("oops, something went wrong!", error);
       });
-  }, [isRead]);
+  }, [isReady]);
   return (
     <Modal
       open={show}
@@ -104,7 +104,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
       <ShareModalStyle>
         <div className="share-modal">
           <div className="share-content">
-            <SeedShare seed={seed} handleLoaded={() => setIsRead(true)} />
+            <SeedShare seed={seed} handleLoaded={() => setIsReady(true)} />
           </div>
         </div>
         {showQrcode ? (
