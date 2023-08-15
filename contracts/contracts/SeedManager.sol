@@ -27,14 +27,14 @@ contract SeedManager is
   // store the merkle root hash of whitelist
   mapping(uint256 => bytes32) public whiteListRootHashes;
   // user claimed flag, true means claimed; user can only
-  // claim once whenever the claim method is whitelist or points
+  // free claim once whenever the claim method is whitelist or points
   mapping(address => bool) public claimed;
 
-  // flag of mint feature gate
+  // flag of payed mint feature gate
   bool public onMint;
-  // flag of claim with white list feature gate
+  // flag of free claim with white list feature gate
   bool public onClaimWithWhiteList;
-  // flag of claim with points feature gate
+  // flag of free claim with points feature gate
   bool public onClaimWithPoints;
 
   // NFT minter address
@@ -64,13 +64,13 @@ contract SeedManager is
     _;
   }
 
-  /// @dev used to restrict that each user can only claim once, whether it is through the whitelist condition or the points condition, they can only claim for free once
+  /// @dev used to restrict that each user can only free claim once, whether it is through the whitelist condition or the points condition, they can only free claim for free once
   modifier noClaimed() {
     require(!claimed[_msgSender()], "You have claimed");
     _;
   }
 
-  /// @dev used to restrict methods that only can call when mint feature gate is open
+  /// @dev used to restrict methods that only can call when payed mint feature gate is open
   modifier enableMint() {
     require(onMint, "Mint is not open");
     _;
@@ -111,7 +111,7 @@ contract SeedManager is
 
   /// @dev claim for free with whitelist, need to specify white list ID and Merkle Proof when calling
   /// `enableClaimWithWhiteList` modifier is used to restrict methods that only can call when claim with whitelist feature gate is open
-  /// `noClaimed` modifier is used to restrict that each user can only claim once, whether it is through the whitelist condition or the points condition, they can only claim for free once
+  /// `noClaimed` modifier is used to restrict that each user can only free claim once, whether it is through the whitelist condition or the points condition, they can only free claim for free once
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function claimWithWhiteList(
     uint256 whiteListId,
@@ -128,7 +128,7 @@ contract SeedManager is
 
   /// claim for free with points
   /// `enableClaimWithPoints` modifier is used to restrict methods that only can call when claim with points feature gate is open
-  /// `noClaimed` modifier is used to restrict that each user can only claim once, whether it is through the whitelist condition or the points condition, they can only claim for free once
+  /// `noClaimed` modifier is used to restrict that each user can only free claim once, whether it is through the whitelist condition or the points condition, they can only free claim for free once
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function claimWithPoints()
     external
@@ -155,7 +155,7 @@ contract SeedManager is
 
   /// @dev direct buy NFT, support buy multiple NFTs at once
   /// `payable` modifier indicates that the current method can receive native token
-  /// `enableMint` modifier is used to restrict methods that only can call when mint feature gate is open
+  /// `enableMint` modifier is used to restrict methods that only can call when payed mint feature gate is open
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function mint(uint256 amount) external payable enableMint nonReentrant {
     require(amount > 0, "Mint amount must bigger than zero");
@@ -246,13 +246,13 @@ contract SeedManager is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev pause mint feature, after paused, can't mint new NFT
+  /// @dev pause payed mint feature, after paused, can't mint new NFT
   function pauseMint() public onlyOwner {
     onMint = false;
     emit MintDisabled(_msgSender());
   }
 
-  /// @dev unpause mint feature, after unpaused, can mint new NFT
+  /// @dev unpause payed mint feature, after unpaused, can mint new NFT
   function unpauseMint() public onlyOwner {
     onMint = true;
     emit MintEnabled(_msgSender());

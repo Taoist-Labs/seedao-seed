@@ -43,7 +43,7 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  constructor(address pointsToken_) ERC721("Seed", "SEED") {
+  constructor(address pointsToken_) ERC721("SeeDAO Seed NFT", "SEED") {
     pointsToken = pointsToken_;
 
     // set default max supply
