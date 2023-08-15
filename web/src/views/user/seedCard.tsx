@@ -13,7 +13,7 @@ import ShareModal from "./shareModal";
 import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
 import SeedDisplay from "./seedDisplay";
-// import { getNftByAccount } from "utils/request";
+import { getNftByAccount } from "utils/request";
 import { GALLERY_ATTRS } from "data/gallery";
 import OpeningModal from "./opening";
 import useSelectAccount from "hooks/useSelectAccout";
@@ -25,7 +25,7 @@ import {
 import SeedABI from "data/abi/Seed.json";
 import SeedMgrABI from "data/abi/SeedManager.json";
 import ScrABI from "data/abi/SCR.json";
-// import { useAppContext, AppActionType } from "providers/appProvider";
+import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
 
 const whiteList = WhiteListData as {
@@ -105,7 +105,7 @@ const LEVELS = [
 export default function SeedCard() {
   const { t } = useTranslation();
   const { account, provider, chainId, connector } = useSelectAccount();
-  // const { dispatch } = useAppContext();
+  const { dispatch } = useAppContext();
 
   const [points, setPoints] = useState("0");
   const [hasSeed, setHasSeed] = useState(false);
@@ -236,6 +236,20 @@ export default function SeedCard() {
     );
   };
 
+  const testMint = () => {
+    const _new_nft: INFT = {
+      tokenId: "1",
+      tokenIdFormat: `SEED No.1`, // display tokenId ?
+      image: emptySeed.image,
+      attrs: emptySeed.attrs,
+    };
+    setNewNft(_new_nft);
+    setNfts([...nfts, _new_nft]);
+
+    setShowSeedModal(true);
+    setLoading(false);
+  };
+
   const goMint = async () => {
     if (!connector) {
       return;
@@ -339,35 +353,35 @@ export default function SeedCard() {
   };
 
   useEffect(() => {
-    // const getMySeeds = () => {
-    //   if (!account) return;
-    //   dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    //   getNftByAccount(account)
-    //     .then((res) => res.json())
-    //     .then((res) => {
-    //       console.log("getMySeeds res:", res);
-    //       const lst: INFT[] = testresp.data.content.map((item: any) => ({
-    //         tokenId: item.token_id,
-    //         tokenIdFormat: `SEED No.${item.token_id}`,
-    //         attrs: item.attributes?.length
-    //           ? item.attributes.map((attr: any) => ({
-    //               name: attr.attribute_name,
-    //               value: attr.attribute_value,
-    //             }))
-    //           : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
-    //         image: item.image_uri,
-    //       }));
-    //       setNfts(lst);
-    //       if (lst.length) {
-    //         setSelectSeedIdx(0);
-    //       }
-    //     })
-    //     .catch((err) => console.log(err))
-    //     .finally(() => {
-    //       dispatch({ type: AppActionType.SET_LOADING, payload: false });
-    //     });
-    // };
-    process.env.NODE_ENV === "development" && console.log("????????");
+    const getMySeeds = () => {
+      if (!account) return;
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      getNftByAccount(account)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("getMySeeds res:", res);
+          const lst: INFT[] = res.data.content.map((item: any) => ({
+            tokenId: item.token_id,
+            tokenIdFormat: `SEED No.${item.token_id}`,
+            attrs: item.attributes?.length
+              ? item.attributes.map((attr: any) => ({
+                  name: attr.attribute_name,
+                  value: attr.attribute_value,
+                }))
+              : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
+            image: item.image_uri,
+          }));
+          setNfts(lst);
+          if (lst.length) {
+            setSelectSeedIdx(0);
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        });
+    };
+    process.env.NODE_ENV !== "development" && getMySeeds();
   }, [account]);
 
   // check network
