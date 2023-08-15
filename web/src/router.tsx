@@ -13,6 +13,9 @@ import UserPage from "views/user/user";
 // import ShopPage from "views/shop";
 import SharePage from "views/share";
 
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 export default function RouterLink() {
   return (
     <Router>
@@ -26,6 +29,18 @@ export default function RouterLink() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {/* <Footer /> */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <LoadingModal />
     </Router>
   );
