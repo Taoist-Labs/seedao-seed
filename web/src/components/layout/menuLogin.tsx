@@ -1,0 +1,115 @@
+import styled from "@emotion/styled";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import ExpandIcon from "assets/images/expand.svg";
+import { useNavigate } from "react-router-dom";
+import { useAppContext, AppActionType } from "providers/appProvider";
+import { SELECT_WALLET } from "utils/constant";
+import LoginModal from "components/modals/loginModal";
+import Button from "@mui/material/Button";
+import { addressToShow } from "utils/index";
+
+export default function MenuLogin({
+  account,
+  connector,
+}: {
+  account?: string;
+  connector?: any;
+}) {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { dispatch } = useAppContext();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openSelect = Boolean(anchorEl);
+
+  const handleDisconnect = () => {
+    dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: "" });
+    localStorage.removeItem(SELECT_WALLET);
+    try {
+      console.log("connector:", connector);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      connector?.deactivate();
+    } catch (error) {
+      console.error("disconnect", error);
+    }
+
+    setAnchorEl(null);
+  };
+
+  const go2profile = () => {
+    navigate("/my");
+    setAnchorEl(null);
+  };
+
+  const showLoginModal = () => {
+    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+  };
+
+  if (!account) {
+    return (
+      <>
+        <LoginModal />
+        <ConnectButton onClick={showLoginModal}>
+          {t("header.connectWallet")}
+        </ConnectButton>
+      </>
+    );
+  }
+  return (
+    <>
+      <SelectBox
+        id="wallet-select"
+        onClick={(event: React.MouseEvent<HTMLElement>) =>
+          setAnchorEl(event.currentTarget)
+        }
+      >
+        <span>{addressToShow(account)}</span>
+        <img src={ExpandIcon} alt="" className="arrow" />
+      </SelectBox>
+      <Menu
+        anchorEl={anchorEl}
+        open={openSelect}
+        onClose={() => setAnchorEl(null)}
+        MenuListProps={{
+          "aria-labelledby": "wallet-select",
+        }}
+      >
+        <MenuItemStyle value={1} onClick={go2profile}>
+          {t("header.myProfile")}
+        </MenuItemStyle>
+        <MenuItemStyle value={0} onClick={handleDisconnect}>
+          {t("header.disconnect")}
+        </MenuItemStyle>
+      </Menu>
+    </>
+  );
+}
+
+const SelectBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  a {
+    color: unset;
+    text-decoration: none;
+  }
+`;
+
+const ConnectButton = styled(Button)`
+  font-family: "Inter-Semibold";
+  font-size: 18px;
+  color: unset;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+`;
+
+const MenuItemStyle = styled(MenuItem)`
+  font-family: "Inter-Semibold";
+  font-size: 18px;
+  text-align: center;
+`;

@@ -1,14 +1,9 @@
 import styled from "@emotion/styled";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LogoIcon from "assets/images/logo.png";
-import { Button } from "@mui/material";
 import { addressToShow } from "utils/index";
-import LoginModal from "components/modals/loginModal";
 import React, { useState } from "react";
-import { useAppContext, AppActionType } from "providers/appProvider";
 
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
@@ -17,8 +12,8 @@ import MenuIcon from "assets/images/home/menu.svg";
 import LanguageIcon from "assets/images/home/language.svg";
 import { useTranslation } from "react-i18next";
 import useSelectAccount from "../../hooks/useSelectAccout";
-import { SELECT_WALLET } from "utils/constant";
 import MenuSeed from "./menu_seed";
+import MenuLogin from "./menuLogin";
 
 const SmNav = ({
   handleClose,
@@ -68,78 +63,6 @@ const SmNav = ({
   );
 };
 
-const LoginBox = ({ account }: { account?: string }) => {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { dispatch } = useAppContext();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const openSelect = Boolean(anchorEl);
-  const { connector } = useSelectAccount();
-
-  const handleDisconnect = () => {
-    dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: "" });
-    localStorage.removeItem(SELECT_WALLET);
-    try {
-      console.log("connector:", connector);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      connector?.deactivate();
-    } catch (error) {
-      console.error("disconnect", error);
-    }
-
-    setAnchorEl(null);
-  };
-
-  const go2profile = () => {
-    navigate("/my");
-    setAnchorEl(null);
-  };
-
-  const showLoginModal = () => {
-    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
-  };
-
-  if (!account) {
-    return (
-      <React.Fragment>
-        <LoginModal />
-        <ConnectButton onClick={showLoginModal}>
-          {t("header.connectWallet")}
-        </ConnectButton>
-      </React.Fragment>
-    );
-  }
-  return (
-    <>
-      <SelectBox
-        id="wallet-select"
-        onClick={(event: React.MouseEvent<HTMLElement>) =>
-          setAnchorEl(event.currentTarget)
-        }
-      >
-        <span>{addressToShow(account)}</span>
-        <ExpandMoreIcon />
-      </SelectBox>
-      <Menu
-        anchorEl={anchorEl}
-        open={openSelect}
-        onClose={() => setAnchorEl(null)}
-        MenuListProps={{
-          "aria-labelledby": "wallet-select",
-        }}
-      >
-        <MenuItemStyle value={1} onClick={go2profile}>
-          {t("header.myProfile")}
-        </MenuItemStyle>
-        <MenuItemStyle value={0} onClick={handleDisconnect}>
-          {t("header.disconnect")}
-        </MenuItemStyle>
-      </Menu>
-    </>
-  );
-};
-
 // const EnterAppButton = () => {
 //   return (
 //     <EnterButton
@@ -178,10 +101,8 @@ const Languagebutton = () => {
 };
 
 export default function Header({ color }: { color?: string }) {
-  const { t } = useTranslation();
-
   const [showMenu, setShowMenu] = React.useState(false);
-  const { account } = useSelectAccount();
+  const { account, connector } = useSelectAccount();
 
   return (
     <HeaderStyle color={color || "#fff"}>
@@ -195,7 +116,7 @@ export default function Header({ color }: { color?: string }) {
         <NavStyle>
           <MenuSeed account={account} />
           <Languagebutton />
-          <LoginBox account={account} />
+          <MenuLogin account={account} connector={connector} />
           {/* <EnterAppButton /> */}
         </NavStyle>
       </HeaderContainer>
@@ -336,17 +257,6 @@ const SmNavStyle = styled.div`
   }
 `;
 
-const SelectBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  a {
-    color: unset;
-    text-decoration: none;
-  }
-`;
-
 // const EnterButton = styled.div`
 //   height: 44px;
 //   line-height: 44px;
@@ -368,19 +278,4 @@ const LanguageBox = styled.div`
   gap: 5px;
   cursor: pointer;
   line-height: unset;
-`;
-
-const ConnectButton = styled(Button)`
-  font-family: "Inter-Semibold";
-  font-size: 18px;
-  color: unset;
-  &:hover {
-    background-color: rgba(168, 225, 0, 0.2);
-  }
-`;
-
-const MenuItemStyle = styled(MenuItem)`
-  font-family: "Inter-Semibold";
-  font-size: 18px;
-  text-align: center;
 `;
