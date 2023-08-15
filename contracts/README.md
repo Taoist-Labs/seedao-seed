@@ -1,56 +1,91 @@
-## prepare for development/deploy
+# SEED Contract
 
-before development and deploy, you need to copy `.env.example` and rename it to `.env`, then fill in the corresponding parameters.
+[Seed Now, See the DAO](https://seed.seedao.tech/)
+
+## 1. Prepare for development and deployment
+
+before development and deployment, you need to copy `.env.example` and rename it to `.env`, and then modify the variable's value.
 
 - `PRIVATE_KEY` is the private key of the account used to deploy the contract
 
-## Run tests
+## 2. Run unit tests
 
-```
+```bash
 $ REPORT_GAS=true npx hardhat test
 ```
 
-## Deploy contracts
+## 3. Deploy contracts
 
-```
-$ npx hardhat run --network bsctest scripts/deploy.ts
-current network: bsctest
-Deploying SeeDAO...
-SeeDAO deployed to 0xfD98A13f9B815C2842b3dDbe9633dD070361490A
-```
+#### 3.1 (Optional, not required when deploying to mainnet) Deploy `MockPoints` contract
 
-- `--network` is the network you want to deploy to
+`MockPoints` contract is used to simulate the points token contract, which is only used for testing and does not need to be deployed to the mainnet when deploying.
 
-## Upgrade contracts
-
-```
-$ npx hardhat run --network bsctest scripts/upgrade.ts
-current network: bsctest
-Upgrading SeeDAO...
-SeeDAO upgraded
+```bash
+$ npx hardhat run --network sepolia scripts/deploy_mockpoints.ts
 ```
 
-- `--network` is the network you want to upgrade at
+#### 3.2 Deploy `Seed` contract
 
-## Verify contracts
+Please modify and confirm the address of the points token contract in `scripts/deploy_seed.ts` #9 line, and then execute the deployment command:
 
-```
-$ npx hardhat verify --network bsctest 0xfD98A13f9B815C2842b3dDbe9633dD070361490A
-Verifying implementation: 0x3D00bF07C722c8Bd175FA445B54F0187A2eFcd4b
-Successfully submitted source code for contract
-contracts/SeeDAO.sol:SeeDAO at 0x3D00bF07C722c8Bd175FA445B54F0187A2eFcd4b
-for verification on the block explorer. Waiting for verification result...
-
-Successfully verified contract SeeDAO on the block explorer.
-https://testnet.bscscan.com/address/0x3D00bF07C722c8Bd175FA445B54F0187A2eFcd4b#code
-Verifying proxy: 0xfD98A13f9B815C2842b3dDbe9633dD070361490A
-Contract at 0xfD98A13f9B815C2842b3dDbe9633dD070361490A already verified.
-Linking proxy 0xfD98A13f9B815C2842b3dDbe9633dD070361490A with implementation
-Successfully linked proxy to implementation.
-Verifying proxy admin: 0x3f9b514Fe2d85C464B4DA4cE4De12C0e23A24FB8
-Contract at 0x3f9b514Fe2d85C464B4DA4cE4De12C0e23A24FB8 already verified.
-
-Proxy fully verified.
+```bash
+$ npx hardhat run --network mainnet scripts/deploy_seed.ts
 ```
 
-- `--network` is the network you want to verify at
+!! Before calling the `tokenURI(uint256)` method to get the correct token uri, you need to call the `setBaseURI(string)` method to set the base URI !!
+
+Management methods supported by `Seed` contract:
+* `changeMinter(address)` : change minter address
+* `setMaxSupply(uint256)` : set the maximum supply of NFT
+* `setURILevelRange(uint256[])` : set the URI level parameter rule of NFT
+* `setBaseURI(string)` : set the base URI of NFT
+* `pause()` : pause contract
+* `unpause()` : unpause contract
+
+#### 3.3 Deploy `SeedManger` contract
+
+Please modify and confirm the address of the `Seed` contract in `scripts/deploy_seed_manager.ts` #9 line, and then execute the deployment command:
+
+```bash
+$ npx hardhat run --network mainnet scripts/deploy_seed_manager.ts 
+```
+
+!! After the `SeedManger` contract is deployed successfully in the `scripts/deploy_seed_manager.ts` script, the `changeMinter(address)` method of the `Seed` contract is called to modify its minter address to the address of the `SeedManger` contract !!
+
+> To enable the whitelist free claim feature, you need to call:
+* `setWhiteList(uint256, bytes32)` : set whitelist
+* `unpauseClaimWithWhiteList()` : enable whitelist claim feature
+
+Call `unpauseClaimWithWhiteList()` to disable the whitelist free claim feature.
+
+> To enable the points free claim feature, you need to call:
+* `setPointsTokenAddress(address)` : set points token contract address
+* `setPointsCountCondition(uint256)` : set points count condition
+* `unpauseClaimWithPoints()` : enable points claim feature
+
+Call `pauseClaimWithPoints()` to disable the points free claim feature.
+
+> To enable payed mint feature, you need to call:
+* `setPrice(uint256)` : set NFT price
+* `unpauseMint()` : enable payed mint feature
+
+Call `pauseMint()` to disable the payed mint feature.
+
+> Other methods:
+* `changeMinter(address)` : change minter address
+
+## 4. Upgrade `SeedManager` contracts
+
+```bash
+$ npx hardhat run --network mainnet scripts/upgrade_seed_manager.ts
+```
+
+## 5. Verify contracts
+
+```bash
+# verify `Seed` contract
+$ npx hardhat verify --network mainnet [Seed 合约地址] [积分 token 合约地址]
+
+# verify `SeedManager` contract
+$ npx hardhat verify --network mainnet []SeedManger 合约地址] [Seed 合约地址]
+```
