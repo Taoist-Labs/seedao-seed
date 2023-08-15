@@ -32,30 +32,27 @@ export default {
     ctx: ExecutionContext,
   ): Promise<Response> {
     switch (req.method) {
+      case 'OPTIONS':
+        const r = new Response(null);
+        // set cors header
+        setCorsHeaders(r);
+        return r;
       case 'POST':
-        //
+        // new file name is bucket's object count
         const objects = await env.BUCKET_SEED.list();
-        const name = `${objects.objects.length + 1}.png`;
+        const name = `${objects.objects.length}.png`;
 
         // save file to bucket
         await env.BUCKET_SEED.put(name, req.body);
 
-        // set cors header
         const resp = new Response(JSON.stringify({ name: name }), {
           headers: {
             'content-type': 'application/json;charset=UTF-8',
           },
         });
-        resp.headers.set('Access-Control-Allow-Origin', '*');
-        resp.headers.set('Access-Control-Allow-Credentials', 'true');
-        resp.headers.set(
-          'Access-Control-Allow-Methods',
-          'GET,HEAD,OPTIONS,POST,PUT',
-        );
-        resp.headers.set(
-          'Access-Control-Allow-Headers',
-          'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-        );
+
+        // set cors header
+        setCorsHeaders(resp);
         return resp;
       case 'GET':
         // read `name` param from url
@@ -79,3 +76,13 @@ export default {
     }
   },
 };
+
+function setCorsHeaders(resp: Response) {
+  resp.headers.set('Access-Control-Allow-Origin', '*');
+  resp.headers.set('Access-Control-Allow-Credentials', 'true');
+  resp.headers.set('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+  resp.headers.set(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  );
+}
