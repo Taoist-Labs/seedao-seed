@@ -141,7 +141,7 @@ export default function DynamicNFT({ color }: { color: string }) {
                   {t("home.points", { num: item.levels[1].points })})
                 </p>
               </div>
-              <div className="img-box">
+              <div className={(matches ? "" : "clip-img ") + "img-box"}>
                 <img src={matches ? item.rimg : item.img} alt="" />
               </div>
             </NFTCardItem>
@@ -230,6 +230,10 @@ const NFTCardItem = styled.li`
     vertical-align: bottom;
     width: 100%;
   }
+  .clip-img img {
+    position: relative;
+    bottom: -4px;
+  }
   .content {
     padding: 15px;
   }
@@ -244,6 +248,7 @@ const NFTCardItem = styled.li`
     font-size: 36px;
     font-family: "Inter-Bold";
   }
+
   @media (max-width: 680px) {
     .img-box {
       position: absolute;
