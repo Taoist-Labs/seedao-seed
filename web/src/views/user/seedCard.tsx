@@ -28,6 +28,10 @@ import ScrABI from "data/abi/SCR.json";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
 
+const whiteList = WhiteListData as {
+  proofs: [{ address: string; proof: string[] }];
+}[];
+
 const LEVELS = [
   {
     level: 0,
@@ -276,7 +280,7 @@ export default function SeedCard() {
   }, [seedMgrContract]);
 
   const checkIfinWhiteList = () => {
-    return WhiteListData.findIndex(
+    return whiteList.findIndex(
       (item) =>
         !!item.proofs.find(
           (p) => p.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
@@ -322,7 +326,7 @@ export default function SeedCard() {
       let res: any;
       const findIdx = checkIfinWhiteList();
       if (findIdx > -1) {
-        const proof_item = WhiteListData[findIdx].proofs.find(
+        const proof_item = whiteList[findIdx].proofs.find(
           (p) => p.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
         );
         if (proof_item) {
