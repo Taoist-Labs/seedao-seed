@@ -61,7 +61,7 @@
         "lockMint": "Mint Locked",
         "unlockMint": "Mint Now",
         "hadMint": "Minting right is used",
-        "unlockTip": "unlocked",
+        "unlockTip": "Mint Permission Unlocked",
         "lockTip": "Required 50,000 $SCR to Unlock",
         "congrats": "Congratulations",
         "congratsTip": "Apart from the gas fee, \n there is no additional cost for this minting.",
