@@ -216,12 +216,12 @@ export default function SeedCard() {
     if (!seedContract) {
       return;
     }
-    try {
-      const data = await seedContract.balanceOf(account);
-      setHasSeed(data.gte(ethers.BigNumber.from(1)));
-    } catch (error) {
-      console.error("getSeedBalance error", error);
-    }
+    // try {
+    //   const data = await seedContract.balanceOf(account);
+    //   setHasSeed(data.gte(ethers.BigNumber.from(1)));
+    // } catch (error) {
+    //   console.error("getSeedBalance error", error);
+    // }
   };
 
   const getSCR = async () => {
@@ -478,7 +478,8 @@ export default function SeedCard() {
               <RightTopBox>
                 {hasSeed ? (
                   <span className="minted">{t("user.hadMint")}</span>
-                ) : checkIfinWhiteList() > -1 || Number(points) >= 5000 ? (
+                ) : (
+                  // checkIfinWhiteList() > -1 || Number(points) >= 5000 ? (
                   <div>
                     <span
                       className="btn mint-btn"
@@ -488,13 +489,13 @@ export default function SeedCard() {
                     </span>
                     <p className="tip">{t("user.unlockTip")}</p>
                   </div>
-                ) : (
-                  <div>
-                    <span className="btn lock-btn">
-                      <span>{t("user.lockMint")}</span>
-                    </span>
-                    <p className="tip">{t("user.lockTip")}</p>
-                  </div>
+                  // ) :
+                  // <div>
+                  //   <span className="btn lock-btn">
+                  //     <span>{t("user.lockMint")}</span>
+                  //   </span>
+                  //   <p className="tip">{t("user.lockTip")}</p>
+                  // </div>
                 )}
               </RightTopBox>
             )}
