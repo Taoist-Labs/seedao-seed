@@ -35,11 +35,6 @@ const config: HardhatUserConfig = {
       chainId: 11155111,
       accounts: [`${PRIVATE_KEY}`],
     },
-    bsctest: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      chainId: 97,
-      accounts: [`${PRIVATE_KEY}`],
-    },
   },
   etherscan: {
     apiKey: {
