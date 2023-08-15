@@ -236,20 +236,6 @@ export default function SeedCard() {
     );
   };
 
-  const testMint = () => {
-    const _new_nft: INFT = {
-      tokenId: "1",
-      tokenIdFormat: `SEED No.1`, // display tokenId ?
-      image: emptySeed.image,
-      attrs: emptySeed.attrs,
-    };
-    setNewNft(_new_nft);
-    setNfts([...nfts, _new_nft]);
-
-    setShowSeedModal(true);
-    setLoading(false);
-  };
-
   const goMint = async () => {
     if (!connector) {
       return;
