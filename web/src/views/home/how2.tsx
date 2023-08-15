@@ -6,6 +6,7 @@ import NFT_02 from "assets/images/home/nfts/2.png";
 import NFT_03 from "assets/images/home/nfts/3.png";
 import NFT_04 from "assets/images/home/nfts/4.png";
 import NFT_05 from "assets/images/home/nfts/5.png";
+import NFT_06 from "assets/images/home/nfts/6.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { CenterBox } from "style";
 import { useTranslation } from "react-i18next";
@@ -72,7 +73,7 @@ const CardPart = () => {
 const AvatarsBox = () => {
   return (
     <AvatarsBoxStyle>
-      {[NFT_01, NFT_02, NFT_03, NFT_04, NFT_05, NFT_01].map((src, idx) => (
+      {[NFT_01, NFT_02, NFT_03, NFT_04, NFT_05, NFT_06].map((src, idx) => (
         <img src={src} alt="" key={idx} />
       ))}
     </AvatarsBoxStyle>
