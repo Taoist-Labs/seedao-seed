@@ -209,13 +209,6 @@ export default function SeedCard() {
       SeedABI,
       provider,
     );
-    try {
-      const uri = await contract.tokenURI(0);
-      console.log("uri: ", uri);
-    } catch (error) {
-      console.error("tokenURI error", error);
-    }
-
     setSeedContract(contract);
   };
 
@@ -292,27 +285,6 @@ export default function SeedCard() {
     if (!connector) {
       return;
     }
-    // setLoading(true);
-    // setShowMintModal(false);
-
-    // setTimeout(() => {
-    //   console.log("mint done");
-    //   setHasSeed(true);
-    //   setNewNft({
-    //     image:
-    //       "https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/seed-Beige%20Gray%23Stategrey%23Normal%23Red%20L0-L1%23Headband_1%23%23Waves%20and%20Peaks_4.png",
-    //     tokenId: "2000",
-    //     name: "lala",
-    //     attrs: [
-    //       { name: "Background", value: "#fff" },
-    //       { name: "Eyes", value: "#fff" },
-    //       { name: "Background", value: "90cm" },
-    //     ],
-    //   });
-    //   setLoading(false);
-    //   setShowSeedModal(true);
-    // }, 3000);
-
     // check network
     if (chainId !== Chain.POLYGON.chainId) {
       await connector.activate(Chain.POLYGON);
@@ -341,7 +313,8 @@ export default function SeedCard() {
       setLoading(true);
       setShowMintModal(false);
       const r = await res.wait();
-      console.log("r:", r);
+      console.log("[DEBUG] r: ", r);
+
       console.log("mint done");
 
       const event = r.events.find(
@@ -352,8 +325,15 @@ export default function SeedCard() {
 
       setHasSeed(true);
       if (event) {
+        console.log("[DEBUG] find event: ", event);
+
         const tokenId = ethers.BigNumber.from(event.topics[3]);
+        console.log("tokenId:", tokenId);
+        console.log("[DEBUG] tokenId: ", tokenId);
+
         const uri = await seedContract.tokenURI(tokenId);
+        console.log("[DEBUG] token uri:  ", uri);
+
         // if (uri.endsWith(".json")) {
         //   const _new_nft: INFT = {
         //     tokenId,
