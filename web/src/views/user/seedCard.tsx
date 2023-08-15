@@ -297,6 +297,7 @@ export default function SeedCard() {
         // };
         // setNewNft(_new_nft);
         // setNfts([...nfts, _new_nft]);
+        // setSelectSeedIdx(nfts.length);
 
         // setShowSeedModal(true);
         // setLoading(false);
@@ -314,6 +315,7 @@ export default function SeedCard() {
             };
             setNewNft(_new_nft);
             setNfts([...nfts, _new_nft]);
+            setSelectSeedIdx(nfts.length);
 
             setShowSeedModal(true);
             setLoading(false);
