@@ -254,7 +254,6 @@ const SocialBox = styled.div`
   justify-content: center;
   gap: 80px;
   margin-top: 17px;
-  margin-bottom: 80px;
   height: 240px;
   @media (max-width: 750px) {
     margin-top: 64px;
@@ -265,7 +264,6 @@ const SocialBox = styled.div`
     img {
       width: 25px;
     }
-    margin-bottom: 0;
     margin-top: 32px;
   }
 `;
