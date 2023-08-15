@@ -44,7 +44,7 @@ const rightStyle = css`
   }
   .tooltip-content::before {
     right: unset;
-    left: -18px;
+    left: -17px;
     transform: translateX(50%) rotate(-90deg);
   }
 `;
@@ -70,7 +70,7 @@ const CopyContent = styled.div<{ dir: string }>`
     position: absolute;
     border: 6px solid transparent;
     border-bottom-color: #000;
-    top: 10px;
+    top: 6px;
     right: -6px;
     transform: translateX(50%) rotate(90deg);
   }
