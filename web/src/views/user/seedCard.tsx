@@ -288,41 +288,41 @@ export default function SeedCard() {
         const uri = await seedContract.tokenURI(tokenId);
         console.log("[DEBUG] token uri:  ", uri);
 
-        const _new_nft: INFT = {
-          tokenId: tokenId.toString(),
-          tokenIdFormat: `SEED No.${tokenId.toString()}`, // display tokenId ?
-          image: emptySeed.image,
-          attrs: emptySeed.attrs,
-        };
-        setNewNft(_new_nft);
-        setNfts([...nfts, _new_nft]);
+        // const _new_nft: INFT = {
+        //   tokenId: tokenId.toString(),
+        //   tokenIdFormat: `SEED No.${tokenId.toString()}`, // display tokenId ?
+        //   image: emptySeed.image,
+        //   attrs: emptySeed.attrs,
+        // };
+        // setNewNft(_new_nft);
+        // setNfts([...nfts, _new_nft]);
 
-        setShowSeedModal(true);
-        setLoading(false);
-        // fetch(uri, { method: "GET" })
-        //   .then((res) => res.json())
-        //   .then((res: any) => {
-        //     const _new_nft: INFT = {
-        //       tokenId: tokenId.toString(),
-        //       tokenIdFormat: `SEED No.${tokenId.toString()}`,
-        //       image: res.image, // TODO handle image url
-        //       attrs: res.attributes.map((attr: any) => ({
-        //         name: attr.trait_type,
-        //         value: attr.value,
-        //       })),
-        //     };
-        //     setNewNft(_new_nft);
-        //     setNfts([...nfts, _new_nft]);
+        // setShowSeedModal(true);
+        // setLoading(false);
+        fetch(uri, { method: "GET" })
+          .then((res) => res.json())
+          .then((res: any) => {
+            const _new_nft: INFT = {
+              tokenId: tokenId.toString(),
+              tokenIdFormat: `SEED No.${tokenId.toString()}`,
+              image: res.image, // TODO handle image url
+              attrs: res.attributes.map((attr: any) => ({
+                name: attr.trait_type,
+                value: attr.value,
+              })),
+            };
+            setNewNft(_new_nft);
+            setNfts([...nfts, _new_nft]);
 
-        //     setShowSeedModal(true);
-        //     setLoading(false);
-        //   })
-        //   .catch((err) => {
-        //     console.error("fetch new token uri error", err, uri);
-        //   })
-        //   .finally(() => {
-        //     setLoading(false);
-        //   });
+            setShowSeedModal(true);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.error("fetch new token uri error", err, uri);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       }
       setLoading(false);
     } catch (error: any) {
