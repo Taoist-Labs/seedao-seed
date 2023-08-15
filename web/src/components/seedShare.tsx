@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import LogoIcon from "assets/images/logo.png";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ATTR_ICON_MAP } from "utils/constant";
 
@@ -10,7 +11,23 @@ export default function SeedShare({
   seed: INFT;
   handleLoaded: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const token_suffix = useMemo(() => {
+    if (i18n.language === "en") {
+      const _id = Number(seed.tokenId);
+      if (_id === 0) {
+        return "st";
+      } else if (_id === 1) {
+        return "nd";
+      } else if (_id === 2) {
+        return "rd";
+      } else {
+        return "th";
+      }
+    } else {
+      return "";
+    }
+  }, [i18n]);
   return (
     <SeedShareBox id="SEED">
       <img src={seed.image} alt="" className="nft" onLoad={handleLoaded} />
@@ -19,7 +36,12 @@ export default function SeedShare({
           {seed.tokenId ? seed.tokenIdFormat : seed.name}
         </div>
         <div className="num">
-          {t("user.minNum1")} <span>{seed.tokenId}</span> {t("user.minNum2")}
+          {t("user.minNum1")}
+          <span>
+            {" "}
+            {Number(seed.tokenId) + 1} {token_suffix}{" "}
+          </span>
+          {t("user.minNum2")}
         </div>
         <AttrBox>
           {seed.attrs.map((attr, idx) => (
@@ -32,7 +54,7 @@ export default function SeedShare({
           ))}
         </AttrBox>
       </SeedContent>
-      <LogoBottom id="sss">
+      <LogoBottom>
         <img src={LogoIcon} alt="" />
       </LogoBottom>
     </SeedShareBox>
