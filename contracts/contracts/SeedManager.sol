@@ -159,6 +159,11 @@ contract SeedManager is
 
   /// batch mint NFT, only minter can call, need to specify the receiving addresses, can be used for batch airdrop
   function batchMint(address[] calldata to) external onlyMinter {
+    // this method is for migrating from SGN to SEED, so those addresses can't free claim again by whitelist and points
+    for (uint256 i = 0; i < to.length; i++) {
+      claimed[to[i]] = true;
+    }
+
     _batchMint(to);
   }
 
@@ -240,6 +245,7 @@ contract SeedManager is
 
   /// @dev set whitelist, need to pass in whitelist ID and Merkle Tree Root Hash when calling
   /// the whitelist has different batches, when adding a new whitelist, a new whitelist ID is required
+  /// start from 0 !!
   function setWhiteList(
     uint256 whiteListId,
     bytes32 rootHash

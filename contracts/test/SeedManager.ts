@@ -552,6 +552,56 @@ describe("SeedManager", function () {
           );
         }
       });
+
+      it("batch mint addresses can't free claim again by whitelist and points", async function () {
+        const {
+          mockPoints,
+          seed,
+          seedManager,
+          owner,
+          secondAccount,
+          thirdAccount,
+        } = await loadFixture(deploySeedManagerFixture);
+
+        const { addresses } = await loadFixture(fakeBatchMintParam);
+
+        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(0));
+
+        // batch mint 3 nfts
+        await seedManager.batchMint(addresses); // minted nft id: 0, 1, 2
+
+        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
+        expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
+
+        for (let i = 0; i < addresses.length; i++) {
+          expect(await seed.balanceOf(addresses[i])).to.equal(
+            ethers.getBigInt(1)
+          );
+          expect(await seed.tokenOfOwnerByIndex(addresses[i], 0)).to.equal(
+            ethers.getBigInt(i)
+          );
+        }
+
+        // claim with white list will revert
+        await seedManager.unpauseClaimWithWhiteList();
+        const whiteListId = ethers.getBigInt(1);
+        const { rootHash, proofOfSecondAccount } = await loadFixture(
+          generateMerkleTreeAndProof
+        );
+        await seedManager.setWhiteList(whiteListId, rootHash);
+        await expect(
+          seedManager
+            .connect(secondAccount)
+            .claimWithWhiteList(whiteListId, proofOfSecondAccount)
+        ).to.be.revertedWith("You have claimed");
+        // claim with points will revert
+        await seedManager.unpauseClaimWithPoints();
+        const bigInt5k = bigInt(5_000, await mockPoints.decimals());
+        await mockPoints.mint(secondAccount.address, bigInt5k);
+        await expect(
+          seedManager.connect(secondAccount).claimWithPoints()
+        ).to.be.revertedWith("You have claimed");
+      });
     });
   });
 
