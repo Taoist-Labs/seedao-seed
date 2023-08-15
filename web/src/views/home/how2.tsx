@@ -304,6 +304,8 @@ const InfoBoxStyle = styled.ul`
     flex-wrap: wrap;
     height: unset;
     padding-block: 20px;
+    align-items: start;
+
     li {
       padding-inline: 8px;
     }
