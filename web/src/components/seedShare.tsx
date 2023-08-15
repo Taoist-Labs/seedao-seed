@@ -127,6 +127,7 @@ const LogoBottom = styled.div`
   padding-bottom: 26px;
   text-align: center;
   margin-top: 54px;
+  margin-inline: 50px;
   img {
     width: 200px;
   }
