@@ -57,6 +57,48 @@ export default function MenuSeed({ account }: { account?: string }) {
   );
 }
 
+export const SmMenuSeed = ({ account }: { account?: string }) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { dispatch } = useAppContext();
+
+  const [expand, setExpand] = useState(false);
+
+  const onClickMySeed = () => {
+    if (account) {
+      navigate("/user");
+    } else {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+    }
+  };
+
+  return (
+    <>
+      <div className="seed-menu" onClick={() => setExpand(!expand)}>
+        <span>{t("header.seed")}</span>
+        {expand ? (
+          <img src={ExpandIcon} alt="" className="arrow" />
+        ) : (
+          <img src={ExpandIcon} alt="" className="arrow" />
+        )}
+      </div>
+      {expand && (
+        <ul className="sub-menu">
+          <li value={1} onClick={() => navigate("/")}>
+            {t("header.about")}
+          </li>
+          <li value={0} onClick={() => navigate("/gallery")}>
+            {t("header.gallery")}
+          </li>
+          <li value={1} onClick={onClickMySeed}>
+            {t("header.mySeed")}
+          </li>
+        </ul>
+      )}
+    </>
+  );
+};
+
 const SelectBox = styled.div`
   display: flex;
   align-items: center;

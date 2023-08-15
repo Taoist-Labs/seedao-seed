@@ -88,6 +88,59 @@ export default function MenuLogin({
   );
 }
 
+export const SmMenuLogin = ({
+  account,
+  connector,
+}: {
+  account?: string;
+  connector?: any;
+}) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { dispatch } = useAppContext();
+
+  const [expand, setExpand] = useState(false);
+
+  const go2profile = () => {
+    navigate("/my");
+  };
+
+  const handleDisconnect = () => {
+    dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: "" });
+    localStorage.removeItem(SELECT_WALLET);
+    try {
+      console.log("connector:", connector);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      connector?.deactivate();
+    } catch (error) {
+      console.error("disconnect", error);
+    }
+  };
+
+  return (
+    <>
+      {account && (
+        <div className="seed-menu" onClick={() => setExpand(!expand)}>
+          <span>{addressToShow(account)}</span>
+          {expand ? (
+            <img src={ExpandIcon} alt="" className="arrow" />
+          ) : (
+            <img src={ExpandIcon} alt="" className="arrow" />
+          )}
+        </div>
+      )}
+
+      {expand && (
+        <ul className="sub-menu">
+          <li onClick={go2profile}>{t("header.myProfile")}</li>
+          <li onClick={handleDisconnect}>{t("header.disconnect")}</li>
+        </ul>
+      )}
+    </>
+  );
+};
+
 const SelectBox = styled.div`
   display: flex;
   align-items: center;

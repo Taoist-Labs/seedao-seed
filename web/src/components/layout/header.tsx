@@ -1,57 +1,31 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import LogoIcon from "assets/images/logo.png";
-import { addressToShow } from "utils/index";
 import React, { useState } from "react";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 // import GreenStarIcon from "assets/images/home/green_star.svg";
 import MenuIcon from "assets/images/home/menu.svg";
 import LanguageIcon from "assets/images/home/language.svg";
 import { useTranslation } from "react-i18next";
 import useSelectAccount from "../../hooks/useSelectAccout";
-import MenuSeed from "./menu_seed";
-import MenuLogin from "./menuLogin";
+import MenuSeed, { SmMenuSeed } from "./menuSeed";
+import MenuLogin, { SmMenuLogin } from "./menuLogin";
 
 const SmNav = ({
   handleClose,
   account,
+  connector,
 }: {
   handleClose: () => void;
   account?: string;
+  connector: any;
 }) => {
-  const { t } = useTranslation();
-  const [expand, setExpand] = useState(false);
-
   return (
     <SmMenu>
       <div className="content">
         <div className="top">
-          <div className="seed-menu">
-            {/* <span>{t("header.seed")}</span> */}
-            <Link to="/gallery">{t("header.gallery")}</Link>
-
-            {/* {expand ? <ExpandLessIcon /> : <ExpandMoreIcon />} */}
-          </div>
-          {account && (
-            <div className="seed-menu" onClick={() => setExpand(!expand)}>
-              <span>{addressToShow(account)}</span>
-              {expand ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </div>
-          )}
-
-          {expand && (
-            <ul className="sub-menu">
-              <li>
-                <Link to="/my" className="my">
-                  {t("header.myProfile")}
-                </Link>
-              </li>
-              {/* <li onClick={handleDisconnect}>{t("header.disconnect")}</li> */}
-            </ul>
-          )}
+          <SmMenuSeed account={account} />
+          <SmMenuLogin account={account} connector={connector} />
         </div>
         <div className="bottom">
           <Languagebutton />
@@ -121,7 +95,11 @@ export default function Header({ color }: { color?: string }) {
         </NavStyle>
       </HeaderContainer>
       {showMenu && (
-        <SmNav handleClose={() => setShowMenu(false)} account={account} />
+        <SmNav
+          handleClose={() => setShowMenu(false)}
+          account={account}
+          connector={connector}
+        />
       )}
     </HeaderStyle>
   );
@@ -156,16 +134,16 @@ const SmMenu = styled.div`
         font-family: "Inter-Semibold";
         cursor: pointer;
         a {
+          display: block;
           color: unset;
           text-decoration: none;
         }
       }
-      .sub-menu li:hover {
-        color: #a8e100;
-      }
-      .my {
+      .sub-menu li {
         padding-left: 20px;
-        display: block;
+      }
+      .sub-menu li:hover {
+        background-color: rgba(0, 0, 0, 0.04);
       }
     }
     .bottom {
@@ -174,7 +152,7 @@ const SmMenu = styled.div`
       gap: 20px;
       justify-content: center;
       border-top: 1px solid #ddd;
-      margin-top: 20px;
+      margin-top: 10px;
     }
   }
   .mask {
@@ -184,6 +162,11 @@ const SmMenu = styled.div`
   @media (max-width: 412px) {
     height: calc(100vh - 60px);
     top: 60px;
+    .content {
+      .top {
+        padding-inline: 15px;
+      }
+    }
   }
 `;
 
