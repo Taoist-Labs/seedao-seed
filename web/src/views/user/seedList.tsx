@@ -16,9 +16,13 @@ export default function SeedList({ list, onSelect, selectedIdx }: IProps) {
             key={idx}
             className={idx === selectedIdx ? "select" : ""}
           >
-            {item.image}
+            <img src={item.image} alt="" />
           </li>
         ))}
+        {list.length < 6 &&
+          new Array(6 - list.length)
+            .fill(1, 0, 9 - list.length)
+            .map((_, idx) => <li key={idx}></li>)}
       </ul>
     </RightBottomBox>
   );
@@ -48,6 +52,9 @@ const RightBottomBox = styled.div`
       }
       &.select {
         border: 2px solid #000;
+      }
+      img {
+        width: 100%;
       }
     }
   }
