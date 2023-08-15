@@ -261,9 +261,7 @@ describe("Seed", function () {
   describe("Function tokenURI", function () {
     describe("Validations", function () {
       it("Should return 404.json when contract is paused", async function () {
-        const { seed, secondAccount } = await loadFixture(
-          deploySeedFixture
-        );
+        const { seed, secondAccount } = await loadFixture(deploySeedFixture);
 
         const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
         // set token uri
@@ -273,7 +271,7 @@ describe("Seed", function () {
         await seed.mint(secondAccount.address);
         // when contract is paused, should return 404.json
         expect(await seed.tokenURI(ethers.getBigInt(0))).to.equal(
-            `${baseURI}/404.json`
+          `${baseURI}/404.json`
         );
       });
 
