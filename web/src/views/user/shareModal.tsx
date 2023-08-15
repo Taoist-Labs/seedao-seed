@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import CopyBox from "components/common/copy";
 import QrcodeBox from "./qrcode";
 import { uploadImage } from "utils/request";
+import LoaderIcon from "assets/images/loader.svg";
 
 interface IProps {
   show: boolean;
@@ -26,9 +27,16 @@ const HASH_TAGS = ["SeeDAO", "SeedNFT", "500KPoints"];
 export default function ShareModal({ show, seed, handleClose }: IProps) {
   const { t } = useTranslation();
   const [imgBlob, setImgBlob] = useState<Blob>();
-  const [isReady, setIsReady] = useState(false);
+  // const [isReady, setIsReady] = useState(false);
   const [imgCode, setImgCode] = useState("");
   const [showQrcode, setShowQrcode] = useState(false);
+
+  const [nftLoaded, setNftLoaded] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
+
+  const isReady = useMemo(() => {
+    return nftLoaded && uploaded;
+  }, [nftLoaded, uploaded]);
 
   const shareLink = useMemo(() => {
     return `https://social-share.fn-labs.workers.dev?image=${imgCode}`;
@@ -77,11 +85,12 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
       .then((res) => {
         console.log(res);
         setImgCode(res.name.split(".")[0]);
+        setUploaded(true);
       });
   }, [imgBlob]);
 
   useEffect(() => {
-    if (!isReady) {
+    if (!nftLoaded) {
       return;
     }
     const node = document.getElementById("SEED");
@@ -94,7 +103,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
       .catch(function (error) {
         console.error("oops, something went wrong!", error);
       });
-  }, [isReady]);
+  }, [nftLoaded]);
   return (
     <Modal
       open={show}
@@ -104,7 +113,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
       <ShareModalStyle>
         <div className="share-modal">
           <div className="share-content">
-            <SeedShare seed={seed} handleLoaded={() => setIsReady(true)} />
+            <SeedShare seed={seed} handleLoaded={() => setNftLoaded(true)} />
           </div>
         </div>
         {showQrcode ? (
@@ -114,7 +123,7 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
               handleClose={() => setShowQrcode(false)}
             />
           </RightBox>
-        ) : (
+        ) : isReady ? (
           <RightBox>
             <div className="content">
               <div className="title">{t("user.shareTo")}</div>
@@ -138,6 +147,12 @@ export default function ShareModal({ show, seed, handleClose }: IProps) {
                 <span>{t("user.download")}</span>
               </span>
             </div>
+          </RightBox>
+        ) : (
+          <RightBox>
+            <Loading>
+              <img src={LoaderIcon} alt="" className="icon" />
+            </Loading>
           </RightBox>
         )}
       </ShareModalStyle>
@@ -202,6 +217,26 @@ const RightBox = styled.div`
       left: -12px;
       top: 6px;
       background-color: #cecdf6;
+    }
+  }
+`;
+
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .icon {
+    animation: spin 2.5s linear infinite;
+  }
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 `;
