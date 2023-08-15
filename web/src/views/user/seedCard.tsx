@@ -102,51 +102,6 @@ const LEVELS = [
 //   return { tokenId: Number(arr[0]), level: Number(arr[1]) };
 // };
 
-const testresp = {
-  code: 200,
-  msg: null,
-  data: {
-    total: 1,
-    next: null,
-    content: [
-      {
-        contract_address: "0xe8feb3a8ad2cf5a7e74e7c48befa8fa43162a210",
-        contract_name: "Seed",
-        contract_token_id:
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-        token_id: "0",
-        erc_type: "erc721",
-        amount: "1",
-        minter: "0x183f09c3ce99c02118c570e03808476b22d63191",
-        owner: "0xebaef7c0f5bd0fa3e15d188a7545fceda76609c7",
-        own_timestamp: 1692034124000,
-        mint_timestamp: 1692034124000,
-        mint_transaction_hash:
-          "0x2ad7ef58c17dc4cb96f3d5be9d07c7ab43ebc2380bb0cf1441e4c400be4451e4",
-        mint_price: 0.0,
-        token_uri: null,
-        metadata_json: null,
-        name: null,
-        content_type: null,
-        content_uri: null,
-        description: null,
-        image_uri: null,
-        external_link: null,
-        latest_trade_price: null,
-        latest_trade_symbol: null,
-        latest_trade_token: null,
-        latest_trade_timestamp: null,
-        nftscan_id: "NS5ED2C8336D8BB12D",
-        nftscan_uri: null,
-        small_nftscan_uri: null,
-        attributes: [],
-        rarity_score: null,
-        rarity_rank: null,
-      },
-    ],
-  },
-};
-
 export default function SeedCard() {
   const { t } = useTranslation();
   const { account, provider, chainId, connector } = useSelectAccount();
