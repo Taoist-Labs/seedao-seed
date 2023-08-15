@@ -13,7 +13,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getNftCollection } from "utils/request";
+// import { getNftCollection } from "utils/request";
 
 const CardPart = () => {
   const { t } = useTranslation();
@@ -81,22 +81,23 @@ const AvatarsBox = () => {
 
 const InfoBox = () => {
   const { t } = useTranslation();
-  const [data, setData] = useState<any>();
+  const [data] = useState<any>();
 
   useEffect(() => {
     process.env.NODE_ENV !== "development" &&
-      getNftCollection()
-        .then((res) => res.json())
-        .then((res) => {
-          const d = res.data;
-          setData({
-            items: d.items_total,
-            volume: d.total_volume,
-            floorPrice: d.floor_price,
-            avg: d.average_price_24h,
-            owners: d.owners_total,
-          });
-        });
+      console.log("getNftCollection -- home");
+    // getNftCollection()
+    //   .then((res) => res.json())
+    //   .then((res) => {
+    //     const d = res.data;
+    //     setData({
+    //       items: d.items_total,
+    //       volume: d.total_volume,
+    //       floorPrice: d.floor_price,
+    //       avg: d.average_price_24h,
+    //       owners: d.owners_total,
+    //     });
+    //   });
   }, []);
 
   return (
