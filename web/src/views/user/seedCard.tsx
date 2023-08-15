@@ -109,7 +109,7 @@ export default function SeedCard() {
   const { dispatch } = useAppContext();
 
   const [points, setPoints] = useState("0");
-  const [hasSeed, setHasSeed] = useState(false);
+  const [hadMint, setHadMint] = useState(false);
   const [seedContract, setSeedContract] = useState<Contract>();
   const [seedMgrContract, setSeedMgrContract] = useState<Contract>();
   const [showSeedModal, setShowSeedModal] = useState(false);
@@ -174,7 +174,7 @@ export default function SeedCard() {
     }
     try {
       const data = await seedContract.balanceOf(account);
-      setHasSeed(data.gte(ethers.BigNumber.from(1)));
+      setHadMint(data.gte(ethers.BigNumber.from(1)));
     } catch (error) {
       console.error("getSeedBalance error", error);
     }
@@ -212,6 +212,21 @@ export default function SeedCard() {
   useEffect(() => {
     chainId === Chain.POLYGON.chainId && account && getSeedManagerContract();
   }, [chainId, account, provider]);
+
+  useEffect(() => {
+    const getUserMintState = async () => {
+      if (!seedMgrContract || !account) {
+        return;
+      }
+      try {
+        const minted = await seedMgrContract.claimed(account);
+        setHadMint(minted);
+      } catch (error) {
+        console.error("getUserMintState error", error);
+      }
+    };
+    getUserMintState();
+  }, [seedMgrContract, account]);
 
   useEffect(() => {
     const getSwitch = async () => {
@@ -279,7 +294,7 @@ export default function SeedCard() {
           "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
       );
 
-      setHasSeed(true);
+      setHadMint(true);
       if (event) {
         console.log("[DEBUG] find event: ", event);
 
@@ -421,7 +436,7 @@ export default function SeedCard() {
           <CardBottomInnerRight>
             {isOpenMint && (
               <RightTopBox>
-                {hasSeed ? (
+                {hadMint ? (
                   <span className="minted">{t("user.hadMint")}</span>
                 ) : checkIfinWhiteList() > -1 || Number(points) >= 5000 ? (
                   <div>
