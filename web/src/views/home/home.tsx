@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import Header from "components/layout/header";
 
 import BannerBg01 from "assets/images/home/banner/banner01.png";
-import BannerBg02 from "assets/images/home/banner/banner02.png";
+import BannerBg02 from "assets/images/home/banner/banner02.jpg";
 import BannerBg03 from "assets/images/home/banner/banner03.png";
 // import BannerBg04 from "assets/images/home/banner/banner04.png";
 
