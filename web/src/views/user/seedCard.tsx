@@ -276,7 +276,12 @@ export default function SeedCard() {
   }, [seedMgrContract]);
 
   const checkIfinWhiteList = () => {
-    return WhiteListData.find((d) => d.address === account);
+    return WhiteListData.findIndex(
+      (item) =>
+        !!item.proofs.find(
+          (p) => p.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
+        ),
+    );
   };
 
   const goMint = async () => {
@@ -314,24 +319,36 @@ export default function SeedCard() {
     }
     // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      setLoading(true);
-      setShowMintModal(false);
       let res: any;
-      const find = checkIfinWhiteList();
-      if (find) {
-        res = await seedMgrContract.claimWithWhiteList(find.no, find.proof);
+      const findIdx = checkIfinWhiteList();
+      if (findIdx > -1) {
+        const proof_item = WhiteListData[findIdx].proofs.find(
+          (p) => p.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
+        );
+        if (proof_item) {
+          res = await seedMgrContract.claimWithWhiteList(
+            findIdx + 1,
+            proof_item.proof,
+          );
+        }
       } else {
         res = await seedMgrContract.claimWithPoints();
       }
+      setLoading(true);
+      setShowMintModal(false);
       const r = await res.wait();
       console.log("r:", r);
       console.log("mint done");
-      const event = r.events.find((e: any) => e.name === "Transfer");
+
+      const event = r.events.find(
+        (e: any) =>
+          e.topics[0] ==
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      );
+
       setHasSeed(true);
       if (event) {
-        const tokenIdHex = event.topics[3];
-        // TODO handle 16 => 10;
-        const tokenId = tokenIdHex;
+        const tokenId = ethers.BigNumber.from(event.topics[3]);
         const uri = await seedContract.tokenURI(tokenId);
         // if (uri.endsWith(".json")) {
         //   const _new_nft: INFT = {
@@ -348,7 +365,7 @@ export default function SeedCard() {
           .then((res) => res.json())
           .then((res: any) => {
             const _new_nft: INFT = {
-              tokenId,
+              tokenId: tokenId.toString(),
               tokenIdFormat: `SEED No.${tokenId}`,
               image: res.image, // TODO handle image url
               attrs: res.attributes.map((attr: any) => ({
@@ -477,7 +494,7 @@ export default function SeedCard() {
               <RightTopBox>
                 {hasSeed ? (
                   <span className="minted">{t("user.hadMint")}</span>
-                ) : checkIfinWhiteList() || Number(points) >= 5000 ? (
+                ) : checkIfinWhiteList() > -1 || Number(points) >= 5000 ? (
                   <div>
                     <span
                       className="btn mint-btn"
