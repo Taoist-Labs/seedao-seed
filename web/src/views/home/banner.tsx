@@ -88,6 +88,7 @@ const BannerTitle = styled.div`
   @media (max-width: 960px) {
     font-size: 48px;
     line-height: 66px;
+    text-align: center;
   }
   @media (max-width: 412px) {
     font-size: 24px;
@@ -106,6 +107,7 @@ const BannerText = styled.div`
 
   @media (max-width: 960px) {
     width: unset;
+    text-align: center;
   }
   @media (max-width: 750px) {
     display: none;
