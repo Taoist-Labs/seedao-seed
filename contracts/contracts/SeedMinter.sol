@@ -182,11 +182,9 @@ contract SeedMinter is
       payable(_msgSender()).transfer(msg.value - payValue);
     }
 
-    address[] memory to = new address[](amount);
     for (uint256 i = 0; i < amount; i++) {
-      to[i] = _msgSender();
+      _mint(_msgSender());
     }
-    _batchMint(to);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
