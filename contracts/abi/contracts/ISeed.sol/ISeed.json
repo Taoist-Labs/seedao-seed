@@ -7,7 +7,7 @@
         "type": "address[]"
       }
     ],
-    "name": "batchMint",
+    "name": "migrate",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -136,19 +136,6 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "to",
-        "type": "address[]"
-      }
-    ],
-    "name": "batchMint",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "minter_",
         "type": "address"
@@ -222,6 +209,19 @@
       }
     ],
     "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "to",
+        "type": "address[]"
+      }
+    ],
+    "name": "migrate",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -43,22 +43,47 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     pause();
   }
 
-  /// @dev mint NFT method
+  /// @dev mint method -- new tokenId will be random
   function mint(address to) public onlyOwner {
-    require(tokenIndex < maxSupply, "Exceeds the maximum supply");
+    require(totalSupply() + 1 <= maxSupply, "Exceeds the maximum supply");
 
-    _safeMint(to, tokenIndex);
-    tokenIndex += 1;
+    _safeMint(to, _newRandomTokenId());
   }
 
-  /// @dev batch mint NFT method
-  function batchMint(address[] calldata to) public onlyOwner {
-    require(tokenIndex + to.length < maxSupply, "Exceeds the maximum supply");
+  /// @dev migrate method -- new tokenId will be in order
+  function migrate(address[] calldata to) public onlyOwner {
+    require(
+      totalSupply() + to.length <= maxSupply,
+      "Exceeds the maximum supply"
+    );
 
     for (uint i = 0; i < to.length; i++) {
+      // when tokenIndex was minted, transaction will revert
       _safeMint(to[i], tokenIndex);
       tokenIndex += 1;
     }
+  }
+
+  /// @dev generate a random new tokenId that was not minted
+  function _newRandomTokenId() internal view returns (uint256) {
+    //// generate a random number between `600` to `maxSupply`
+    //uint256 randomId = (uint256(
+    //  // Warning: Since the VM version paris, "difficulty" was replaced by "prevrandao", which now returns a random number based on the beacon chain.
+    //  keccak256(abi.encodePacked(block.prevrandao, block.timestamp))
+    //) % (maxSupply - 600 )) + 600;
+
+    // generate a random number between `tokenIndex` to `maxSupply`
+    uint256 randomId = (uint256(
+      // Warning: Since the VM version paris, "difficulty" was replaced by "prevrandao", which now returns a random number based on the beacon chain.
+      keccak256(abi.encodePacked(block.prevrandao, block.timestamp))
+    ) % (maxSupply - tokenIndex)) + tokenIndex;
+
+    // if the randomId is already minted, then increment it until it is not minted
+    while (_ownerOf(randomId) != address(0)) {
+      randomId += 1;
+    }
+
+    return randomId;
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------

@@ -6,5 +6,5 @@ interface ISeed {
 
   function mint(address to) external;
 
-  function batchMint(address[] calldata to) external;
+  function migrate(address[] calldata to) external;
 }

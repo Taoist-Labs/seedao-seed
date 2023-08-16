@@ -157,17 +157,17 @@ contract SeedMinter is
     _mint(_msgSender());
   }
 
-  /// batch mint NFT, only minter can call, need to specify the receiving addresses, can be used for batch airdrop
-  function batchMint(address[] calldata to) external onlyMinter {
+  /// migrate SGN to SEED, only minter can call, need to specify the receiving addresses, can be used for batch airdrop
+  function migrate(address[] calldata to) external onlyMinter {
     // this method is for migrating from SGN to SEED, so those addresses can't free claim again by whitelist and points
     for (uint256 i = 0; i < to.length; i++) {
       claimed[to[i]] = true;
     }
 
-    _batchMint(to);
+    _migrate(to);
   }
 
-  /// @dev direct buy NFT, support buy multiple NFTs at once
+  /// @dev direct buy SEED with payment, support buy multiple NFTs at once
   /// `payable` modifier indicates that the current method can receive native token
   /// `enableMint` modifier is used to restrict methods that only can call when payed mint feature gate is open
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
@@ -204,14 +204,14 @@ contract SeedMinter is
       );
   }
 
-  /// @dev mint NFT
+  /// @dev mint SEED
   function _mint(address to) internal {
     ISeed(seed).mint(to);
   }
 
-  /// @dev batch mint NFT
-  function _batchMint(address[] memory to) internal {
-    ISeed(seed).batchMint(to);
+  /// @dev migrate SGN to SEED
+  function _migrate(address[] memory to) internal {
+    ISeed(seed).migrate(to);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
