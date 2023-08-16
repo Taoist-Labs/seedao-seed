@@ -15,7 +15,7 @@
         "bannerContent02": "每个Seed NFT都是一颗独一无二的种子。",
         "galleryButton": "查看图鉴",
         "buySeedButton": "购买 Seed",
-        "dynamicTitle": "Dynamic PFP of Seed NFT",
+        "dynamicTitle": "动态NFT展示规则",
         "dynamicContent": "Seed NFT中人物眉间\"太极星\"的颜色会随着成员钱包中积分所处段位变化而改变，所有链上头像将动态显示。太极星颜色仅与当前持有人的段位相关，交易后将更新为新持有人的段位。",
         "dynamicPolaris": "以下是不同积分 / 段位 对应的<span>太极星颜色</span>：",
         "sgnRelated": "SGN 问题专区",
