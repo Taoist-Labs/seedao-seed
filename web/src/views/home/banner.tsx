@@ -14,28 +14,32 @@ export default function Banner({ color, bg }: { color: string; bg: string }) {
             <img src={bg} alt="" />
           </div>
         )}
-        <BannerTitle>{t("home.bannerTitle")}</BannerTitle>
-        <BannerText>
-          <p>{t("home.bannerContent01")}</p>
-          <p className="last">{t("home.bannerContent02")}</p>
-        </BannerText>
-        <BannerButtonGroup>
-          <ViewButton
-            onClick={() => window.open(`${window.origin}/#/gallery`, "_blank")}
-          >
-            {t("home.galleryButton")}
-          </ViewButton>
-          <BuyButton
-            onClick={() =>
-              window.open(
-                "https://opensea.io/collection/seedaogenesis",
-                "_blank",
-              )
-            }
-          >
-            {t("home.buySeedButton")}
-          </BuyButton>
-        </BannerButtonGroup>
+        <div className="content">
+          <BannerTitle>{t("home.bannerTitle")}</BannerTitle>
+          <BannerText>
+            <p>{t("home.bannerContent01")}</p>
+            <p className="last">{t("home.bannerContent02")}</p>
+          </BannerText>
+          <BannerButtonGroup>
+            <ViewButton
+              onClick={() =>
+                window.open(`${window.origin}/#/gallery`, "_blank")
+              }
+            >
+              {t("home.galleryButton")}
+            </ViewButton>
+            <BuyButton
+              onClick={() =>
+                window.open(
+                  "https://opensea.io/collection/seedaogenesis",
+                  "_blank",
+                )
+              }
+            >
+              {t("home.buySeedButton")}
+            </BuyButton>
+          </BannerButtonGroup>
+        </div>
       </BannerContent>
     </BannerStyle>
   );
@@ -44,7 +48,6 @@ export default function Banner({ color, bg }: { color: string; bg: string }) {
 const BannerStyle = styled.section<{ bg: string }>`
   height: calc(100vh - 90px);
   min-height: 664px;
-  padding: 113px 0 0 80px;
   box-sizing: border-box;
   background: ${(props) => props.color};
   background-image: ${(props) => `url(${props.bg})`};
@@ -63,18 +66,25 @@ const BannerStyle = styled.section<{ bg: string }>`
 `;
 
 const BannerContent = styled(CenterBox)`
-  padding-inline: 24px;
   display: flex;
   flex-direction: column;
   gap: 36px;
+  height: 100%;
   .img-box {
     width: 61%;
     img {
       width: 100%;
     }
   }
+  padding-inline: 100px;
+  justify-content: center;
+
   @media (max-width: 960px) {
     align-items: center;
+    padding-inline: 80px;
+  }
+  @media (max-width: 750px) {
+    padding-inline: 20px;
   }
   @media (max-width: 414px) {
     gap: 10px;
@@ -96,7 +106,9 @@ const BannerTitle = styled.div`
 `;
 
 const BannerText = styled.div`
-  width: 50%;
+  width: 45%;
+  margin-top: 40px;
+  margin-bottom: 50px;
   p {
     font-family: Inter;
     font-size: 20px;
@@ -117,8 +129,16 @@ const BannerText = styled.div`
 const BannerButtonGroup = styled.div`
   display: flex;
   gap: 20px;
+  @media (max-width: 960px) {
+    justify-content: center;
+  }
+  @media (max-width: 750px) {
+    margin-top: 28px;
+  }
+
   @media (max-width: 414px) {
     gap: 10px;
+    margin-top: 14px;
   }
 `;
 

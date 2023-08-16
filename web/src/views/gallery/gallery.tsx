@@ -137,7 +137,6 @@ export default function GalleryPage() {
     });
     return count;
   }, [selectAttrs, keyword]);
-
   const removeFilters = () => {
     setSelectAttrs([]);
   };
@@ -145,7 +144,6 @@ export default function GalleryPage() {
   const handleDisplayList = (_page: number, _list: INFT[]) => {
     const start = _page * PageSize;
     const end = start + PageSize;
-    console.log(list.length, _page);
     if (start === 0) {
       setDisplayList([..._list.slice(start, end)]);
     } else {
