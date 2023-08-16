@@ -16,6 +16,8 @@ import UnipassIcon from "assets/images/wallet/unipass.svg";
 import { useTranslation } from "react-i18next";
 import useSelectAccount from "hooks/useSelectAccout";
 import Chain from "utils/chain";
+import { isMobile } from "utils/userAgent";
+import CallApp from "callapp-lib";
 
 // enum LoginStatus {
 //   Default = 0,
@@ -75,6 +77,30 @@ export default function LoginModal() {
   };
 
   const connect = async (w: LoginWallet) => {
+    if (w.value === Wallet.METAMASK) {
+      if (isMobile) {
+        const options = {
+          scheme: {
+            protocol: "https",
+            host: "metamask.app.link",
+          },
+          appstore: "",
+          fallback: "https://metamask.io/download.html",
+        };
+        const callLib = new CallApp(options);
+        const openParams = {
+          path: `dapp/${window.location.hostname}/`,
+          callback() {
+            console.log("Please install MetaMask");
+          },
+        };
+        callLib.open(openParams);
+        return;
+      } else if (!window.ethereum) {
+        window.open("https://metamask.io/download.html", "_blank");
+        return;
+      }
+    }
     // setChooseWallet(w);
     const connector = w.connector;
     // setLoginStatus(LoginStatus.Pending);
