@@ -159,7 +159,7 @@ const DynamicNFTStyle = styled.section`
   @media (max-width: 960px) {
     padding: 60px 30px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     padding: 40px 15px;
   }
 `;
@@ -175,7 +175,7 @@ const Title = styled.div`
   @media (max-width: 750px) {
     font-size: 40px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 20px;
     margin-bottom: 32px;
   }
@@ -197,7 +197,7 @@ const Content = styled.div`
       color: #d9393b;
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     p {
       font-size: 12px;
       line-height: 20px;
@@ -262,7 +262,7 @@ const NFTCardItem = styled.li`
       }
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     height: 68px;
     position: relative;
     .content {
@@ -299,7 +299,7 @@ const ViewButton = styled.div`
     height: 56px;
     line-height: 56px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     height: 28px;
     line-height: 28px;
     font-size: 12px;

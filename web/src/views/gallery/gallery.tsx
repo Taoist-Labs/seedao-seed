@@ -273,13 +273,13 @@ const GalleryContent = styled.div`
   @media (max-width: 960px) {
     padding: 40px 30px 0;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     padding: 20px 15px;
   }
 `;
 
 const NFTList = styled(Grid)`
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     &.nft-container {
       margin: 0;
     }
@@ -312,7 +312,7 @@ const Tag = styled.li`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     line-height: 18px;
     height: 18px;
     font-size: 12px;
@@ -345,7 +345,7 @@ const FilterHead = styled.div`
     font-family: "Inter-Bold";
     font-size: 14px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     margin-bottom: 15px;
 
     .title {
@@ -368,7 +368,7 @@ const FilterHeadRight = styled.div`
     margin-right: 28px;
     cursor: pointer;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     .result {
       font-size: 13px;
     }
@@ -391,7 +391,7 @@ const EmptyBox = styled.div`
   min-height: calc(80vh - 100px);
   text-align: center;
   font-size: 20px;
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 14px;
   }
 `;

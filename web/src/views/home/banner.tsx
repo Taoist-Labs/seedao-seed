@@ -57,7 +57,7 @@ const BannerStyle = styled.section<{ bg: string }>`
     height: unset;
     padding-bottom: 40px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     min-height: unset;
   }
 `;
@@ -76,7 +76,7 @@ const BannerContent = styled(CenterBox)`
   @media (max-width: 960px) {
     align-items: center;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     gap: 10px;
   }
 `;
@@ -90,7 +90,7 @@ const BannerTitle = styled.div`
     line-height: 66px;
     text-align: center;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 24px;
   }
 `;
@@ -117,7 +117,7 @@ const BannerText = styled.div`
 const BannerButtonGroup = styled.div`
   display: flex;
   gap: 20px;
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     gap: 10px;
   }
 `;
@@ -132,7 +132,7 @@ const Button = styled.div`
   font-size: 20px;
   font-style: normal;
   font-family: "Inter-Bold";
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 12px;
     height: 28px;
     line-height: 28px;

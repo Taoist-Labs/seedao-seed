@@ -115,7 +115,7 @@ const GalleryLeft = styled.div<{ sm: boolean }>`
       display: none;
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     padding: 20px 15px;
   } ;
 `;
@@ -128,7 +128,7 @@ const LeftTitle = styled.div`
   .close {
     top: 20px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 15px;
   }
 `;

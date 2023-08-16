@@ -102,7 +102,7 @@ const ModalContainer = styled(Box)`
       display: flex;
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     width: calc(100% - 30px);
     .sm-title {
       font-size: 15px;
@@ -199,7 +199,7 @@ const AttrBox = styled.ul`
       display: none;
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     li {
       min-height: 32px;
       img {
@@ -217,7 +217,7 @@ const CloseIconStyle = styled(CloseIcon)`
   fill: #0f0f0f;
   opacity: 0.5;
   cursor: pointer;
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 18px;
   }
 `;

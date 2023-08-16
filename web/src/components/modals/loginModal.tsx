@@ -169,7 +169,7 @@ const ModalContainer = styled(Box)`
     top: 20px;
     cursor: pointer;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     width: 320px;
     padding: 20px;
   }

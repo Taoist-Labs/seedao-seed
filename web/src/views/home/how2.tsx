@@ -140,7 +140,7 @@ const How2Style = styled(CenterBox)`
   @media (max-width: 960px) {
     padding: 60px 30px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     padding: 40px 20px;
   }
 `;
@@ -158,7 +158,7 @@ const Title = styled.div`
     font-size: 40px;
     margin-bottom: 64px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 20px;
     margin-bottom: 32px;
   }
@@ -173,7 +173,7 @@ const CardsBox = styled.div`
     gap: 48px;
     padding-inline: 40px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     gap: 24px;
     padding-inline: 20px;
   }
@@ -221,7 +221,7 @@ const CardItem = styled.div`
     margin-bottom: 40px;
     white-space: pre-line;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     .title {
       font-size: 16px;
     }
@@ -255,7 +255,7 @@ const AvatarsBoxStyle = styled.div`
       width: calc(100% / 3);
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     margin: 0;
   }
 `;
@@ -314,7 +314,7 @@ const InfoBoxStyle = styled.ul`
       font-size: 10px;
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     margin-block: 28px;
     li {
       padding-inline: 6px;

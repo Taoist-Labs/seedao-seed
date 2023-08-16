@@ -79,7 +79,7 @@ const UtilitytStyle = styled(CenterBox)`
   @media (max-width: 960px) {
     padding: 60px 40px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     padding: 40px 15px;
   }
 `;
@@ -92,7 +92,7 @@ const UtilityTitle = styled.div`
   font-family: "Inter-Bold";
   line-height: 50px;
   margin-bottom: 80px;
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 20px;
     margin-bottom: 32px;
   }
@@ -142,7 +142,7 @@ const Box = styled.ul`
       align-items: stretch;
       margin-bottom: 50px;
     }
-    @media (max-width: 412px) {
+    @media (max-width: 414px) {
       .icon img {
         width: 60px;
       }
@@ -193,7 +193,7 @@ const JoinButton = styled.a`
       display: none;
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     height: 28px;
     line-height: 28px;
     font-size: 12px;

@@ -105,7 +105,7 @@ const FilterAttrName = styled.div`
     img {
       width: 30px;
     }
-    @media (max-width: 412px) {
+    @media (max-width: 414px) {
       img {
         width: 25px;
       }
@@ -132,7 +132,7 @@ const FilterAttrValues = styled.ul`
       font-size: 16px;
       font-weight: 400;
     }
-    @media (max-width: 412px) {
+    @media (max-width: 414px) {
       .text {
         font-size: 18px;
       }

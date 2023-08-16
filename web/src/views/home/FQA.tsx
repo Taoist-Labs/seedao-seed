@@ -158,7 +158,7 @@ const FQAStyle = styled.section`
     display: block;
     text-align: center;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     padding: 40px 15px;
     .subject {
       font-size: 12px;
@@ -180,7 +180,7 @@ const Title = styled.div`
   line-height: 50px;
   margin-bottom: 17px;
   color: #000;
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 24px;
   }
 `;
@@ -231,7 +231,7 @@ const QuestionItemStyle = styled.li`
       line-height: 30px;
     }
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     .q {
       .name {
         font-size: 12px;
@@ -259,7 +259,7 @@ const SocialBox = styled.div`
     margin-top: 64px;
     height: unset;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     gap: 33px;
     img {
       width: 25px;

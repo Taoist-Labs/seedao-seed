@@ -25,7 +25,7 @@ const Intro = styled.div`
   color: #686666;
   font-size: 16px;
   font-family: "Inter-Medium";
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     font-size: 12px;
   }
   margin-top: 5px;

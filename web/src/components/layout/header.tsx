@@ -159,7 +159,7 @@ const SmMenu = styled.div`
     flex: 1;
     background-color: rgba(0, 0, 0, 0.5);
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     height: calc(100vh - 60px);
     top: 60px;
     .content {
@@ -180,7 +180,7 @@ const HeaderStyle = styled.header<{ color: string }>`
   @media (max-width: 750px) {
     background-color: ${(props) => props.color};
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     height: 60px;
     line-height: 60px;
     padding: 0 15px;
@@ -203,7 +203,7 @@ const LogoLink = styled(Link)`
     position: relative;
     top: 15px;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     img {
       top: 10px;
       left: -8px;
@@ -232,7 +232,7 @@ const SmNavStyle = styled.div`
   @media (max-width: 750px) {
     display: block;
   }
-  @media (max-width: 412px) {
+  @media (max-width: 414px) {
     img {
       width: 24px;
       top: 8px;
