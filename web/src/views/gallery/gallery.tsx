@@ -17,6 +17,7 @@ import NftData from "data/nfts.json";
 import { handleNfts } from "utils/handler";
 
 const { attrGroups, nfts: AllNFTs } = handleNfts(NftData);
+const PageSize = 16;
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
@@ -25,11 +26,16 @@ export default function GalleryPage() {
 
   const [selectAttrs, setSelectAttrs] = useState<SelectAttr[]>([]);
   const [list, setList] = useState<INFT[]>(AllNFTs);
+  const [displayList, setDisplayList] = useState<INFT[]>([]);
+  const [page, setPage] = useState<number>(0);
   const [showSeed, setShowSeed] = useState<INFT>();
   const [keyword, setKeyword] = useState<string>("");
 
   const randomList = (arr: INFT[]) => {
-    setList([...arr.sort(() => Math.random() - 0.5)]);
+    const _list = [...arr.sort(() => Math.random() - 0.5)];
+    setList(_list);
+    setPage(0);
+    handleDisplayList(0, _list);
   };
 
   const handleFilter = () => {
@@ -109,8 +115,12 @@ export default function GalleryPage() {
       const f = AllNFTs.find((item) => item.tokenId === keyword);
       if (f) {
         setList([{ ...f }]);
+        setPage(0);
+        handleDisplayList(0, [{ ...f }]);
       } else {
         setList([]);
+        setPage(0);
+        handleDisplayList(0, []);
       }
     } else {
       handleFilter();
@@ -130,6 +140,33 @@ export default function GalleryPage() {
 
   const removeFilters = () => {
     setSelectAttrs([]);
+  };
+
+  const handleDisplayList = (_page: number, _list: INFT[]) => {
+    const start = _page * PageSize;
+    const end = start + PageSize;
+    console.log(list.length, _page);
+    if (start === 0) {
+      setDisplayList([..._list.slice(start, end)]);
+    } else {
+      const more_list = _list.slice(start, end);
+      if (more_list.length) {
+        setDisplayList([...displayList, ..._list.slice(start, end)]);
+      } else {
+        setPage(_page - 1);
+      }
+    }
+  };
+
+  const handleScroll = () => {
+    const dom = document.getElementById("scroll");
+    const scrollHeight = dom?.scrollHeight || 0;
+    const scrollTop = dom?.scrollTop || 0;
+    const clientHeight = dom?.clientHeight || 0;
+    if (clientHeight + scrollTop >= scrollHeight) {
+      setPage(page + 1);
+      handleDisplayList(page + 1, list);
+    }
   };
 
   return (
@@ -166,7 +203,7 @@ export default function GalleryPage() {
           )}
 
           <GalleryRight>
-            <GalleryContent>
+            <GalleryContent onScroll={handleScroll} id="scroll">
               <FilterHead>
                 <span className="title">{t("gallery.filters")}</span>
                 <span className="num">{filterNums}</span>
@@ -211,21 +248,24 @@ export default function GalleryPage() {
                 </FilterHeadRight>
               </FilterHead>
               {list.length > 0 ? (
+                // <ScrollBox>
                 <NFTList
                   container
                   spacing={matches ? "10px" : 3}
                   style={{ width: "100%" }}
                   className="nft-container"
                 >
-                  {list.map((item, idx) => (
+                  {displayList.map((item, idx) => (
                     <NFTCard
-                      key={`${idx}_${Math.random()}`}
+                      // key={`${idx}_${Math.random()}`}
+                      key={idx}
                       data={item}
                       onClick={() => setShowSeed(item)}
                     />
                   ))}
                 </NFTList>
               ) : (
+                // </ScrollBox>
                 <EmptyBox>
                   <p>{t("gallery.emptyResult")}</p>
                   <ClearButton onClick={removeFilters}>
