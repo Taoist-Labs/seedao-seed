@@ -139,6 +139,7 @@ export default function GalleryPage() {
   }, [selectAttrs, keyword]);
   const removeFilters = () => {
     setSelectAttrs([]);
+    setKeyword("");
   };
 
   const handleDisplayList = (_page: number, _list: INFT[]) => {
