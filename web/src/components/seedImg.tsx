@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 import Fade from "@mui/material/Fade";
 
 import EmptyIcon from "assets/images/user/empty.svg";
@@ -8,9 +9,10 @@ interface IProps {
   src: string;
   name?: string;
   children?: React.ReactNode;
+  isStatic?: boolean;
 }
 
-export default function SeedImg({ src, name, children }: IProps) {
+export default function SeedImg({ src, name, children, isStatic }: IProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -18,7 +20,10 @@ export default function SeedImg({ src, name, children }: IProps) {
   }, []);
   return (
     <Fade in={show}>
-      <SeedImgStyle className={imgLoaded ? "" : "loading"}>
+      <SeedImgStyle
+        className={imgLoaded ? "" : "loading"}
+        isDynamic={!isStatic}
+      >
         <img src={EmptyIcon} alt="" />
         <img
           src={src}
@@ -34,17 +39,8 @@ export default function SeedImg({ src, name, children }: IProps) {
   );
 }
 
-const SeedImgStyle = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  img {
-    width: 100%;
-  }
+const DynamicStyle = css`
   img.nft-img {
-    position: absolute;
-    left: 0;
-    top: 0;
     cursor: pointer;
     &:hover {
       animation: scaleanim 0.2s ease-in-out forwards;
@@ -58,4 +54,19 @@ const SeedImgStyle = styled.div`
       }
     }
   }
+`;
+
+const SeedImgStyle = styled.div<{ isDynamic: boolean }>`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  img {
+    width: 100%;
+  }
+  img.nft-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  ${(props) => props.isDynamic && DynamicStyle}
 `;

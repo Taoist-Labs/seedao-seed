@@ -6,7 +6,7 @@ export default function SeedDisplay({ seed }: { seed: INFT }) {
   return (
     <SeedDetail>
       <SeedImgBox>
-        <SeedImg src={seed.image} name={seed.name} />
+        <SeedImg src={seed.image} name={seed.name} isStatic />
       </SeedImgBox>
       <SeedAttr>
         <div className="name">
