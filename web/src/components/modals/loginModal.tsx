@@ -126,18 +126,23 @@ const ModalContainer = styled(Box)`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 370px;
-  height: 200px;
+  /* height: 200px; */
   background-color: #fff;
   padding: 40px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
   .icon-close {
     position: absolute;
     right: 20px;
     top: 20px;
     cursor: pointer;
+  }
+  @media (max-width: 412px) {
+    width: 320px;
+    padding: 20px;
   }
 `;
 
