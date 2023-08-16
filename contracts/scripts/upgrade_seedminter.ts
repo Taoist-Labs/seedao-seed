@@ -6,7 +6,7 @@ async function main() {
 
   const SeedManager = await ethers.getContractFactory("SeedManager");
   const seedManager = await upgrades.upgradeProxy(
-    deployed.getSeedManagerContract(),
+    deployed.getSeedMinterContract(),
     SeedManager
   );
   await seedManager.waitForDeployment();

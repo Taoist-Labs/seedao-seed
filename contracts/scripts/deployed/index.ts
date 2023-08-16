@@ -40,19 +40,12 @@ const deployd = {
   getSeedContract: function (): string {
     return this.contracts["Seed"];
   },
-  setISeedContract: function (addr: string) {
-    this.contracts["SeedManager"] = addr;
+  setSeedMinterContract: function (addr: string) {
+    this.contracts["SeedMinter"] = addr;
     saveSync();
   },
-  getISeedContract: function (): string {
-    return this.contracts["SeedManager"];
-  },
-  setSeedManagerContract: function (addr: string) {
-    this.contracts["SeedManager"] = addr;
-    saveSync();
-  },
-  getSeedManagerContract: function (): string {
-    return this.contracts["SeedManager"];
+  getSeedMinterContract: function (): string {
+    return this.contracts["SeedMinter"];
   },
   setMockPointsContract: function (addr: string) {
     this.contracts["mock"]["MockPoints"] = addr;

@@ -1,6 +1,6 @@
 {
   "Seed": "_",
-  "SeedManager": "_",
+  "SeedMinter": "_",
   "mock": {
     "MockPoints": "_"
   }

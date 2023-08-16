@@ -1,6 +1,6 @@
 {
   "Seed": "0x79a45d1DB4a0e5d5c43C9836baCB2B409cAb414c",
-  "SeedManager": "0x586f31fe89a4eBebB7616bb16848770eDC7fE655",
+  "SeedMinter": "0x586f31fe89a4eBebB7616bb16848770eDC7fE655",
   "mock": {
     "MockPoints": "0x5485715fedED2D3398f8bb922695e7d8bE86B242"
   }

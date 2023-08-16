@@ -24,7 +24,7 @@ async function main() {
   ]);
   await seedManager.waitForDeployment();
 
-  deployed.setSeedManagerContract(seedManager.target.toString());
+  deployed.setSeedMinterContract(seedManager.target.toString());
   console.log(`[SeedManager] deployed to ${seedManager.target}`);
 
   // transfer Seed's owner to SeedManager contract
