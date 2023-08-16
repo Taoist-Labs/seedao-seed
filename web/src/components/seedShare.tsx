@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import LogoIcon from "assets/images/logo.png";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ATTR_ICON_MAP } from "utils/constant";
 
@@ -28,9 +28,23 @@ export default function SeedShare({
       return "";
     }
   }, [i18n]);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
+
+  useEffect(() => {
+    if (imgLoaded && logoLoaded) {
+      handleLoaded();
+    }
+  }, [logoLoaded, imgLoaded]);
+
   return (
     <SeedShareBox id="SEED">
-      <img src={seed.image} alt="" className="nft" onLoad={handleLoaded} />
+      <img
+        src={seed.image}
+        alt=""
+        className="nft"
+        onLoad={() => setImgLoaded(true)}
+      />
       <SeedContent>
         <div className="title">
           {seed.tokenId ? seed.tokenIdFormat : seed.name}
@@ -55,7 +69,7 @@ export default function SeedShare({
         </AttrBox>
       </SeedContent>
       <LogoBottom>
-        <img src={LogoIcon} alt="" />
+        <img src={LogoIcon} alt="" onLoad={() => setLogoLoaded(true)} />
       </LogoBottom>
     </SeedShareBox>
   );
