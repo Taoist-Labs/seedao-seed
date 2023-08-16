@@ -14,7 +14,7 @@ export default function SeedShare({
   const { t, i18n } = useTranslation();
   const token_suffix = useMemo(() => {
     if (i18n.language === "en") {
-      const _id = Number(seed.tokenId);
+      const _id = Number(seed.ownerRank);
       if (_id === 0) {
         return "st";
       } else if (_id === 1) {
@@ -27,7 +27,7 @@ export default function SeedShare({
     } else {
       return "";
     }
-  }, [i18n]);
+  }, [i18n, seed]);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
 
