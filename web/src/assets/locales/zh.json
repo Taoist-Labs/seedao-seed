@@ -2,7 +2,7 @@
     "copied": "Copied",
     "header": {
         "seed": "SEED",
-        "gallery": "画廊",
+        "gallery": "图鉴",
         "connectWallet": "连接钱包",
         "disconnect": "断开连接",
         "myProfile": "个人中心",
@@ -13,7 +13,7 @@
         "bannerTitle": "Seed Now, See the DAO",
         "bannerContent01": "Seed NFT, 是SeeDAO数字城邦的公民身份证明，也是获得城邦政治权利的前提。",
         "bannerContent02": "每个Seed NFT都是一颗独一无二的种子。",
-        "galleryButton": "查看画廊",
+        "galleryButton": "查看图鉴",
         "buySeedButton": "购买 Seed",
         "dynamicTitle": "Dynamic PFP of Seed NFT",
         "dynamicContent": "Seed NFT中人物眉间\"太极星\"的颜色会随着成员钱包中积分所处段位变化而改变，所有链上头像将动态显示。太极星颜色仅与当前持有人的段位相关，交易后将更新为新持有人的段位。",
