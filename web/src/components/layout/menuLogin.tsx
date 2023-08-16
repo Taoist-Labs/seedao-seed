@@ -10,6 +10,7 @@ import { SELECT_WALLET } from "utils/constant";
 import LoginModal from "components/modals/loginModal";
 import Button from "@mui/material/Button";
 import { addressToShow } from "utils/index";
+import { css } from "@emotion/react";
 
 export default function MenuLogin({
   account,
@@ -118,9 +119,13 @@ export const SmMenuLogin = ({
     }
   };
 
+  const showLogin = () => {
+    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+  };
+
   return (
     <>
-      {account && (
+      {account ? (
         <div className="seed-menu" onClick={() => setExpand(!expand)}>
           <span>{addressToShow(account)}</span>
           {expand ? (
@@ -129,6 +134,10 @@ export const SmMenuLogin = ({
             <img src={ExpandIcon} alt="" className="arrow" />
           )}
         </div>
+      ) : (
+        <SmConnectButton onClick={showLogin}>
+          {t("header.connectWallet")}
+        </SmConnectButton>
       )}
 
       {expand && (
@@ -152,13 +161,23 @@ const SelectBox = styled.div`
   }
 `;
 
-const ConnectButton = styled(Button)`
+const ConnectButtonStyle = css`
   font-family: "Inter-Semibold";
   font-size: 18px;
+  cursor: pointer;
+`;
+
+const ConnectButton = styled(Button)`
   color: unset;
   &:hover {
     background-color: rgba(0, 0, 0, 0.04);
   }
+  ${ConnectButtonStyle}
+`;
+
+const SmConnectButton = styled.div`
+  line-height: 44px;
+  ${ConnectButtonStyle}
 `;
 
 const MenuItemStyle = styled(MenuItem)`

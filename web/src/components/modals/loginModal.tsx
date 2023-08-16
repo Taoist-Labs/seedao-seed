@@ -160,6 +160,9 @@ const ModalContainer = styled(Box)`
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
+  &:focus-visible {
+    outline: none;
+  }
   .icon-close {
     position: absolute;
     right: 20px;
