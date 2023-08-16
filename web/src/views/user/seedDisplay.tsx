@@ -59,7 +59,7 @@ const SeedAttr = styled.div`
   }
   li {
     width: 190px;
-    height: 42px;
+    min-height: 42px;
     border-radius: 8px;
     border: 1px solid #000;
     background: #fff;
