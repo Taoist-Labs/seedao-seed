@@ -9,7 +9,11 @@ export default function Banner({ color, bg }: { color: string; bg: string }) {
   return (
     <BannerStyle color={color} bg={bg}>
       <BannerContent>
-        {matches && <img src={bg} alt="" />}
+        {matches && (
+          <div className="img-box">
+            <img src={bg} alt="" />
+          </div>
+        )}
         <BannerTitle>{t("home.bannerTitle")}</BannerTitle>
         <BannerText>
           <p>{t("home.bannerContent01")}</p>
@@ -63,15 +67,17 @@ const BannerContent = styled(CenterBox)`
   display: flex;
   flex-direction: column;
   gap: 36px;
-
-  img {
+  .img-box {
     width: 61%;
+    img {
+      width: 100%;
+    }
   }
   @media (max-width: 960px) {
     align-items: center;
   }
   @media (max-width: 412px) {
-    gap: 14px;
+    gap: 10px;
   }
 `;
 

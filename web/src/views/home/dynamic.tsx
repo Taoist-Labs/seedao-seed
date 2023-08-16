@@ -260,7 +260,6 @@ const NFTCardItem = styled.li`
         width: unset;
         height: 100%;
       }
-      background-color: #000;
     }
   }
   @media (max-width: 412px) {
