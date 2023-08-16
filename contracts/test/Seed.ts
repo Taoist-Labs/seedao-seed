@@ -34,22 +34,36 @@ describe("Seed", function () {
   }
 
   describe("Deployment", function () {
+    it("Should set the right pointsToken", async function () {
+      const { mockPoints, seed } = await loadFixture(deploySeedFixture);
+
+      expect(await seed.pointsToken()).to.equal(await mockPoints.getAddress());
+    });
+
     it("Should set the right maxSupply", async function () {
       const { seed } = await loadFixture(deploySeedFixture);
 
       expect(await seed.maxSupply()).to.equal(ethers.getBigInt(100_000));
     });
 
+    it("Should set the right uriLevelRanges", async function () {
+      const { seed } = await loadFixture(deploySeedFixture);
+
+      expect(await seed.uriLevelRanges(0)).to.equal(ethers.getBigInt(20_000));
+      expect(await seed.uriLevelRanges(1)).to.equal(ethers.getBigInt(300_000));
+      expect(await seed.uriLevelRanges(2)).to.equal(
+        ethers.getBigInt(3_000_000)
+      );
+      expect(await seed.uriLevelRanges(3)).to.equal(
+        ethers.getBigInt(30_000_000)
+      );
+      await expect(seed.uriLevelRanges(4)).to.be.revertedWithoutReason();
+    });
+
     it("Should set the right owner", async function () {
       const { seed, owner } = await loadFixture(deploySeedFixture);
 
       expect(await seed.owner()).to.equal(owner.address);
-    });
-
-    it("Should set the right minter", async function () {
-      const { seed, owner } = await loadFixture(deploySeedFixture);
-
-      expect(await seed.minter()).to.equal(owner.address);
     });
 
     it("Should paused default", async function () {
@@ -61,40 +75,6 @@ describe("Seed", function () {
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
-
-  describe("Function changeMinter()", function () {
-    describe("Validations", function () {
-      it("Should revert when caller is not owner", async function () {
-        const { seed, secondAccount } = await loadFixture(deploySeedFixture);
-
-        await expect(
-          seed.connect(secondAccount).changeMinter(secondAccount.address)
-        ).to.be.revertedWith("Ownable: caller is not the owner");
-      });
-
-      it("Should change minter success", async function () {
-        const { seed, owner, secondAccount } = await loadFixture(
-          deploySeedFixture
-        );
-
-        expect(await seed.minter()).to.equal(owner.address);
-        await seed.changeMinter(secondAccount.address);
-        expect(await seed.minter()).to.equal(secondAccount.address);
-      });
-    });
-
-    describe("Events", function () {
-      it("Should emit an event on changeMinter", async function () {
-        const { seed, owner, secondAccount } = await loadFixture(
-          deploySeedFixture
-        );
-
-        await expect(seed.changeMinter(secondAccount.address))
-          .to.emit(seed, "MinterChanged")
-          .withArgs(owner.address, secondAccount.address);
-      });
-    });
-  });
 
   describe("Function setMaxSupply", function () {
     const defaultMaxSupply = ethers.getBigInt(100_000);
@@ -137,17 +117,50 @@ describe("Seed", function () {
     });
   });
 
+  describe("Function setURILevelRange", function () {
+    it("Should revert when caller is not owner", async function () {
+      const { seed, secondAccount } = await loadFixture(deploySeedFixture);
+
+      await expect(
+        seed
+          .connect(secondAccount)
+          .setURILevelRange([
+            ethers.getBigInt(100),
+            ethers.getBigInt(1_000),
+            ethers.getBigInt(10_000),
+            ethers.getBigInt(100_000),
+          ])
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("Should set uri level range success", async function () {
+      const { seed } = await loadFixture(deploySeedFixture);
+
+      await seed.setURILevelRange([
+        ethers.getBigInt(100),
+        ethers.getBigInt(1_000),
+        ethers.getBigInt(10_000),
+        ethers.getBigInt(100_000),
+      ]);
+      expect(await seed.uriLevelRanges(0)).to.equal(ethers.getBigInt(100));
+      expect(await seed.uriLevelRanges(1)).to.equal(ethers.getBigInt(1_000));
+      expect(await seed.uriLevelRanges(2)).to.equal(ethers.getBigInt(10_000));
+      expect(await seed.uriLevelRanges(3)).to.equal(ethers.getBigInt(100_000));
+      await expect(seed.uriLevelRanges(4)).to.be.revertedWithoutReason();
+    });
+  });
+
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   describe("Function mint", function () {
     describe("Validations", function () {
-      it("Should revert when caller is not minter", async function () {
+      it("Should revert when caller is not owner", async function () {
         const { seed, secondAccount } = await loadFixture(deploySeedFixture);
 
         await expect(
           seed.connect(secondAccount).mint(secondAccount.address)
-        ).to.be.revertedWith("Only minter can call this method");
+        ).to.be.revertedWith("Ownable: caller is not the owner");
       });
 
       it("Should revert when exceeds max supply", async function () {
@@ -212,13 +225,13 @@ describe("Seed", function () {
 
   describe("Function batchMint", function () {
     describe("Validations", function () {
-      it("Should revert when caller is not minter", async function () {
+      it("Should revert when caller is not owner", async function () {
         const { seed, secondAccount } = await loadFixture(deploySeedFixture);
         const { addresses } = await loadFixture(fakeBatchMintParam);
 
         await expect(
           seed.connect(secondAccount).batchMint(addresses)
-        ).to.be.revertedWith("Only minter can call this method");
+        ).to.be.revertedWith("Ownable: caller is not the owner");
       });
 
       it("Should revert when exceeds max supply", async function () {

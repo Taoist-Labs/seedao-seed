@@ -2,13 +2,13 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
-import { SeedManager } from "../typechain-types";
+import { SeedMinter } from "../typechain-types";
 
-describe("SeedManager", function () {
+describe("SeedMinter", function () {
   // We define a fixture to reuse the same setup in every test.
   // We use loadFixture to run this setup once, snapshot that state,
   // and reset Hardhat Network to that snapshot in every test.
-  async function deploySeedManagerFixture() {
+  async function deploySeedMinterFixture() {
     // Contracts are deployed using the first signer/account by default
     const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
 
@@ -18,20 +18,20 @@ describe("SeedManager", function () {
       await mockPoints.getAddress(),
     ]);
 
-    const SeedManager = await ethers.getContractFactory("SeedManager");
-    const seedManager = (await upgrades.deployProxy(SeedManager, [
+    const SeedMinter = await ethers.getContractFactory("SeedMinter");
+    const seedMinter = (await upgrades.deployProxy(SeedMinter, [
       await seed.getAddress(),
       await mockPoints.getAddress(),
       ethers.getBigInt(5000),
-    ])) as unknown as SeedManager;
+    ])) as unknown as SeedMinter;
 
-    // change Seed's minter to SeedManager contract
-    await seed.changeMinter(seedManager.target.toString());
+    // transfer Seed's owner to SeedManager contract
+    await seed.transferOwnership(seedMinter.target.toString());
 
     return {
       mockPoints,
       seed,
-      seedManager,
+      seedMinter,
       owner,
       secondAccount,
       thirdAccount,
@@ -86,35 +86,42 @@ describe("SeedManager", function () {
 
   describe("Deployment", function () {
     it("Should set the right seed contract address", async function () {
-      const { seed, seedManager } = await loadFixture(deploySeedManagerFixture);
+      const { seed, seedMinter } = await loadFixture(deploySeedMinterFixture);
 
-      expect(await seedManager.seed()).to.equal(await seed.getAddress());
+      expect(await seedMinter.seed()).to.equal(await seed.getAddress());
     });
 
-    it("Should set the right owner", async function () {
-      const { seedManager, owner } = await loadFixture(
-        deploySeedManagerFixture
+    it("Should set the right pointsTokenAddress and pointsCountCond", async function () {
+      const { mockPoints, seed, seedMinter } = await loadFixture(
+        deploySeedMinterFixture
       );
 
-      expect(await seedManager.owner()).to.equal(owner.address);
+      expect(await seedMinter.pointsToken()).to.equal(
+        await mockPoints.getAddress()
+      );
+      expect(await seedMinter.pointsCountCondi()).to.equal(
+        bigInt(5_000, await mockPoints.decimals())
+      );
     });
 
     it("Should set the right minter", async function () {
-      const { seedManager, owner } = await loadFixture(
-        deploySeedManagerFixture
-      );
+      const { seedMinter, owner } = await loadFixture(deploySeedMinterFixture);
 
-      expect(await seedManager.minter()).to.equal(owner.address);
+      expect(await seedMinter.minter()).to.equal(owner.address);
     });
 
     it("Should disable `onMint` `onClaimWithWhiteList` `onClaimWithPoints` default", async function () {
-      const { seedManager, owner } = await loadFixture(
-        deploySeedManagerFixture
-      );
+      const { seedMinter, owner } = await loadFixture(deploySeedMinterFixture);
 
-      expect(await seedManager.onMint()).to.equal(false);
-      expect(await seedManager.onClaimWithWhiteList()).to.equal(false);
-      expect(await seedManager.onClaimWithPoints()).to.equal(false);
+      expect(await seedMinter.onMint()).to.equal(false);
+      expect(await seedMinter.onClaimWithWhiteList()).to.equal(false);
+      expect(await seedMinter.onClaimWithPoints()).to.equal(false);
+    });
+
+    it("Should set the right owner", async function () {
+      const { seedMinter, owner } = await loadFixture(deploySeedMinterFixture);
+
+      expect(await seedMinter.owner()).to.equal(owner.address);
     });
   });
 
@@ -124,34 +131,34 @@ describe("SeedManager", function () {
   describe("Function changeMinter()", function () {
     describe("Validations", function () {
       it("Should revert when caller is not owner", async function () {
-        const { seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         await expect(
-          seedManager.connect(secondAccount).changeMinter(secondAccount.address)
+          seedMinter.connect(secondAccount).changeMinter(secondAccount.address)
         ).to.be.revertedWith("Ownable: caller is not the owner");
       });
 
       it("Should change minter success", async function () {
-        const { seedManager, owner, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, owner, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
-        expect(await seedManager.minter()).to.equal(owner.address);
-        await seedManager.changeMinter(secondAccount.address);
-        expect(await seedManager.minter()).to.equal(secondAccount.address);
+        expect(await seedMinter.minter()).to.equal(owner.address);
+        await seedMinter.changeMinter(secondAccount.address);
+        expect(await seedMinter.minter()).to.equal(secondAccount.address);
       });
     });
 
     describe("Events", function () {
       it("Should emit an event on changeMinter", async function () {
-        const { seedManager, owner, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, owner, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
-        await expect(seedManager.changeMinter(secondAccount.address))
-          .to.emit(seedManager, "MinterChanged")
+        await expect(seedMinter.changeMinter(secondAccount.address))
+          .to.emit(seedMinter, "MinterChanged")
           .withArgs(owner.address, secondAccount.address);
       });
     });
@@ -159,25 +166,25 @@ describe("SeedManager", function () {
 
   describe("Function setPointsTokenAddress", function () {
     it("Should revert when caller is not owner", async function () {
-      const { mockPoints, seedManager, secondAccount } = await loadFixture(
-        deploySeedManagerFixture
+      const { mockPoints, seedMinter, secondAccount } = await loadFixture(
+        deploySeedMinterFixture
       );
 
       await expect(
-        seedManager.connect(secondAccount).setPointsTokenAddress(mockPoints)
+        seedMinter.connect(secondAccount).setPointsTokenAddress(mockPoints)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("Should set points token address success", async function () {
-      const { mockPoints, seedManager } = await loadFixture(
-        deploySeedManagerFixture
+      const { mockPoints, seedMinter } = await loadFixture(
+        deploySeedMinterFixture
       );
 
-      expect(await seedManager.pointsToken()).to.equal(
+      expect(await seedMinter.pointsToken()).to.equal(
         await mockPoints.getAddress()
       );
-      await seedManager.setPointsTokenAddress(ethers.ZeroAddress);
-      expect(await seedManager.pointsToken()).to.equal(ethers.ZeroAddress);
+      await seedMinter.setPointsTokenAddress(ethers.ZeroAddress);
+      expect(await seedMinter.pointsToken()).to.equal(ethers.ZeroAddress);
     });
   });
 
@@ -185,37 +192,37 @@ describe("SeedManager", function () {
     const Big5k = ethers.getBigInt(5_000);
 
     it("Should revert when caller is not owner", async function () {
-      const { mockPoints, seedManager, secondAccount } = await loadFixture(
-        deploySeedManagerFixture
+      const { mockPoints, seedMinter, secondAccount } = await loadFixture(
+        deploySeedMinterFixture
       );
 
       await expect(
-        seedManager.connect(secondAccount).setPointsCountCondition(Big5k)
+        seedMinter.connect(secondAccount).setPointsCountCondition(Big5k)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("Should revert when points token address have not set", async function () {
-      const { mockPoints, seedManager } = await loadFixture(
-        deploySeedManagerFixture
+      const { mockPoints, seedMinter } = await loadFixture(
+        deploySeedMinterFixture
       );
 
-      await seedManager.setPointsTokenAddress(ethers.ZeroAddress);
+      await seedMinter.setPointsTokenAddress(ethers.ZeroAddress);
 
       await expect(
-        seedManager.setPointsCountCondition(Big5k)
+        seedMinter.setPointsCountCondition(Big5k)
       ).to.be.revertedWith("Points token address is not set");
     });
 
     it("Should set points condition success", async function () {
-      const { mockPoints, seedManager } = await loadFixture(
-        deploySeedManagerFixture
+      const { mockPoints, seedMinter } = await loadFixture(
+        deploySeedMinterFixture
       );
 
-      expect(await seedManager.pointsCountCondi()).to.equal(
+      expect(await seedMinter.pointsCountCondi()).to.equal(
         bigInt(5_000, await mockPoints.decimals())
       );
-      await seedManager.setPointsCountCondition(Big5k);
-      expect(await seedManager.pointsCountCondi()).to.equal(
+      await seedMinter.setPointsCountCondition(Big5k);
+      expect(await seedMinter.pointsCountCondi()).to.equal(
         bigInt(5_000, await mockPoints.decimals())
       );
     });
@@ -226,22 +233,22 @@ describe("SeedManager", function () {
     const rootHash = ethers.randomBytes(32);
 
     it("Should revert when caller is not owner", async function () {
-      const { seedManager, secondAccount } = await loadFixture(
-        deploySeedManagerFixture
+      const { seedMinter, secondAccount } = await loadFixture(
+        deploySeedMinterFixture
       );
 
       await expect(
-        seedManager.connect(secondAccount).setWhiteList(whiteListId, rootHash)
+        seedMinter.connect(secondAccount).setWhiteList(whiteListId, rootHash)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("Should set whitelist success", async function () {
-      const { seedManager } = await loadFixture(deploySeedManagerFixture);
+      const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
       // TODO FIXME
-      // expect(await seedManager.whiteListRootHashes(whiteListId)).to.equal(ethers.hexlify(ethers.randomBytes(0)));
-      await seedManager.setWhiteList(whiteListId, rootHash);
-      expect(await seedManager.whiteListRootHashes(whiteListId)).to.equal(
+      // expect(await seedMinter.whiteListRootHashes(whiteListId)).to.equal(ethers.hexlify(ethers.randomBytes(0)));
+      await seedMinter.setWhiteList(whiteListId, rootHash);
+      expect(await seedMinter.whiteListRootHashes(whiteListId)).to.equal(
         ethers.hexlify(rootHash)
       );
     });
@@ -252,21 +259,21 @@ describe("SeedManager", function () {
     const price = ethers.parseEther("1");
 
     it("Should revert when caller is not owner", async function () {
-      const { seedManager, secondAccount } = await loadFixture(
-        deploySeedManagerFixture
+      const { seedMinter, secondAccount } = await loadFixture(
+        deploySeedMinterFixture
       );
 
       await expect(
-        seedManager.connect(secondAccount).setPrice(price)
+        seedMinter.connect(secondAccount).setPrice(price)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("Should set price success", async function () {
-      const { seedManager } = await loadFixture(deploySeedManagerFixture);
+      const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
-      expect(await seedManager.price()).to.equal(zero);
-      await seedManager.setPrice(price);
-      expect(await seedManager.price()).to.equal(price);
+      expect(await seedMinter.price()).to.equal(zero);
+      await seedMinter.setPrice(price);
+      expect(await seedMinter.price()).to.equal(price);
     });
   });
 
@@ -278,56 +285,52 @@ describe("SeedManager", function () {
 
     describe("Validations", function () {
       it("Should revert when not enableClaimWithWhiteList", async function () {
-        const { seedManager } = await loadFixture(deploySeedManagerFixture);
+        const { seedMinter } = await loadFixture(deploySeedMinterFixture);
         const { proofOfSecondAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
 
         await expect(
-          seedManager.claimWithWhiteList(whiteListId, proofOfSecondAccount)
+          seedMinter.claimWithWhiteList(whiteListId, proofOfSecondAccount)
         ).to.be.revertedWith("Claim with white list is not open");
       });
 
       it("Should revert when not int whiteList", async function () {
-        const { seedManager } = await loadFixture(deploySeedManagerFixture);
+        const { seedMinter } = await loadFixture(deploySeedMinterFixture);
         const { proofOfFakeAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
 
         // enable claim
-        await seedManager.unpauseClaimWithWhiteList();
+        await seedMinter.unpauseClaimWithWhiteList();
 
         await expect(
-          seedManager.claimWithWhiteList(whiteListId, proofOfFakeAccount)
+          seedMinter.claimWithWhiteList(whiteListId, proofOfFakeAccount)
         ).to.be.revertedWith("You are not in the white list");
       });
 
       it("Should claim success", async function () {
-        const { seed, seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
         const { rootHash, proofOfSecondAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
 
         // enable claim
-        await seedManager.unpauseClaimWithWhiteList();
+        await seedMinter.unpauseClaimWithWhiteList();
         // set white list
-        await seedManager.setWhiteList(whiteListId, rootHash);
+        await seedMinter.setWhiteList(whiteListId, rootHash);
 
         // claim
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(false);
-        await seedManager
+        await seedMinter
           .connect(secondAccount)
           .claimWithWhiteList(whiteListId, proofOfSecondAccount);
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(1));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
@@ -340,38 +343,67 @@ describe("SeedManager", function () {
       });
 
       it("Should revert when has claimed", async function () {
-        const { seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
         const { rootHash, proofOfSecondAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
 
         // enable claim
-        await seedManager.unpauseClaimWithWhiteList();
+        await seedMinter.unpauseClaimWithWhiteList();
         // set white list
-        await seedManager.setWhiteList(whiteListId, rootHash);
+        await seedMinter.setWhiteList(whiteListId, rootHash);
 
         // claim
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(false);
-        await seedManager
+        await seedMinter
           .connect(secondAccount)
           .claimWithWhiteList(whiteListId, proofOfSecondAccount);
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
 
         // claim again should revert
         await expect(
-          seedManager
+          seedMinter
             .connect(secondAccount)
             .claimWithWhiteList(whiteListId, proofOfSecondAccount)
+        ).to.be.revertedWith("You have claimed");
+      });
+
+      it("Should revert claim again by points", async function () {
+        const { mockPoints, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+        const { rootHash, proofOfSecondAccount } = await loadFixture(
+          generateMerkleTreeAndProof
+        );
+
+        // enable claim
+        await seedMinter.unpauseClaimWithWhiteList();
+        // set white list
+        await seedMinter.setWhiteList(whiteListId, rootHash);
+
+        // claim
+        expect(
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(false);
+        await seedMinter
+          .connect(secondAccount)
+          .claimWithWhiteList(whiteListId, proofOfSecondAccount);
+        expect(
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(true);
+
+        // claim with points will revert
+        await seedMinter.unpauseClaimWithPoints();
+        const bigInt5k = bigInt(5_000, await mockPoints.decimals());
+        await mockPoints.mint(secondAccount.address, bigInt5k);
+        await expect(
+          seedMinter.connect(secondAccount).claimWithPoints()
         ).to.be.revertedWith("You have claimed");
       });
     });
@@ -380,33 +412,33 @@ describe("SeedManager", function () {
   describe("Function claimWithPoints", function () {
     describe("Validations", function () {
       it("Should revert when not enableClaimWithPoints", async function () {
-        const { seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         await expect(
-          seedManager.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithPoints()
         ).to.be.revertedWith("Claim with point is not open");
       });
 
       it("Should revert when not set points token address", async function () {
-        const { seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         // enable claim
-        await seedManager.unpauseClaimWithPoints();
+        await seedMinter.unpauseClaimWithPoints();
 
-        await seedManager.setPointsTokenAddress(ethers.ZeroAddress);
+        await seedMinter.setPointsTokenAddress(ethers.ZeroAddress);
 
         await expect(
-          seedManager.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithPoints()
         ).to.be.revertedWith("Points token address is not set");
       });
 
       it("Should revert when not have enough points", async function () {
-        const { mockPoints, seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { mockPoints, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
@@ -414,15 +446,15 @@ describe("SeedManager", function () {
         );
 
         // enable claim
-        await seedManager.unpauseClaimWithPoints();
+        await seedMinter.unpauseClaimWithPoints();
 
         // revert because of `pointsCondi == 0`
         await expect(
-          seedManager.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithPoints()
         ).to.be.revertedWith("You don't have enough points");
 
         // set condition to 5k
-        await seedManager.setPointsCountCondition(ethers.getBigInt(5_000));
+        await seedMinter.setPointsCountCondition(ethers.getBigInt(5_000));
         // only mint 2k points
         const bigInt2k = bigInt(2_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt2k);
@@ -432,20 +464,20 @@ describe("SeedManager", function () {
 
         // revert because of `points < pointsCondi`
         await expect(
-          seedManager.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithPoints()
         ).to.be.revertedWith("You don't have enough points");
       });
 
       it("Should claim success", async function () {
-        const { mockPoints, seed, seedManager, secondAccount } =
-          await loadFixture(deploySeedManagerFixture);
+        const { mockPoints, seed, seedMinter, secondAccount } =
+          await loadFixture(deploySeedMinterFixture);
 
         expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(0)
         );
 
         // enable claim
-        await seedManager.unpauseClaimWithPoints();
+        await seedMinter.unpauseClaimWithPoints();
         // default points condition is 5k
         // mint 5k points
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
@@ -456,15 +488,11 @@ describe("SeedManager", function () {
 
         // claim
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(false);
-        await seedManager.connect(secondAccount).claimWithPoints();
+        await seedMinter.connect(secondAccount).claimWithPoints();
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(1));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
@@ -477,8 +505,8 @@ describe("SeedManager", function () {
       });
 
       it("Should revert when has claimed", async function () {
-        const { mockPoints, seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { mockPoints, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
@@ -486,7 +514,7 @@ describe("SeedManager", function () {
         );
 
         // enable claim
-        await seedManager.unpauseClaimWithPoints();
+        await seedMinter.unpauseClaimWithPoints();
         // default points condition is 5k
         // mint 5k points
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
@@ -497,20 +525,58 @@ describe("SeedManager", function () {
 
         // claim
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(false);
-        await seedManager.connect(secondAccount).claimWithPoints();
+        await seedMinter.connect(secondAccount).claimWithPoints();
         expect(
-          await seedManager
-            .connect(secondAccount)
-            .claimed(secondAccount.address)
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
 
         // claim again should revert
         await expect(
-          seedManager.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithPoints()
+        ).to.be.revertedWith("You have claimed");
+      });
+
+      it("Should revert when has claimed", async function () {
+        const { mockPoints, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
+          ethers.getBigInt(0)
+        );
+
+        // enable claim
+        await seedMinter.unpauseClaimWithPoints();
+        // default points condition is 5k
+        // mint 5k points
+        const bigInt5k = bigInt(5_000, await mockPoints.decimals());
+        await mockPoints.mint(secondAccount.address, bigInt5k);
+        expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
+          bigInt5k
+        );
+
+        // claim
+        expect(
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(false);
+        await seedMinter.connect(secondAccount).claimWithPoints();
+        expect(
+          await seedMinter.connect(secondAccount).claimed(secondAccount.address)
+        ).to.equal(true);
+
+        // claim with white list will revert
+        await seedMinter.unpauseClaimWithWhiteList();
+        const whiteListId = ethers.getBigInt(1);
+        const { rootHash, proofOfSecondAccount } = await loadFixture(
+          generateMerkleTreeAndProof
+        );
+        await seedMinter.setWhiteList(whiteListId, rootHash);
+        await expect(
+          seedMinter
+            .connect(secondAccount)
+            .claimWithWhiteList(whiteListId, proofOfSecondAccount)
         ).to.be.revertedWith("You have claimed");
       });
     });
@@ -519,26 +585,26 @@ describe("SeedManager", function () {
   describe("Function batchMint", function () {
     describe("Validations", function () {
       it("Should revert when caller is not minter", async function () {
-        const { seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
         const { addresses } = await loadFixture(fakeBatchMintParam);
 
         await expect(
-          seedManager.connect(secondAccount).batchMint(addresses)
+          seedMinter.connect(secondAccount).batchMint(addresses)
         ).to.be.revertedWith("Only minter can call this method");
       });
 
       it("Should mint success", async function () {
-        const { seed, seedManager, owner } = await loadFixture(
-          deploySeedManagerFixture
+        const { seed, seedMinter, owner } = await loadFixture(
+          deploySeedMinterFixture
         );
         const { addresses } = await loadFixture(fakeBatchMintParam);
 
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(0));
 
         // batch mint 3 nfts
-        await seedManager.batchMint(addresses); // minted nft id: 0, 1, 2
+        await seedMinter.batchMint(addresses); // minted nft id: 0, 1, 2
 
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
@@ -557,18 +623,18 @@ describe("SeedManager", function () {
         const {
           mockPoints,
           seed,
-          seedManager,
+          seedMinter,
           owner,
           secondAccount,
           thirdAccount,
-        } = await loadFixture(deploySeedManagerFixture);
+        } = await loadFixture(deploySeedMinterFixture);
 
         const { addresses } = await loadFixture(fakeBatchMintParam);
 
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(0));
 
         // batch mint 3 nfts
-        await seedManager.batchMint(addresses); // minted nft id: 0, 1, 2
+        await seedMinter.batchMint(addresses); // minted nft id: 0, 1, 2
 
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
@@ -583,23 +649,23 @@ describe("SeedManager", function () {
         }
 
         // claim with white list will revert
-        await seedManager.unpauseClaimWithWhiteList();
+        await seedMinter.unpauseClaimWithWhiteList();
         const whiteListId = ethers.getBigInt(1);
         const { rootHash, proofOfSecondAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
-        await seedManager.setWhiteList(whiteListId, rootHash);
+        await seedMinter.setWhiteList(whiteListId, rootHash);
         await expect(
-          seedManager
+          seedMinter
             .connect(secondAccount)
             .claimWithWhiteList(whiteListId, proofOfSecondAccount)
         ).to.be.revertedWith("You have claimed");
         // claim with points will revert
-        await seedManager.unpauseClaimWithPoints();
+        await seedMinter.unpauseClaimWithPoints();
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt5k);
         await expect(
-          seedManager.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithPoints()
         ).to.be.revertedWith("You have claimed");
       });
     });
@@ -608,72 +674,72 @@ describe("SeedManager", function () {
   describe("Function mint", function () {
     describe("Validations", function () {
       it("Should revert when not mintable", async function () {
-        const { seedManager } = await loadFixture(deploySeedManagerFixture);
+        const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
-        await expect(seedManager.mint(ethers.getBigInt(1))).to.be.revertedWith(
+        await expect(seedMinter.mint(ethers.getBigInt(1))).to.be.revertedWith(
           "Mint is not open"
         );
       });
 
       it("Should revert when mint amount is zero", async function () {
-        const { seedManager } = await loadFixture(deploySeedManagerFixture);
+        const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
         // enable mint
-        await seedManager.unpauseMint();
+        await seedMinter.unpauseMint();
 
         // will revert when mint 0
-        await expect(seedManager.mint(ethers.getBigInt(0))).to.be.revertedWith(
+        await expect(seedMinter.mint(ethers.getBigInt(0))).to.be.revertedWith(
           "Mint amount must bigger than zero"
         );
       });
 
       it("Should revert when not set price", async function () {
-        const { seedManager } = await loadFixture(deploySeedManagerFixture);
+        const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
         // enable mint
-        await seedManager.unpauseMint();
+        await seedMinter.unpauseMint();
 
-        await expect(seedManager.mint(ethers.getBigInt(1))).to.be.revertedWith(
+        await expect(seedMinter.mint(ethers.getBigInt(1))).to.be.revertedWith(
           "Insufficient payment"
         );
       });
 
       it("Should revert when insufficient payment", async function () {
-        const { seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         // enable mint
-        await seedManager.unpauseMint();
+        await seedMinter.unpauseMint();
 
         // set price
-        await seedManager.setPrice(ethers.parseEther("2"));
+        await seedMinter.setPrice(ethers.parseEther("2"));
 
         // revert because of zero payment
-        await expect(seedManager.mint(ethers.getBigInt(1))).to.be.revertedWith(
+        await expect(seedMinter.mint(ethers.getBigInt(1))).to.be.revertedWith(
           "Insufficient payment"
         );
 
         // revert because of insufficient payment
         await expect(
-          seedManager
+          seedMinter
             .connect(secondAccount)
             .mint(ethers.getBigInt(1), { value: ethers.parseEther("1") })
         ).to.be.revertedWith("Insufficient payment");
       });
 
       it("Should mint success", async function () {
-        const { seed, seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         // enable mint
-        await seedManager.unpauseMint();
+        await seedMinter.unpauseMint();
 
         // set price
-        await seedManager.setPrice(ethers.parseEther("2"));
+        await seedMinter.setPrice(ethers.parseEther("2"));
 
-        await seedManager
+        await seedMinter
           .connect(secondAccount)
           .mint(ethers.getBigInt(1), { value: ethers.parseEther("2") }); // minted nft id: 0
         //
@@ -687,7 +753,7 @@ describe("SeedManager", function () {
           await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
         ).to.equal(ethers.getBigInt(0));
 
-        await seedManager
+        await seedMinter
           .connect(secondAccount)
           .mint(ethers.getBigInt(2), { value: ethers.parseEther("4.5") }); // minted nft id: 1, 2
         //
@@ -709,21 +775,21 @@ describe("SeedManager", function () {
       });
 
       it("Should refund the extra native token", async function () {
-        const { seed, seedManager, secondAccount } = await loadFixture(
-          deploySeedManagerFixture
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
         );
 
         // enable mint
-        await seedManager.unpauseMint();
+        await seedMinter.unpauseMint();
 
         // set price
-        await seedManager.setPrice(ethers.parseEther("2"));
+        await seedMinter.setPrice(ethers.parseEther("2"));
 
         const balanceBefore = await ethers.provider.getBalance(
           secondAccount.address
         );
         // just need pay 2ETH, in act
-        await seedManager
+        await seedMinter
           .connect(secondAccount)
           .mint(ethers.getBigInt(1), { value: ethers.parseEther("3.5") }); // minted nft id: 0
         const balanceAfter = await ethers.provider.getBalance(
@@ -731,6 +797,77 @@ describe("SeedManager", function () {
         );
         expect(balanceBefore - balanceAfter == ethers.parseEther("1.5"));
       });
+    });
+  });
+
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+  describe("Function transferSeedOwnership", function () {
+    describe("Validations", function () {
+      it("Should transferSeedOwnership success", async function () {
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await seedMinter.transferSeedOwnership("0x0000000000000000000000000000000000000001");
+
+        expect(await seed.owner()).to.equal("0x0000000000000000000000000000000000000001");
+      });
+    });
+  });
+
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+  describe("Function withdraw", function () {
+    it("Should refund the extra native token", async function () {
+      const { seed, seedMinter, owner, secondAccount } = await loadFixture(
+        deploySeedMinterFixture
+      );
+
+      // enable mint
+      await seedMinter.unpauseMint();
+      // set price
+      await seedMinter.setPrice(ethers.parseEther("2"));
+
+      // pay 2ETH to buy
+      expect(
+        await ethers.provider.getBalance(await seedMinter.getAddress())
+      ).to.be.equal(ethers.parseEther("0"));
+      const secondAccountBalanceBefore = await ethers.provider.getBalance(
+        secondAccount.address
+      );
+      // just need pay 2ETH, in act
+      await seedMinter
+        .connect(secondAccount)
+        .mint(ethers.getBigInt(1), { value: ethers.parseEther("3.5") }); // minted nft id: 0
+      const secondAccountBalanceAfter = await ethers.provider.getBalance(
+        secondAccount.address
+      );
+      expect(
+        await ethers.provider.getBalance(await seedMinter.getAddress())
+      ).to.be.equal(ethers.parseEther("2"));
+      expect(
+        secondAccountBalanceBefore - secondAccountBalanceAfter ==
+          ethers.parseEther("1.5")
+      );
+
+      // withdraw
+      const ownerAccountBalanceBefore = await ethers.provider.getBalance(
+        owner.address
+      );
+      await seedMinter.withdraw();
+      const ownerAccountBalanceAfter = await ethers.provider.getBalance(
+        owner.address
+      );
+      expect(
+        await ethers.provider.getBalance(await seedMinter.getAddress())
+      ).to.be.equal(ethers.parseEther("0"));
+      expect(
+        ownerAccountBalanceAfter - ownerAccountBalanceBefore ==
+          ethers.parseEther("1.5")
+      );
     });
   });
 });
