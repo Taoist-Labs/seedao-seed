@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import ExpandIcon from "assets/images/expand.svg";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { SELECT_WALLET } from "utils/constant";
 import LoginModal from "components/modals/loginModal";
@@ -19,7 +19,7 @@ export default function MenuLogin({
   account?: string;
   connector?: any;
 }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { t } = useTranslation();
   const { dispatch } = useAppContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -40,10 +40,10 @@ export default function MenuLogin({
     setAnchorEl(null);
   };
 
-  const go2profile = () => {
-    navigate("/my");
-    setAnchorEl(null);
-  };
+  // const go2profile = () => {
+  //   navigate("/my");
+  //   setAnchorEl(null);
+  // };
 
   const showLoginModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
@@ -78,9 +78,9 @@ export default function MenuLogin({
           "aria-labelledby": "wallet-select",
         }}
       >
-        <MenuItemStyle value={1} onClick={go2profile}>
+        {/* <MenuItemStyle value={1} onClick={go2profile}>
           {t("header.myProfile")}
-        </MenuItemStyle>
+        </MenuItemStyle> */}
         <MenuItemStyle value={0} onClick={handleDisconnect}>
           {t("header.disconnect")}
         </MenuItemStyle>
@@ -97,14 +97,14 @@ export const SmMenuLogin = ({
   connector?: any;
 }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { dispatch } = useAppContext();
 
   const [expand, setExpand] = useState(false);
 
-  const go2profile = () => {
-    navigate("/my");
-  };
+  // const go2profile = () => {
+  //   navigate("/my");
+  // };
 
   const handleDisconnect = () => {
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: "" });
@@ -142,7 +142,7 @@ export const SmMenuLogin = ({
 
       {expand && (
         <ul className="sub-menu">
-          <li onClick={go2profile}>{t("header.myProfile")}</li>
+          {/* <li onClick={go2profile}>{t("header.myProfile")}</li> */}
           <li onClick={handleDisconnect}>{t("header.disconnect")}</li>
         </ul>
       )}
