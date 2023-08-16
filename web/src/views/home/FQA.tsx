@@ -3,6 +3,7 @@ import { CenterBox } from "style";
 import { FQA_LIST_ZH, FQA_LIST_EN, SGN_FQA_LIST } from "data/fqa";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
+import Fade from "@mui/material/Fade";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useTranslation } from "react-i18next";
@@ -46,9 +47,11 @@ const QuestionItem = ({ idx, data, onHandle, expandIdx }: IProps) => {
         {show ? <RemoveIcon className="btn" /> : <AddIcon className="btn" />}
       </div>
       {show && (
-        <div className="answer">
-          <ReactMarkdown>{content}</ReactMarkdown>
-        </div>
+        <Fade in={true}>
+          <div className="answer">
+            <ReactMarkdown>{content}</ReactMarkdown>
+          </div>
+        </Fade>
       )}
     </QuestionItemStyle>
   );
