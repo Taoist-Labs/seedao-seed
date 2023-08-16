@@ -255,8 +255,12 @@ const NFTCardItem = styled.li`
       right: 0;
       height: 100%;
       img {
+        position: absolute;
+        right: 0;
+        width: unset;
         height: 100%;
       }
+      background-color: #000;
     }
   }
   @media (max-width: 412px) {
