@@ -178,6 +178,9 @@ const ConnectButton = styled(Button)`
 const SmConnectButton = styled.div`
   line-height: 44px;
   ${ConnectButtonStyle}
+  @media (max-width: 412px) {
+    font-size: 14px;
+  }
 `;
 
 const MenuItemStyle = styled(MenuItem)`

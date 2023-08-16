@@ -76,6 +76,7 @@ const ModalContainer = styled(Box)`
   gap: 30px;
   border-radius: 8px;
   background: #fbf5ef;
+  overflow-y: auto;
   .sm-title {
     color: #040404;
     font-size: 30px;
@@ -173,7 +174,7 @@ const AttrBox = styled.ul`
     display: flex;
     align-items: center;
     gap: 10px;
-    height: 56px;
+    min-height: 56px;
     img {
       width: 30px;
     }
@@ -200,7 +201,7 @@ const AttrBox = styled.ul`
   }
   @media (max-width: 412px) {
     li {
-      height: 32px;
+      min-height: 32px;
       img {
         width: 17px;
       }
