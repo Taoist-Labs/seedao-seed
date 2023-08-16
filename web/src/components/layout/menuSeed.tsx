@@ -17,7 +17,7 @@ export default function MenuSeed({ account }: { account?: string }) {
 
   const onClickMySeed = () => {
     if (account) {
-      navigate("/user");
+      navigate("/my");
     } else {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       setAnchorEl(null);
