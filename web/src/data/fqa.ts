@@ -5,7 +5,7 @@ import A4 from "./fqa_zh/4.md";
 import A5 from "./fqa_zh/5.md";
 import A6 from "./fqa_zh/6.md";
 import A7 from "./fqa_zh/7.md";
-import A8 from "./fqa_zh/7.md";
+import A8 from "./fqa_zh/8.md";
 import A9 from "./fqa_zh/9.md";
 import A10 from "./fqa_zh/10.md";
 

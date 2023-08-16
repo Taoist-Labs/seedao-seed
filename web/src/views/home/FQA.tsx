@@ -33,7 +33,7 @@ const QuestionItem = ({ idx, data, onHandle, expandIdx }: IProps) => {
         .then((text) => setContent(text));
     };
     readMd(data.answer);
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     setShow(idx === expandIdx);
