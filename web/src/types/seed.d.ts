@@ -5,6 +5,7 @@ declare interface INFT {
   tokenIdFormat?: string;
   attrs: { name: string; value: string }[];
   thumb?: string;
+  ownerRank?: number;
 }
 
 declare interface IAttrGroup {

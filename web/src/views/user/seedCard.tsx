@@ -302,7 +302,10 @@ export default function SeedCard() {
         console.log("[DEBUG] tokenId: ", tokenId);
 
         const uri = await seedContract.tokenURI(tokenId);
-        console.log("[DEBUG] token uri:  ", uri);
+        console.log("[DEBUG] token uri: ", uri);
+
+        const supply = await seedContract.totalSupply();
+        console.log("[DEBUG] supply: ", supply.toNumber());
 
         // const _new_nft: INFT = {
         //   tokenId: tokenId.toString(),
@@ -327,6 +330,7 @@ export default function SeedCard() {
                 name: attr.trait_type,
                 value: attr.value,
               })),
+              ownerRank: supply.toNumber(),
             };
             setNewNft(_new_nft);
             setNfts([...nfts, _new_nft]);
