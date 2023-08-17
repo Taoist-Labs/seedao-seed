@@ -5,20 +5,55 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Divider from "@mui/material/Divider";
 import Checkbox from "components/common/checkbox";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
+type ValueType = {
+  name: string;
+  values: string[];
+};
 
 interface IProps {
   id: number;
   name: string;
-  values: string[];
+  values: ValueType[];
   valueNumbers: { [key: string]: number };
   selected: string[];
   icon: string;
-  onSelectValue: (value: string, selected: boolean) => void;
+  onSelectValue: (values: string[], selected: boolean) => void;
 }
 
 type AttrItem = {
   value: string;
+  children: AttrItem[];
   isSelected: boolean;
+  isExpand?: boolean;
+};
+
+const SubFilterAttrItem = ({
+  list,
+  valueNumbers,
+  onSelectValue,
+}: {
+  list: AttrItem[];
+  valueNumbers: { [key: string]: number };
+  onSelectValue: (value: string, selected: boolean) => void;
+}) => {
+  return (
+    <SubFilterStyle>
+      {list.map((item, index) => (
+        <li key={index}>
+          <Checkbox
+            checked={item.isSelected}
+            onChange={(checked) => onSelectValue(item.value, checked)}
+          >
+            <span className="text">{item.value}</span>
+            <span className="num">({valueNumbers[item.value]})</span>
+          </Checkbox>
+        </li>
+      ))}
+    </SubFilterStyle>
+  );
 };
 
 export default function FilterAttrItem({
@@ -32,21 +67,53 @@ export default function FilterAttrItem({
   const [isOpen, setIsOpen] = useState(false);
   const [attrList, setAttrList] = useState<AttrItem[]>([]);
   const [keyword, setKeyword] = useState<string>("");
+  const [expandMap, setExpandMap] = useState<{ [k: number]: boolean }>({});
 
   useEffect(() => {
     const lst: AttrItem[] = [];
-    values.forEach((value) => {
+    values.forEach((item) => {
       const _key = keyword.toLowerCase();
-      const _val = value.toLowerCase();
+      const _val = item.name.toLowerCase();
       if (!_key || _val.includes(_key)) {
         lst.push({
-          value,
-          isSelected: !!selected.find((v) => v === value),
+          value: item.name,
+          isSelected: !!selected.find((v) => v === item.name),
+          children: item.values.map((subItem) => ({
+            value: subItem,
+            isSelected: !!selected.find((v) => v === subItem),
+            children: [],
+          })),
         });
       }
     });
     setAttrList(lst);
   }, [values, selected, keyword]);
+
+  const handleSelect = (item: AttrItem, checked: boolean) => {
+    onSelectValue([item.value, ...item.children.map((c) => c.value)], checked);
+  };
+
+  const handleSubSelect = (
+    item: AttrItem,
+    subValue: string,
+    checked: boolean,
+  ) => {
+    if (checked) {
+      let c = true;
+      item.children.forEach((sitem) => {
+        if (sitem.value !== subValue && !sitem.isSelected) {
+          c = false;
+        }
+      });
+      if (c) {
+        onSelectValue([item.value, subValue], checked);
+      } else {
+        onSelectValue([subValue], checked);
+      }
+    } else {
+      onSelectValue([item.value, subValue], checked);
+    }
+  };
   return (
     <FilterAttrItemStyle>
       <FilterAttrName onClick={() => setIsOpen(!isOpen)}>
@@ -70,10 +137,47 @@ export default function FilterAttrItem({
               <li key={index}>
                 <Checkbox
                   checked={item.isSelected}
-                  onChange={(checked) => onSelectValue(item.value, checked)}
+                  onChange={(checked) => handleSelect(item, checked)}
                 >
-                  <span className="text">{item.value}</span>
-                  <span className="num">({valueNumbers[item.value]})</span>
+                  <div>
+                    <div
+                      className="out-box"
+                      onClick={() =>
+                        setExpandMap({
+                          ...expandMap,
+                          [index]: !expandMap[index],
+                        })
+                      }
+                    >
+                      <span className="text">{item.value}</span>
+                      <span className="num snum">
+                        ({valueNumbers[item.value]})
+                      </span>
+                      {!!item.children.length && (
+                        <>
+                          {expandMap[index] ? (
+                            <ExpandLessIcon className="icon" />
+                          ) : (
+                            <ExpandMoreIcon className="icon" />
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {!!item.children.length && (
+                      <>
+                        {expandMap[index] && (
+                          <SubFilterAttrItem
+                            list={item.children}
+                            valueNumbers={valueNumbers}
+                            onSelectValue={(value: string, checked: boolean) =>
+                              handleSubSelect(item, value, checked)
+                            }
+                          />
+                        )}
+                      </>
+                    )}
+                  </div>
                 </Checkbox>
               </li>
             ))}
@@ -132,6 +236,9 @@ const FilterAttrValues = styled.ul`
       font-size: 16px;
       font-weight: 400;
     }
+    .snum {
+      margin-left: 10px;
+    }
     @media (max-width: 414px) {
       .text {
         font-size: 18px;
@@ -139,6 +246,12 @@ const FilterAttrValues = styled.ul`
       .num {
         font-size: 12px;
       }
+    }
+  }
+  .out-box {
+    display: flex;
+    .icon {
+      margin-left: 10px;
     }
   }
 `;
@@ -164,4 +277,8 @@ const InputWrapper = styled.div`
       color: #b5b5b5;
     }
   }
+`;
+
+const SubFilterStyle = styled.ul`
+  margin-top: 15px;
 `;

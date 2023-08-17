@@ -15,7 +15,7 @@ interface IProps {
   selectAttrs: SelectAttr[];
   serialKeyword: string;
   onChangeSerialKeyword: (value: string) => void;
-  onSelectValue: (name: string, value: string, selected: boolean) => void;
+  onSelectValue: (name: string, values: string[], selected: boolean) => void;
   sm: boolean;
   handleClose?: () => void;
 }
@@ -65,8 +65,8 @@ export default function GalleryFilterMenu({
                 selectAttrs.find((item) => item.name === group.name)?.values ||
                 []
               }
-              onSelectValue={(value, selected) =>
-                onSelectValue(group.name, value, selected)
+              onSelectValue={(values, selected) =>
+                onSelectValue(group.name, values, selected)
               }
             />
           ))}
@@ -97,7 +97,7 @@ const SmLeftStyle = css`
 `;
 
 const GalleryLeft = styled.div<{ sm: boolean }>`
-  width: 340px;
+  width: 400px;
   height: calc(100vh - 102px);
   overflow-y: auto;
   padding-inline: 30px;

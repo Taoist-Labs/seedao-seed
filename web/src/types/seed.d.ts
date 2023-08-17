@@ -10,7 +10,7 @@ declare interface INFT {
 
 declare interface IAttrGroup {
   name: string;
-  values: string[];
+  values: { name: string; values: string[] }[];
   icon: string;
   valueNumbers: { [key: string]: number };
 }

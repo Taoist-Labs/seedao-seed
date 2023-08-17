@@ -10,8 +10,8 @@ interface IProps {
 
 export default function Checkbox(props: IProps) {
   return (
-    <CheckboxStyle onClick={() => props.onChange(!props.checked)}>
-      <div>
+    <CheckboxStyle>
+      <div className="check" onClick={() => props.onChange(!props.checked)}>
         {props.checked ? (
           <img src={CheckboxOnIcon} alt="" style={{ width: "16px" }} />
         ) : (
@@ -35,10 +35,15 @@ interface IboxStyle {
 
 const CheckboxStyle = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 10px;
   img {
     display: block;
+  }
+  .check {
+    position: relative;
+    top: 4px;
+    cursor: pointer;
   }
 `;
 
@@ -49,5 +54,4 @@ const Box = styled.span<IboxStyle>`
   height: ${(props) => `${props.size || 16}px`};
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 `;

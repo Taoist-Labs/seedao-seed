@@ -51,8 +51,7 @@ export default function GalleryPage() {
     );
   };
 
-  const onSelectValue = (name: string, value: string, selected: boolean) => {
-    console.log(name, value, selected);
+  const onSelectValue = (name: string, values: string[], selected: boolean) => {
     if (selected) {
       const f = selectAttrs.find((item) => item.name === name);
       if (!f) {
@@ -60,7 +59,7 @@ export default function GalleryPage() {
           ...selectAttrs,
           {
             name,
-            values: [value],
+            values: [...values],
           },
         ]);
         return;
@@ -69,7 +68,8 @@ export default function GalleryPage() {
         selectAttrs.forEach((item) => {
           _select_lst.push({
             ...item,
-            values: item.name === name ? [...item.values, value] : item.values,
+            values:
+              item.name === name ? [...item.values, ...values] : item.values,
           });
         });
         setSelectAttrs(_select_lst);
@@ -80,7 +80,7 @@ export default function GalleryPage() {
         if (item.name === name) {
           _select_lst.push({
             ...item,
-            values: item.values.filter((v) => v !== value),
+            values: item.values.filter((v) => !values.includes(v)),
           });
         } else {
           _select_lst.push({ ...item });
