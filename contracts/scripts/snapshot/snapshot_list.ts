@@ -4,34 +4,29 @@ import fs from "fs";
 async function main() {
   // https://etherscan.io/address/0x23fDA8a873e9E46Dbe51c78754dddccFbC41CFE1#readContract
   const seeDAO = await ethers.getContractAt(
-    "SeeDAO",
+    "Seed",
     "0x23fDA8a873e9E46Dbe51c78754dddccFbC41CFE1"
   );
 
+  const outputFile = "scripts/snapshot/output/snapshot_list.md";
+
+  // write to markdown file
+  fs.writeFileSync(outputFile, "| Token ID | Owner |\n|----------|-------|\n", {
+    flag: "w",
+  });
+
   const totalSupply = await seeDAO.totalSupply();
-  console.log(`totalSupply: ${totalSupply}`);
-
-  // // write to markdown file
-  // fs.writeFileSync(
-  //   "scripts/snapshot/snapshot.md",
-  //   "| Token ID | Owner |\n|----------|-------|\n",
-  //   { flag: "a+" }
-  // );
-
+  // console.log(`totalSupply: ${totalSupply}\n`);
   for (let i = 0; i < totalSupply; i++) {
     const tokenId = await seeDAO.tokenByIndex(i);
     const owner = await seeDAO.ownerOf(tokenId);
 
-    console.log(`${tokenId}: ${owner}`);
+    console.log(`tokenId: ${tokenId}, owner: ${owner}`);
 
-    // // write to markdown file
-    // fs.writeFileSync(
-    //   "scripts/snapshot/snapshot.md",
-    //   `| ${tokenId} | ${owner} |\n`,
-    //   {
-    //     flag: "a+",
-    //   }
-    // );
+    // write to markdown file
+    fs.writeFileSync(outputFile, `| ${tokenId} | ${owner} |\n`, {
+      flag: "a+",
+    });
   }
 }
 
