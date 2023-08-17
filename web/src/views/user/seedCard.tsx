@@ -442,7 +442,7 @@ export default function SeedCard() {
               <RightTopBox>
                 {hadMint ? (
                   <span className="minted">{t("user.hadMint")}</span>
-                ) : checkIfinWhiteList() > -1 || Number(points) >= 5000 ? (
+                ) : checkIfinWhiteList() > -1 || Number(points) >= 50000 ? (
                   <div>
                     <span
                       className="btn mint-btn"
