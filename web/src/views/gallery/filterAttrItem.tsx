@@ -69,20 +69,28 @@ export default function FilterAttrItem({
   const [keyword, setKeyword] = useState<string>("");
   const [expandMap, setExpandMap] = useState<{ [k: number]: boolean }>({});
 
+  const checkOutSelected = (value: string, children: AttrItem[]) => {
+    return (
+      !!selected.find((v) => v === value) ||
+      children.every((sitem) => selected.find((v) => v === sitem.value))
+    );
+  };
+
   useEffect(() => {
     const lst: AttrItem[] = [];
     values.forEach((item) => {
       const _key = keyword.toLowerCase();
       const _val = item.name.toLowerCase();
       if (!_key || _val.includes(_key)) {
+        const children = item.values.map((subItem) => ({
+          value: subItem,
+          isSelected: !!selected.find((v) => v === subItem),
+          children: [],
+        }));
         lst.push({
           value: item.name,
-          isSelected: !!selected.find((v) => v === item.name),
-          children: item.values.map((subItem) => ({
-            value: subItem,
-            isSelected: !!selected.find((v) => v === subItem),
-            children: [],
-          })),
+          isSelected: checkOutSelected(item.name, children),
+          children,
         });
       }
     });
@@ -90,29 +98,11 @@ export default function FilterAttrItem({
   }, [values, selected, keyword]);
 
   const handleSelect = (item: AttrItem, checked: boolean) => {
-    onSelectValue([item.value, ...item.children.map((c) => c.value)], checked);
+    onSelectValue([...item.children.map((c) => c.value)], checked);
   };
 
-  const handleSubSelect = (
-    item: AttrItem,
-    subValue: string,
-    checked: boolean,
-  ) => {
-    if (checked) {
-      let c = true;
-      item.children.forEach((sitem) => {
-        if (sitem.value !== subValue && !sitem.isSelected) {
-          c = false;
-        }
-      });
-      if (c) {
-        onSelectValue([item.value, subValue], checked);
-      } else {
-        onSelectValue([subValue], checked);
-      }
-    } else {
-      onSelectValue([item.value, subValue], checked);
-    }
+  const handleSubSelect = (subValue: string, checked: boolean) => {
+    onSelectValue([subValue], checked);
   };
   return (
     <FilterAttrItemStyle>
@@ -170,9 +160,7 @@ export default function FilterAttrItem({
                           <SubFilterAttrItem
                             list={item.children}
                             valueNumbers={valueNumbers}
-                            onSelectValue={(value: string, checked: boolean) =>
-                              handleSubSelect(item, value, checked)
-                            }
+                            onSelectValue={handleSubSelect}
                           />
                         )}
                       </>

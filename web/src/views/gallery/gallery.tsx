@@ -69,7 +69,9 @@ export default function GalleryPage() {
           _select_lst.push({
             ...item,
             values:
-              item.name === name ? [...item.values, ...values] : item.values,
+              item.name === name
+                ? Array.from(new Set([...item.values, ...values]))
+                : item.values,
           });
         });
         setSelectAttrs(_select_lst);
