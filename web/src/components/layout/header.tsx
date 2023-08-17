@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
-import LogoIcon from "assets/images/logo.png";
+import LogoIcon from "assets/images/logo.svg";
 import React, { useState } from "react";
 
 // import GreenStarIcon from "assets/images/home/green_star.svg";
@@ -199,7 +199,6 @@ const HeaderContainer = styled.div`
 
 const LogoLink = styled(Link)`
   img {
-    height: 55px;
     position: relative;
     top: 15px;
   }
