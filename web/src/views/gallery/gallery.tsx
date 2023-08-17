@@ -329,14 +329,12 @@ const FilterTags = styled.div`
   flex: 1;
   overflow-x: auto;
   .tag-container {
-    width: 100%;
-    overflow-x: auto;
     display: flex;
     align-items: center;
     gap: 10px;
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  }
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 const Tag = styled.li`
