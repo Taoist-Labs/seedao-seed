@@ -171,126 +171,125 @@ export default function GalleryPage() {
   return (
     <>
       <Header />
-      <div className="mainContent">
-        <GalleryPageStyle>
-          {matches ? (
-            <>
-              {showLeft && (
-                <GalleryMenuBox>
-                  <div className="mask" onClick={() => setshowLeft(false)} />
-                  <GalleryFilterMenu
-                    sm={matches}
-                    selectAttrs={selectAttrs}
-                    attrGroups={attrGroups}
-                    serialKeyword={keyword}
-                    onChangeSerialKeyword={(v) => setKeyword(v)}
-                    onSelectValue={onSelectValue}
-                    handleClose={() => setshowLeft(false)}
-                  />
-                </GalleryMenuBox>
-              )}
-            </>
-          ) : (
-            <GalleryFilterMenu
-              sm={matches}
-              selectAttrs={selectAttrs}
-              attrGroups={attrGroups}
-              serialKeyword={keyword}
-              onChangeSerialKeyword={(v) => setKeyword(v)}
-              onSelectValue={onSelectValue}
-            />
-          )}
+      <GalleryPageStyle>
+        {matches ? (
+          <>
+            {showLeft && (
+              <GalleryMenuBox>
+                <div className="mask" onClick={() => setshowLeft(false)} />
+                <GalleryFilterMenu
+                  sm={matches}
+                  selectAttrs={selectAttrs}
+                  attrGroups={attrGroups}
+                  serialKeyword={keyword}
+                  onChangeSerialKeyword={(v) => setKeyword(v)}
+                  onSelectValue={onSelectValue}
+                  handleClose={() => setshowLeft(false)}
+                />
+              </GalleryMenuBox>
+            )}
+          </>
+        ) : (
+          <GalleryFilterMenu
+            sm={matches}
+            selectAttrs={selectAttrs}
+            attrGroups={attrGroups}
+            serialKeyword={keyword}
+            onChangeSerialKeyword={(v) => setKeyword(v)}
+            onSelectValue={onSelectValue}
+          />
+        )}
 
-          <GalleryRight>
-            <GalleryContent onScroll={handleScroll} id="scroll">
-              <FilterHead>
-                <span className="title">{t("gallery.filters")}</span>
-                <span className="num">{filterNums}</span>
-                <FilterTags>
-                  <ul className="tag-container">
-                    {keyword ? (
-                      <Tag onClick={() => setKeyword("")}>
-                        <span>{t("gallery.serialTag", { keyword })}</span>
-                        <CloseIcon fontSize="small" className="remove-tag" />
-                      </Tag>
-                    ) : (
-                      selectAttrs.map((item, idx) => {
-                        return item.values.map((v, jdx) => (
-                          <Tag
-                            key={`${idx}_${jdx}`}
-                            onClick={() => removeAttr(item.name, v)}
-                          >
-                            <span>
-                              {item.name}:{v}
-                            </span>
-                            <CloseIcon fontSize="small" />
-                          </Tag>
-                        ));
-                      })
-                    )}
-                  </ul>
-                </FilterTags>
-                <FilterHeadRight>
-                  <span className="result">{list.length}</span>
-                  <img
-                    src={RefreshSvg}
-                    className="refresh"
-                    onClick={() => randomList(list)}
-                  />
-                  {matches && (
-                    <img
-                      src={FilterSvg}
-                      onClick={() => setshowLeft(true)}
-                      className="filter-icon"
-                    />
+        <GalleryRight>
+          <GalleryContent onScroll={handleScroll} id="scroll">
+            <FilterHead>
+              <span className="title">{t("gallery.filters")}</span>
+              <span className="num">{filterNums}</span>
+              <FilterTags>
+                <ul className="tag-container">
+                  {keyword ? (
+                    <Tag onClick={() => setKeyword("")}>
+                      <span>{t("gallery.serialTag", { keyword })}</span>
+                      <CloseIcon fontSize="small" className="remove-tag" />
+                    </Tag>
+                  ) : (
+                    selectAttrs.map((item, idx) => {
+                      return item.values.map((v, jdx) => (
+                        <Tag
+                          key={`${idx}_${jdx}`}
+                          onClick={() => removeAttr(item.name, v)}
+                        >
+                          <span>
+                            {item.name}:{v}
+                          </span>
+                          <CloseIcon fontSize="small" />
+                        </Tag>
+                      ));
+                    })
                   )}
-                </FilterHeadRight>
-              </FilterHead>
-              {list.length > 0 ? (
-                // <ScrollBox>
-                <NFTList
-                  container
-                  spacing={matches ? "10px" : 3}
-                  style={{ width: "100%" }}
-                  className="nft-container"
-                >
-                  {displayList.map((item, idx) => (
-                    <NFTCard
-                      // key={`${idx}_${Math.random()}`}
-                      key={idx}
-                      data={item}
-                      onClick={() => setShowSeed(item)}
-                    />
-                  ))}
-                </NFTList>
-              ) : (
-                // </ScrollBox>
-                <EmptyBox>
-                  <p>{t("gallery.emptyResult")}</p>
-                  <ClearButton onClick={removeFilters}>
-                    {t("gallery.clearFilters")}
-                  </ClearButton>
-                </EmptyBox>
-              )}
-            </GalleryContent>
-          </GalleryRight>
-          {showSeed && (
-            <SeedModal
-              seed={showSeed}
-              handleClose={() => setShowSeed(undefined)}
-            />
-          )}
-        </GalleryPageStyle>
-      </div>
+                </ul>
+              </FilterTags>
+              <FilterHeadRight>
+                <span className="result">{list.length}</span>
+                <img
+                  src={RefreshSvg}
+                  className="refresh"
+                  onClick={() => randomList(list)}
+                />
+                {matches && (
+                  <img
+                    src={FilterSvg}
+                    onClick={() => setshowLeft(true)}
+                    className="filter-icon"
+                  />
+                )}
+              </FilterHeadRight>
+            </FilterHead>
+            {list.length > 0 ? (
+              // <ScrollBox>
+              <NFTList
+                container
+                spacing={matches ? "10px" : 3}
+                style={{ width: "100%" }}
+                className="nft-container"
+              >
+                {displayList.map((item, idx) => (
+                  <NFTCard
+                    // key={`${idx}_${Math.random()}`}
+                    key={idx}
+                    data={item}
+                    onClick={() => setShowSeed(item)}
+                  />
+                ))}
+              </NFTList>
+            ) : (
+              // </ScrollBox>
+              <EmptyBox>
+                <p>{t("gallery.emptyResult")}</p>
+                <ClearButton onClick={removeFilters}>
+                  {t("gallery.clearFilters")}
+                </ClearButton>
+              </EmptyBox>
+            )}
+          </GalleryContent>
+        </GalleryRight>
+        {showSeed && (
+          <SeedModal
+            seed={showSeed}
+            handleClose={() => setShowSeed(undefined)}
+          />
+        )}
+      </GalleryPageStyle>
     </>
   );
 }
 
-const GalleryPageStyle = styled(CenterBox)`
+const GalleryPageStyle = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   position: relative;
+  overflow: hidden;
 `;
 
 const GalleryRight = styled(Box)`

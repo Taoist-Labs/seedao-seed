@@ -9,7 +9,13 @@ interface IProps {
 
 export default function NFTCard({ data, onClick }: IProps) {
   return (
-    <NFTStyle xs={6} sm={3} onClick={() => onClick && onClick(data)}>
+    <NFTStyle
+      xs={6}
+      sm={4}
+      md={3}
+      lg={2}
+      onClick={() => onClick && onClick(data)}
+    >
       <SeedImg src={data.thumb || data.image} name={data.name}>
         <Intro>{data.tokenId ? data.tokenIdFormat : data.name}</Intro>
       </SeedImg>
