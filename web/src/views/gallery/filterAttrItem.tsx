@@ -72,7 +72,8 @@ export default function FilterAttrItem({
   const checkOutSelected = (value: string, children: AttrItem[]) => {
     return (
       !!selected.find((v) => v === value) ||
-      children.every((sitem) => selected.find((v) => v === sitem.value))
+      (!!children.length &&
+        children.every((sitem) => selected.find((v) => v === sitem.value)))
     );
   };
 
@@ -98,7 +99,11 @@ export default function FilterAttrItem({
   }, [values, selected, keyword]);
 
   const handleSelect = (item: AttrItem, checked: boolean) => {
-    onSelectValue([...item.children.map((c) => c.value)], checked);
+    if (item.children.length) {
+      onSelectValue([...item.children.map((c) => c.value)], checked);
+    } else {
+      onSelectValue([item.value], checked);
+    }
   };
 
   const handleSubSelect = (subValue: string, checked: boolean) => {
