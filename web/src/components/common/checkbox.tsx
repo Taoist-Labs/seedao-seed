@@ -1,17 +1,20 @@
 import styled from "@emotion/styled";
+import React, { MouseEvent } from "react";
 import CheckboxOnIcon from "assets/images/checkbox_on.svg";
 
 interface IProps {
   checked?: boolean;
-  onChange: (v: boolean) => void;
+  onChange: (e: MouseEvent, v: boolean) => void;
   children?: React.ReactNode;
   size?: "small" | "medium";
 }
 
 export default function Checkbox(props: IProps) {
   return (
-    <CheckboxStyle>
-      <div className="check" onClick={() => props.onChange(!props.checked)}>
+    <CheckboxStyle
+      onClick={(e: MouseEvent) => props.onChange(e, !props.checked)}
+    >
+      <div className="check">
         {props.checked ? (
           <img src={CheckboxOnIcon} alt="" style={{ width: "16px" }} />
         ) : (

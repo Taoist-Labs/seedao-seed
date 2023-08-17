@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import styled from "@emotion/styled";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -39,13 +39,17 @@ const SubFilterAttrItem = ({
   valueNumbers: { [key: string]: number };
   onSelectValue: (value: string, selected: boolean) => void;
 }) => {
+  const handleSelect = (e: MouseEvent, value: string, selected: boolean) => {
+    e.stopPropagation();
+    onSelectValue(value, selected);
+  };
   return (
     <SubFilterStyle>
       {list.map((item, index) => (
         <li key={index}>
           <Checkbox
             checked={item.isSelected}
-            onChange={(checked) => onSelectValue(item.value, checked)}
+            onChange={(e, checked) => handleSelect(e, item.value, checked)}
           >
             <span className="text">{item.value}</span>
             <span className="num">({valueNumbers[item.value]})</span>
@@ -109,6 +113,13 @@ export default function FilterAttrItem({
   const handleSubSelect = (subValue: string, checked: boolean) => {
     onSelectValue([subValue], checked);
   };
+  const handleExpand = (e: MouseEvent, index: number) => {
+    e.stopPropagation();
+    setExpandMap({
+      ...expandMap,
+      [index]: !expandMap[index],
+    });
+  };
   return (
     <FilterAttrItemStyle>
       <FilterAttrName onClick={() => setIsOpen(!isOpen)}>
@@ -132,18 +143,10 @@ export default function FilterAttrItem({
               <li key={index}>
                 <Checkbox
                   checked={item.isSelected}
-                  onChange={(checked) => handleSelect(item, checked)}
+                  onChange={(e, checked) => handleSelect(item, checked)}
                 >
                   <div>
-                    <div
-                      className="out-box"
-                      onClick={() =>
-                        setExpandMap({
-                          ...expandMap,
-                          [index]: !expandMap[index],
-                        })
-                      }
-                    >
+                    <div className="out-box">
                       <span className="text">{item.value}</span>
                       <span className="num snum">
                         ({valueNumbers[item.value]})
@@ -151,9 +154,15 @@ export default function FilterAttrItem({
                       {!!item.children.length && (
                         <>
                           {expandMap[index] ? (
-                            <ExpandLessIcon className="icon" />
+                            <ExpandLessIcon
+                              className="icon"
+                              onClick={(e) => handleExpand(e, index)}
+                            />
                           ) : (
-                            <ExpandMoreIcon className="icon" />
+                            <ExpandMoreIcon
+                              className="icon"
+                              onClick={(e) => handleExpand(e, index)}
+                            />
                           )}
                         </>
                       )}
@@ -243,6 +252,7 @@ const FilterAttrValues = styled.ul`
   }
   .out-box {
     display: flex;
+    align-items: center;
     .icon {
       margin-left: 10px;
     }

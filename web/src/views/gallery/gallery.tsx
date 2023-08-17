@@ -16,7 +16,7 @@ import NftData from "data/nfts.json";
 import { handleNfts } from "utils/handler";
 
 const { attrGroups, nfts: AllNFTs } = handleNfts(NftData);
-const PageSize = 16;
+const PageSize = 20;
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
