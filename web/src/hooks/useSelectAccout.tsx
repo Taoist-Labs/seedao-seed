@@ -17,16 +17,16 @@ export default function useSelectAccount() {
   const _account = useAccount();
   const _chainId = useChainId();
 
-  console.log("=================");
-  console.log("wallet_type: ", wallet_type);
+  // console.log("=================");
+  // console.log("wallet_type: ", wallet_type);
 
-  console.log(
-    "provider: ",
-    provider?.connection?.url,
-    _uprovider?.connection?.url,
-  );
-  console.log("account: ", account, _account);
-  console.log("chainId: ", chainId, _chainId);
+  // console.log(
+  //   "provider: ",
+  //   provider?.connection?.url,
+  //   _uprovider?.connection?.url,
+  // );
+  // console.log("account: ", account, _account);
+  // console.log("chainId: ", chainId, _chainId);
   switch (wallet_type) {
     case WalletType.EOA:
       return { account, provider, chainId, connector: injected };
