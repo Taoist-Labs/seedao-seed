@@ -189,23 +189,25 @@ const HeaderStyle = styled.header<{ color: string }>`
 `;
 
 const HeaderContainer = styled.div`
-  max-width: 1440px;
+  /* max-width: 1440px; */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   height: 100%;
 `;
 
 const LogoLink = styled(Link)`
   img {
     position: relative;
-    top: 15px;
+    top: 14px;
+    height: 36px;
   }
   @media (max-width: 414px) {
     img {
-      top: 10px;
-      left: -8px;
+      top: 4px;
+      left: -0;
+      height: 18px;
     }
   }
 `;
