@@ -66,7 +66,7 @@ describe("SeedMinter", function () {
     return { rootHash, proofOfSecondAccount, proofOfFakeAccount };
   }
 
-  // generate batch mint param
+  // generate batch mint param TODO rename me
   async function fakeBatchMintParam() {
     const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
 
@@ -254,6 +254,64 @@ describe("SeedMinter", function () {
     });
   });
 
+  describe("Function setHasClaimed", function () {
+    it("Should revert when caller is not owner", async function () {
+      const { seedMinter, secondAccount } = await loadFixture(
+        deploySeedMinterFixture
+      );
+
+      const { addresses } = await loadFixture(fakeBatchMintParam);
+
+      await expect(
+        seedMinter.connect(secondAccount).setHasClaimed(addresses)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("Should call setHasClaimed success", async function () {
+      const { seedMinter } = await loadFixture(deploySeedMinterFixture);
+
+      const { addresses } = await loadFixture(fakeBatchMintParam);
+      await seedMinter.setHasClaimed(addresses);
+
+      expect(await seedMinter.claimed(addresses[0])).to.equal(true);
+      expect(await seedMinter.claimed(addresses[1])).to.equal(true);
+      expect(await seedMinter.claimed(addresses[2])).to.equal(true);
+    });
+
+    it("Should revert when claim again by whitelist and points after called setHasClaimed", async function () {
+      const {
+        mockPoints,
+        seed,
+        seedMinter,
+        owner,
+        secondAccount,
+        thirdAccount,
+      } = await loadFixture(deploySeedMinterFixture);
+
+      await seedMinter.setHasClaimed([secondAccount.address]);
+
+      // claim with white list will revert
+      await seedMinter.unpauseClaimWithWhiteList();
+      const whiteListId = ethers.getBigInt(1);
+      const { rootHash, proofOfSecondAccount } = await loadFixture(
+        generateMerkleTreeAndProof
+      );
+      await seedMinter.setWhiteList(whiteListId, rootHash);
+      await expect(
+        seedMinter
+          .connect(secondAccount)
+          .claimWithWhiteList(whiteListId, proofOfSecondAccount)
+      ).to.be.revertedWith("You have claimed");
+      // claim with points will revert
+      await seedMinter.unpauseClaimWithPoints();
+      const bigInt5k = bigInt(5_000, await mockPoints.decimals());
+      await mockPoints.mint(secondAccount.address, bigInt5k);
+      await expect(
+        seedMinter.connect(secondAccount).claimWithPoints()
+      ).to.be.revertedWith("You have claimed");
+    });
+  });
+
   describe("Function setPrice", function () {
     const zero = ethers.getBigInt(0);
     const price = ethers.parseEther("1");
@@ -375,7 +433,7 @@ describe("SeedMinter", function () {
         ).to.be.revertedWith("You have claimed");
       });
 
-      it("Should revert claim again by points", async function () {
+      it("Should revert when claim again by points", async function () {
         const { mockPoints, seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture
         );
@@ -540,7 +598,7 @@ describe("SeedMinter", function () {
         ).to.be.revertedWith("You have claimed");
       });
 
-      it("Should revert when has claimed", async function () {
+      it("Should revert when claim again by whitelist", async function () {
         const { mockPoints, seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture
         );
@@ -597,7 +655,7 @@ describe("SeedMinter", function () {
         ).to.be.revertedWith("Only minter can call this method");
       });
 
-      it("Should mint success", async function () {
+      it("Should migrate success", async function () {
         const { seed, seedMinter, owner } = await loadFixture(
           deploySeedMinterFixture
         );
@@ -620,62 +678,12 @@ describe("SeedMinter", function () {
           );
         }
       });
-
-      it("batch mint addresses can't free claim again by whitelist and points", async function () {
-        const {
-          mockPoints,
-          seed,
-          seedMinter,
-          owner,
-          secondAccount,
-          thirdAccount,
-        } = await loadFixture(deploySeedMinterFixture);
-
-        const { addresses } = await loadFixture(fakeBatchMintParam);
-
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(0));
-
-        // batch mint 3 nfts
-        await seedMinter.migrate(addresses); // minted nft id: 0, 1, 2
-
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
-        expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
-
-        for (let i = 0; i < addresses.length; i++) {
-          expect(await seed.balanceOf(addresses[i])).to.equal(
-            ethers.getBigInt(1)
-          );
-          expect(await seed.tokenOfOwnerByIndex(addresses[i], 0)).to.equal(
-            ethers.getBigInt(i)
-          );
-        }
-
-        // claim with white list will revert
-        await seedMinter.unpauseClaimWithWhiteList();
-        const whiteListId = ethers.getBigInt(1);
-        const { rootHash, proofOfSecondAccount } = await loadFixture(
-          generateMerkleTreeAndProof
-        );
-        await seedMinter.setWhiteList(whiteListId, rootHash);
-        await expect(
-          seedMinter
-            .connect(secondAccount)
-            .claimWithWhiteList(whiteListId, proofOfSecondAccount)
-        ).to.be.revertedWith("You have claimed");
-        // claim with points will revert
-        await seedMinter.unpauseClaimWithPoints();
-        const bigInt5k = bigInt(5_000, await mockPoints.decimals());
-        await mockPoints.mint(secondAccount.address, bigInt5k);
-        await expect(
-          seedMinter.connect(secondAccount).claimWithPoints()
-        ).to.be.revertedWith("You have claimed");
-      });
     });
   });
 
   describe("Function mint", function () {
     describe("Validations", function () {
-      it("Should revert when not mintable", async function () {
+      it("Should revert when mint not enable", async function () {
         const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
         await expect(seedMinter.mint(ethers.getBigInt(1))).to.be.revertedWith(
@@ -814,9 +822,13 @@ describe("SeedMinter", function () {
           deploySeedMinterFixture
         );
 
-        await seedMinter.transferSeedOwnership("0x0000000000000000000000000000000000000001");
+        await seedMinter.transferSeedOwnership(
+          "0x0000000000000000000000000000000000000001"
+        );
 
-        expect(await seed.owner()).to.equal("0x0000000000000000000000000000000000000001");
+        expect(await seed.owner()).to.equal(
+          "0x0000000000000000000000000000000000000001"
+        );
       });
     });
   });
@@ -825,7 +837,7 @@ describe("SeedMinter", function () {
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   describe("Function withdraw", function () {
-    it("Should refund the extra native token", async function () {
+    it("Should withdraw success", async function () {
       const { seed, seedMinter, owner, secondAccount } = await loadFixture(
         deploySeedMinterFixture
       );

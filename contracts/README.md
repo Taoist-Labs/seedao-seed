@@ -38,7 +38,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 
 Management methods supported by `Seed` contract:
 
-- `changeMinter(address)` : change minter address
+- `transferOwnership(address)` : change owner address
 - `setMaxSupply(uint256)` : set the maximum supply of NFT
 - `setURILevelRange(uint256[])` : set the URI level parameter rule of NFT
 - `setBaseURI(string)` : set the base URI of NFT
@@ -54,6 +54,8 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 ```
 
 !! After the `SeedManger` contract is deployed successfully in the `scripts/2_deploy_seedminter.ts` script, the `changeMinter(address)` method of the `Seed` contract is called to modify its minter address to the address of the `SeedManger` contract !!
+
+> call `migrate(address[])` method to migrate SGN to SEED, up to 200 addresses can be passed at one time, if you need to migrate more addresses, you can call this method multiple times.
 
 > To enable the whitelist free claim feature, you need to call:
 
@@ -77,6 +79,8 @@ Call `pauseMint()` to disable the payed mint feature.
 
 > Other methods:
 
+- `transferSeedOwnership(address)` : change Seed contract's owner address
+- `setHasClaimed(address[]` : set has claimed addresses
 - `changeMinter(address)` : change minter address
 
 ## 4. Upgrade `SeedManager` contracts

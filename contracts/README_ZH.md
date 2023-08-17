@@ -38,7 +38,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 
 `Seed` 合约支持的管理方法：
 
-- `changeMinter(address)` : 修改 minter 地址
+- `transferOwnership(address)` : 修改 owner 地址
 - `setMaxSupply(uint256)` : 设置 NFT 的最大供应量
 - `setURILevelRange(uint256[])` : 设置 NFT 的 URI 等级参数规则
 - `setBaseURI(string)` : 设置 NFT 的 base URI
@@ -54,6 +54,8 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 ```
 
 !! 在 `scripts/2_deploy_seedminter.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `changeMinter(address)` 方法修改其 minter 的地址为 `SeedManger` 合约的地址 !!
+
+> 调用 `migrate(address[])` 方法迁移 SGN 到 SEED，一次最多可以传200个地址，如果需要迁移更多的地址，可以多次调用该方法。
 
 > 开启白名单免费 claim 功能，需要调用：
 
@@ -77,6 +79,8 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 
 > 其他方法：
 
+- `transferSeedOwnership(address)` : 修改 Seed 合约的 owner 地址
+- `setHasClaimed(address[]` : 设置已经 claim 过的地址
 - `changeMinter(address)` : 修改 minter 地址
 
 ## 4. 升级 `SeedManager` 合约

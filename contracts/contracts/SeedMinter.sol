@@ -157,14 +157,11 @@ contract SeedMinter is
     _mint(_msgSender());
   }
 
-  /// migrate SGN to SEED, only minter can call, need to specify the receiving addresses, can be used for batch airdrop
+  /// migrate from SGN to SEED, only minter can call, need to specify the receiving addresses, can be used for batch airdrop
   function migrate(address[] calldata to) external onlyMinter {
-    // this method is for migrating from SGN to SEED, so those addresses can't free claim again by whitelist and points
     for (uint256 i = 0; i < to.length; i++) {
-      claimed[to[i]] = true;
+      _mint(to[i]);
     }
-
-    _migrate(to);
   }
 
   /// @dev direct buy SEED with payment, support buy multiple NFTs at once
@@ -204,14 +201,14 @@ contract SeedMinter is
       );
   }
 
+  //  /// mint SEED
+  //  function _mint(address to, uint256 tokenId) internal {
+  //    ISeed(seed).mint(to, tokenId);
+  //  }
+  //
   /// @dev mint SEED
   function _mint(address to) internal {
-    ISeed(seed).mint(to);
-  }
-
-  /// @dev migrate SGN to SEED
-  function _migrate(address[] memory to) internal {
-    ISeed(seed).migrate(to);
+    ISeed(seed).mint(to, ISeed(seed).totalSupply());
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
@@ -249,6 +246,13 @@ contract SeedMinter is
     bytes32 rootHash
   ) external onlyOwner {
     whiteListRootHashes[whiteListId] = rootHash;
+  }
+
+  /// @dev set has claimed addresses
+  function setHasClaimed(address[] calldata addr) external onlyOwner {
+    for (uint256 i = 0; i < addr.length; i++) {
+      claimed[addr[i]] = true;
+    }
   }
 
   /// @dev set NFT price, the decimals of the price is the same as the decimals of the chain native token

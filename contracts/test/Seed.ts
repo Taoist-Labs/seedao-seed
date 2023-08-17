@@ -160,7 +160,9 @@ describe("Seed", function () {
         const { seed, secondAccount } = await loadFixture(deploySeedFixture);
 
         await expect(
-          seed.connect(secondAccount).mint(secondAccount.address)
+          seed
+            .connect(secondAccount)
+            .mint(secondAccount.address, ethers.getBigInt(0))
         ).to.be.revertedWith("Ownable: caller is not the owner");
       });
 
@@ -171,16 +173,16 @@ describe("Seed", function () {
         await seed.setMaxSupply(ethers.getBigInt(1));
 
         // will revert when mint 2
-        await seed.mint(secondAccount.address);
-        await expect(seed.mint(secondAccount.address)).to.be.revertedWith(
-          "Exceeds the maximum supply"
-        );
+        await seed.mint(secondAccount.address, ethers.getBigInt(0));
+        await expect(
+          seed.mint(secondAccount.address, ethers.getBigInt(1))
+        ).to.be.revertedWith("Exceeds the maximum supply");
       });
 
       it("Should mint success", async function () {
         const { seed, secondAccount } = await loadFixture(deploySeedFixture);
 
-        await seed.mint(secondAccount.address); // minted nft id: 0
+        await seed.mint(secondAccount.address, ethers.getBigInt(0)); // minted nft id: 0
         //
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(1));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
@@ -188,13 +190,12 @@ describe("Seed", function () {
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(1)
         );
-        // TODO FIXME
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
-        // ).to.equal(ethers.getBigInt(0));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
 
-        await seed.mint(secondAccount.address); // minted nft id: 1
-        await seed.mint(secondAccount.address); // minted nft id: 2
+        await seed.mint(secondAccount.address, ethers.getBigInt(1)); // minted nft id: 1
+        await seed.mint(secondAccount.address, ethers.getBigInt(2)); // minted nft id: 2
         //
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
@@ -202,74 +203,26 @@ describe("Seed", function () {
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(3)
         );
-        // TODO FIXME
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
-        // ).to.equal(ethers.getBigInt(0));
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 1)
-        // ).to.equal(ethers.getBigInt(1));
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 2)
-        // ).to.equal(ethers.getBigInt(2));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 1)
+        ).to.equal(ethers.getBigInt(1));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 2)
+        ).to.equal(ethers.getBigInt(2));
       });
     });
 
     describe("Events", function () {
-      it("Should emit an event on claimWithWhiteList", async function () {
+      it("Should emit an event on mint", async function () {
         const { seed, secondAccount } = await loadFixture(deploySeedFixture);
 
-        await expect(seed.mint(secondAccount.address))
+        const tokenId = ethers.getBigInt(0);
+        await expect(seed.mint(secondAccount.address, tokenId))
           .to.be.emit(seed, "Transfer")
-          .withArgs(ethers.ZeroAddress, secondAccount.address, anyValue);
-      });
-    });
-  });
-
-  describe("Function migrate", function () {
-    describe("Validations", function () {
-      it("Should revert when caller is not owner", async function () {
-        const { seed, secondAccount } = await loadFixture(deploySeedFixture);
-        const { addresses } = await loadFixture(fakeBatchMintParam);
-
-        await expect(
-          seed.connect(secondAccount).migrate(addresses)
-        ).to.be.revertedWith("Ownable: caller is not the owner");
-      });
-
-      it("Should revert when exceeds max supply", async function () {
-        const { seed } = await loadFixture(deploySeedFixture);
-        const { addresses } = await loadFixture(fakeBatchMintParam);
-
-        // set max supply to 2
-        await seed.setMaxSupply(ethers.getBigInt(2));
-
-        // will revert when batch mint 3
-        await expect(seed.migrate(addresses)).to.be.revertedWith(
-          "Exceeds the maximum supply"
-        );
-      });
-
-      it("Should mint success", async function () {
-        const { seed, owner } = await loadFixture(deploySeedFixture);
-        const { addresses } = await loadFixture(fakeBatchMintParam);
-
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(0));
-
-        // batch mint 3 nfts
-        await seed.migrate(addresses); // minted nft id: 0, 1, 2
-
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
-        expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
-
-        for (let i = 0; i < addresses.length; i++) {
-          expect(await seed.balanceOf(addresses[i])).to.equal(
-            ethers.getBigInt(1)
-          );
-          expect(await seed.tokenOfOwnerByIndex(addresses[i], 0)).to.equal(
-            ethers.getBigInt(i)
-          );
-        }
+          .withArgs(ethers.ZeroAddress, secondAccount.address, tokenId);
       });
     });
   });
@@ -284,13 +237,14 @@ describe("Seed", function () {
         await seed.setBaseURI(baseURI);
 
         // secondAccount mint nft #0
-        await seed.mint(secondAccount.address);
-        const tokenId = await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        await seed.mint(secondAccount.address, ethers.getBigInt(0));
+        const tokenId = await seed.tokenOfOwnerByIndex(
+          secondAccount.address,
+          0
+        );
 
         // when contract is paused, should return 404.json
-        expect(await seed.tokenURI(tokenId)).to.equal(
-          `${baseURI}/404.json`
-        );
+        expect(await seed.tokenURI(tokenId)).to.equal(`${baseURI}/404.json`);
       });
 
       it("Use default uri level ranges", async function () {
@@ -308,8 +262,8 @@ describe("Seed", function () {
         const mockPointsDecimals = await mockPoints.decimals();
 
         // secondAccount mint nft #0
-        await seed.mint(secondAccount.address);
-        const tokenId = await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        const tokenId = ethers.getBigInt(0);
+        await seed.mint(secondAccount.address, tokenId);
 
         // [20_000, 300_000, 3_000_000, 30_000_000]
         // case1: mint 100 points to secondAccount
@@ -354,8 +308,8 @@ describe("Seed", function () {
         const mockPointsDecimals = await mockPoints.decimals();
 
         // secondAccount mint nft #0
-        await seed.mint(secondAccount.address);
-        const tokenId = await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        const tokenId = ethers.getBigInt(0);
+        await seed.mint(secondAccount.address, tokenId);
 
         // set custom uri level ranges: [100, 1_000, 10_000, 100_000]
         await seed.setURILevelRange([

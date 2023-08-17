@@ -13,8 +13,6 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   using Strings for uint256;
 
-  uint256 private tokenIndex;
-
   // max supply amount
   uint256 public maxSupply;
 
@@ -43,47 +41,14 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     pause();
   }
 
-  /// @dev mint method -- new tokenId will be random
-  function mint(address to) public onlyOwner {
+  /// @dev mint method
+  function mint(address to, uint256 tokenId) public onlyOwner {
     require(totalSupply() + 1 <= maxSupply, "Exceeds the maximum supply");
 
-    _safeMint(to, _newRandomTokenId());
-  }
+    // this check code already exists in `_safeMint(address, uint256)` method
+    // require(!_exists(tokenId), "ERC721: token already minted");
 
-  /// @dev migrate method -- new tokenId will be in order
-  function migrate(address[] calldata to) public onlyOwner {
-    require(
-      totalSupply() + to.length <= maxSupply,
-      "Exceeds the maximum supply"
-    );
-
-    for (uint i = 0; i < to.length; i++) {
-      // when tokenIndex was minted, transaction will revert
-      _safeMint(to[i], tokenIndex);
-      tokenIndex += 1;
-    }
-  }
-
-  /// @dev generate a random new tokenId that was not minted
-  function _newRandomTokenId() internal view returns (uint256) {
-    //// generate a random number between `600` to `maxSupply`
-    //uint256 randomId = (uint256(
-    //  // Warning: Since the VM version paris, "difficulty" was replaced by "prevrandao", which now returns a random number based on the beacon chain.
-    //  keccak256(abi.encodePacked(block.prevrandao, block.timestamp))
-    //) % (maxSupply - 600 )) + 600;
-
-    // generate a random number between `tokenIndex` to `maxSupply`
-    uint256 randomId = (uint256(
-      // Warning: Since the VM version paris, "difficulty" was replaced by "prevrandao", which now returns a random number based on the beacon chain.
-      keccak256(abi.encodePacked(block.prevrandao, block.timestamp))
-    ) % (maxSupply - tokenIndex)) + tokenIndex;
-
-    // if the randomId is already minted, then increment it until it is not minted
-    while (_ownerOf(randomId) != address(0)) {
-      randomId += 1;
-    }
-
-    return randomId;
+    _safeMint(to, tokenId);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
