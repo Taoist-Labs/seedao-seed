@@ -69,7 +69,7 @@ const Languagebutton = () => {
   return (
     <LanguageBox onClick={changeLan}>
       <img src={LanguageIcon} alt="" />
-      <span>{lan === "zh" ? "ZH" : "EN"}</span>
+      <span>{lan === "zh" ? "CN" : "EN"}</span>
     </LanguageBox>
   );
 };
