@@ -11,7 +11,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import GalleryFilterMenu, { SelectAttr } from "./filterMenu";
 import FilterSvg from "assets/images/filter.svg";
 import RefreshSvg from "assets/images/refresh.svg";
-import { CenterBox } from "style";
 import Header from "components/layout/header";
 import NftData from "data/nfts.json";
 import { handleNfts } from "utils/handler";
