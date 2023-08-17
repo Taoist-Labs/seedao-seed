@@ -10,16 +10,14 @@ import Header from "components/layout/header";
 import BannerBg01 from "assets/images/home/banner/banner01.png";
 import BannerBg02 from "assets/images/home/banner/banner02.jpg";
 import BannerBg03 from "assets/images/home/banner/banner03.png";
-// import BannerBg04 from "assets/images/home/banner/banner04.png";
+import BannerBg04 from "assets/images/home/banner/banner04.png";
 
-// const COLORS = ["#F9D9FB", "#A6A2F9", "#B2D8D0", "#272B65"];
-// const BANNER_IMGS = [BannerBg01, BannerBg02, BannerBg03, BannerBg04];
-const COLORS = ["#F9D9FB", "#A6A2F9", "#B2D8D0"];
-const BANNER_IMGS = [BannerBg01, BannerBg02, BannerBg03];
+const COLORS = ["#F9D9FB", "#A6A2F9", "#B2D8D0", "#DFFCD4"];
+const BANNER_IMGS = [BannerBg01, BannerBg02, BannerBg03, BannerBg04];
 
 export default function Home() {
   const { color, bg } = useMemo(() => {
-    const i = Math.floor(Math.random() * 3);
+    const i = Math.floor(Math.random() * 4);
     return { color: COLORS[i], bg: BANNER_IMGS[i] };
   }, []);
   return (
