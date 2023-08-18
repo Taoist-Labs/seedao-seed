@@ -9,6 +9,11 @@
       "address": "0xdD006C66E4279978F4c3A0A21cB9b0e548B22827",
       "txHash": "0x70b0b45047d93eab2a27dbe020b4b24c79ebc84030f065c6bc160d314dc2dbc4",
       "kind": "transparent"
+    },
+    {
+      "address": "0xb3B1314966d2883864d1Cd10Cd664cA3fD041b38",
+      "txHash": "0x8f3571b962973932c7c462ddc4be0a589c1a8e46ea5965fbc07a56283e3b76ea",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -154,6 +159,374 @@
             "type": "t_address",
             "contract": "SeedManager",
             "src": "contracts/SeedManager.sol:41"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bytes32)": {
+            "label": "mapping(uint256 => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "a872669eba6550aaffd0a607f8e07a54d5ad48940acb44a5426a6e96385a5106": {
+      "address": "0x61cD1B13cB0a27547d59968426093eBDD68059AE",
+      "txHash": "0xd8dd1b5f64360a0b9fdc6c50521078ce6cab3c8bc616b30ddd788345ab90d512",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "seed",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:19"
+          },
+          {
+            "label": "price",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:22"
+          },
+          {
+            "label": "scr",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:24"
+          },
+          {
+            "label": "scrAmountCondi",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:26"
+          },
+          {
+            "label": "whiteListRootHashes",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_mapping(t_uint256,t_bytes32)",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:28"
+          },
+          {
+            "label": "claimed",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:31"
+          },
+          {
+            "label": "onMint",
+            "offset": 0,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:34"
+          },
+          {
+            "label": "onClaimWithWhiteList",
+            "offset": 1,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:36"
+          },
+          {
+            "label": "onClaimWithSCR",
+            "offset": 2,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:38"
+          },
+          {
+            "label": "minter",
+            "offset": 3,
+            "slot": "157",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:41"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bytes32)": {
+            "label": "mapping(uint256 => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "d438c344b0f0265a89fbda4adb8c8a7baac588dcc3ce10addf9fadefcf055fcf": {
+      "address": "0x80ADAffa06A4fA6b9985F3e2bB19b4722C0923A5",
+      "txHash": "0xa97284ccc8f0be8c3e0a3cc7f148e93b6014372131027b31fc94f4c00b806844",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "seed",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:19"
+          },
+          {
+            "label": "price",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:22"
+          },
+          {
+            "label": "scr",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:24"
+          },
+          {
+            "label": "scrAmountCondi",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:26"
+          },
+          {
+            "label": "whiteListRootHashes",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_mapping(t_uint256,t_bytes32)",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:28"
+          },
+          {
+            "label": "claimed",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:31"
+          },
+          {
+            "label": "onMint",
+            "offset": 0,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:34"
+          },
+          {
+            "label": "onClaimWithWhiteList",
+            "offset": 1,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:36"
+          },
+          {
+            "label": "onClaimWithSCR",
+            "offset": 2,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:38"
+          },
+          {
+            "label": "minter",
+            "offset": 3,
+            "slot": "157",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:41"
           }
         ],
         "types": {
