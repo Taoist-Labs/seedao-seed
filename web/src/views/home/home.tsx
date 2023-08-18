@@ -12,6 +12,8 @@ import BannerBg02 from "assets/images/home/banner/banner02.jpg";
 import BannerBg03 from "assets/images/home/banner/banner03.png";
 import BannerBg04 from "assets/images/home/banner/banner04.png";
 
+import Footer from "components/layout/footer";
+
 const COLORS = ["#F9D9FB", "#A6A2F9", "#B2D8D0", "#DFFCD4"];
 const BANNER_IMGS = [BannerBg01, BannerBg02, BannerBg03, BannerBg04];
 
@@ -31,6 +33,7 @@ export default function Home() {
           <How2 />
           <FQA color={color} />
         </HomePageStyle>
+        <Footer color={color} />
       </div>
     </>
   );
