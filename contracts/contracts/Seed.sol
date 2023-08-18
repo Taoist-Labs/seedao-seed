@@ -18,7 +18,7 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
 
   // NFT URI base
   string public baseURI;
-  // uri level range rules
+  // URI level range rules
   uint256[] public uriLevelRanges;
   // points token address
   address public pointsToken;
@@ -57,6 +57,11 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   /// @dev set max supply
   function setMaxSupply(uint256 maxSupply_) external onlyOwner {
     maxSupply = maxSupply_;
+  }
+
+  /// @dev set points token contract address
+  function setPointsTokenAddress(address pointsToken_) external onlyOwner {
+    pointsToken = pointsToken_;
   }
 
   /// @dev set NFT URI base, don't include the last "/"

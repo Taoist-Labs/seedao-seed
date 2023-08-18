@@ -39,6 +39,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 `Seed` 合约支持的管理方法：
 
 - `transferOwnership(address)` : 修改 owner 地址
+- `setPointsTokenAddress(address)` 设置积分 token 合约地址
 - `setMaxSupply(uint256)` : 设置 NFT 的最大供应量
 - `setURILevelRange(uint256[])` : 设置 NFT 的 URI 等级参数规则
 - `setBaseURI(string)` : 设置 NFT 的 base URI

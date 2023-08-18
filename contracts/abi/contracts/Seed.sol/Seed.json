@@ -450,6 +450,19 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "pointsToken_",
+        "type": "address"
+      }
+    ],
+    "name": "setPointsTokenAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256[]",
         "name": "uriLevelRanges_",
         "type": "uint256[]"

@@ -39,6 +39,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 Management methods supported by `Seed` contract:
 
 - `transferOwnership(address)` : change owner address
+- `setPointsTokenAddress(address)` : set points token contract address
 - `setMaxSupply(uint256)` : set the maximum supply of NFT
 - `setURILevelRange(uint256[])` : set the URI level parameter rule of NFT
 - `setBaseURI(string)` : set the base URI of NFT

@@ -98,6 +98,30 @@ describe("Seed", function () {
     });
   });
 
+  describe("Function setPointsTokenAddress", function () {
+    it("Should revert when caller is not owner", async function () {
+      const { mockPoints, seed, secondAccount } = await loadFixture(
+          deploySeedFixture
+      );
+
+      await expect(
+          seed.connect(secondAccount).setPointsTokenAddress(mockPoints)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("Should set points token address success", async function () {
+      const { mockPoints, seed } = await loadFixture(
+          deploySeedFixture
+      );
+
+      expect(await seed.pointsToken()).to.equal(
+          await mockPoints.getAddress()
+      );
+      await seed.setPointsTokenAddress(ethers.ZeroAddress);
+      expect(await seed.pointsToken()).to.equal(ethers.ZeroAddress);
+    });
+  });
+
   describe("Function setBaseURI", function () {
     const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
 
