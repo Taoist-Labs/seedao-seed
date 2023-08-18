@@ -71,15 +71,14 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   }
 
   /// @dev set URI level range rules
-  /// URI format：ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/{tokenID}_{level}.json
-  //
-  /// for example：
-  /// level1: < 20_000
-  /// level2: >=20_000 && < 300_000
-  /// level3: >=300_000 && < 3_000_000
-  /// level4: >=3_000_000 && < 30_000_000
-  /// level5: >=30_000_000
-  /// for this example, the input param is：[20_000, 300_000, 3_000_000, 30_000_000]
+  /// For example, we have 5 levels, their range rule is as follows:
+  ///   level1 range: (0 ~ 20_000)
+  ///   level2 range: (20_000 ~ 300_000)
+  ///   level3 range: (300_000 ~ 3_000_000)
+  ///   level4 range: (3_000_000 ~ 30_000_000)
+  ///   level5 range: (30_000_000 ~ ∞)
+  /// We just need to use level1's top value, level2's top value, level3's top value, level4's top value as the input array param's elements.
+  /// For this example, the input param is: `[20_000, 300_000, 3_000_000, 30_000_000]`.
   function setURILevelRange(
     uint256[] calldata uriLevelRanges_
   ) external onlyOwner {
