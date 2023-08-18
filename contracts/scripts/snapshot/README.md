@@ -1,12 +1,12 @@
 ## 1. List all SGN and holders
 
 ```bash
-$ npx hardhat run --network mainnet scripts/snapshot/snapshot_list.ts
+$ npx hardhat run --network mainnet scripts/snapshot/snapshot_holders.ts
 ```
 
 > !! `--network` param must be `mainnet`, because of old SGN contract is deployed at mainnet.
 
-will generate `snapshot_list.md` file.
+will generate `snapshot_holders.md` file.
 
 ## 2. List all claimed addresses
 

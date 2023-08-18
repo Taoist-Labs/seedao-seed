@@ -8,7 +8,7 @@ async function main() {
     "0x23fDA8a873e9E46Dbe51c78754dddccFbC41CFE1"
   );
 
-  const outputFile = "scripts/snapshot/output/snapshot_list.md";
+  const outputFile = "scripts/snapshot/output/snapshot_holders.md";
 
   // write to markdown file
   fs.writeFileSync(outputFile, "| Token ID | Owner |\n|----------|-------|\n", {
