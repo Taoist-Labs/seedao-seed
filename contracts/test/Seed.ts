@@ -366,4 +366,68 @@ describe("Seed", function () {
       });
     });
   });
+
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+  describe("Function _beforeTokenTransfer", function () {
+    describe("Validations", function () {
+      it("Should revert when call transferFrom because of contract is paused", async function () {
+        const { seed, secondAccount, thirdAccount } = await loadFixture(
+          deploySeedFixture
+        );
+
+        await seed.mint(secondAccount.address, ethers.getBigInt(0)); // minted nft id: 0
+        expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
+
+        // approve
+        await seed
+          .connect(secondAccount)
+          .approve(thirdAccount.address, ethers.getBigInt(0));
+
+        await expect(
+          seed
+            .connect(thirdAccount)
+            .transferFrom(
+              secondAccount.address,
+              thirdAccount.address,
+              ethers.getBigInt(0)
+            )
+        ).to.be.revertedWith("Pausable: paused");
+      });
+
+      it("Should call transferFrom success when contract is unpaused", async function () {
+        const { seed, secondAccount, thirdAccount } = await loadFixture(
+          deploySeedFixture
+        );
+
+        await seed.mint(secondAccount.address, ethers.getBigInt(0)); // minted nft id: 0
+        expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
+
+        // approve
+        await seed
+          .connect(secondAccount)
+          .approve(thirdAccount.address, ethers.getBigInt(0));
+
+        // unpause contract
+        await seed.unpause();
+
+        expect(
+          await seed
+            .connect(thirdAccount)
+            .transferFrom(
+              secondAccount.address,
+              thirdAccount.address,
+              ethers.getBigInt(0)
+            )
+        )
+          .to.be.emit(seed, "Transfer")
+          .withArgs(
+            secondAccount.address,
+            thirdAccount.address,
+            ethers.getBigInt(0)
+          );
+      });
+    });
+  });
 });
