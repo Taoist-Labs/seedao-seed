@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "pointsToken_",
+        "name": "scr_",
         "type": "address"
       }
     ],
@@ -334,19 +334,6 @@
   },
   {
     "inputs": [],
-    "name": "pointsToken",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -404,6 +391,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "scr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -451,11 +451,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "pointsToken_",
+        "name": "scr_",
         "type": "address"
       }
     ],
-    "name": "setPointsTokenAddress",
+    "name": "setSCR",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
