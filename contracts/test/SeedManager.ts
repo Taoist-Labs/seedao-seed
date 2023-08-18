@@ -91,15 +91,13 @@ describe("SeedMinter", function () {
       expect(await seedMinter.seed()).to.equal(await seed.getAddress());
     });
 
-    it("Should set the right pointsTokenAddress and pointsCountCond", async function () {
+    it("Should set the right scr and scrAmountCondi", async function () {
       const { mockPoints, seed, seedMinter } = await loadFixture(
         deploySeedMinterFixture
       );
 
-      expect(await seedMinter.pointsToken()).to.equal(
-        await mockPoints.getAddress()
-      );
-      expect(await seedMinter.pointsCountCondi()).to.equal(
+      expect(await seedMinter.scr()).to.equal(await mockPoints.getAddress());
+      expect(await seedMinter.scrAmountCondi()).to.equal(
         bigInt(5_000, await mockPoints.decimals())
       );
     });
@@ -110,12 +108,12 @@ describe("SeedMinter", function () {
       expect(await seedMinter.minter()).to.equal(owner.address);
     });
 
-    it("Should disable `onMint` `onClaimWithWhiteList` `onClaimWithPoints` default", async function () {
+    it("Should disable `onMint` `onClaimWithWhiteList` `onClaimWithSCR` default", async function () {
       const { seedMinter, owner } = await loadFixture(deploySeedMinterFixture);
 
       expect(await seedMinter.onMint()).to.equal(false);
       expect(await seedMinter.onClaimWithWhiteList()).to.equal(false);
-      expect(await seedMinter.onClaimWithPoints()).to.equal(false);
+      expect(await seedMinter.onClaimWithSCR()).to.equal(false);
     });
 
     it("Should set the right owner", async function () {
@@ -164,31 +162,29 @@ describe("SeedMinter", function () {
     });
   });
 
-  describe("Function setPointsTokenAddress", function () {
+  describe("Function setSCR", function () {
     it("Should revert when caller is not owner", async function () {
       const { mockPoints, seedMinter, secondAccount } = await loadFixture(
         deploySeedMinterFixture
       );
 
       await expect(
-        seedMinter.connect(secondAccount).setPointsTokenAddress(mockPoints)
+        seedMinter.connect(secondAccount).setSCR(mockPoints)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
-    it("Should set points token address success", async function () {
+    it("Should set SCR contract address success", async function () {
       const { mockPoints, seedMinter } = await loadFixture(
         deploySeedMinterFixture
       );
 
-      expect(await seedMinter.pointsToken()).to.equal(
-        await mockPoints.getAddress()
-      );
-      await seedMinter.setPointsTokenAddress(ethers.ZeroAddress);
-      expect(await seedMinter.pointsToken()).to.equal(ethers.ZeroAddress);
+      expect(await seedMinter.scr()).to.equal(await mockPoints.getAddress());
+      await seedMinter.setSCR(ethers.ZeroAddress);
+      expect(await seedMinter.scr()).to.equal(ethers.ZeroAddress);
     });
   });
 
-  describe("Function setPointsCondition", function () {
+  describe("Function setSCRAmountCondi", function () {
     const Big5k = ethers.getBigInt(5_000);
 
     it("Should revert when caller is not owner", async function () {
@@ -197,32 +193,32 @@ describe("SeedMinter", function () {
       );
 
       await expect(
-        seedMinter.connect(secondAccount).setPointsCountCondition(Big5k)
+        seedMinter.connect(secondAccount).setSCRAmountCondi(Big5k)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
-    it("Should revert when points token address have not set", async function () {
+    it("Should revert when SCR contract address have not set", async function () {
       const { mockPoints, seedMinter } = await loadFixture(
         deploySeedMinterFixture
       );
 
-      await seedMinter.setPointsTokenAddress(ethers.ZeroAddress);
+      await seedMinter.setSCR(ethers.ZeroAddress);
 
-      await expect(
-        seedMinter.setPointsCountCondition(Big5k)
-      ).to.be.revertedWith("Points token address is not set");
+      await expect(seedMinter.setSCRAmountCondi(Big5k)).to.be.revertedWith(
+        "SCR address is not set"
+      );
     });
 
-    it("Should set points condition success", async function () {
+    it("Should set SCR amount condition success", async function () {
       const { mockPoints, seedMinter } = await loadFixture(
         deploySeedMinterFixture
       );
 
-      expect(await seedMinter.pointsCountCondi()).to.equal(
+      expect(await seedMinter.scrAmountCondi()).to.equal(
         bigInt(5_000, await mockPoints.decimals())
       );
-      await seedMinter.setPointsCountCondition(Big5k);
-      expect(await seedMinter.pointsCountCondi()).to.equal(
+      await seedMinter.setSCRAmountCondi(Big5k);
+      expect(await seedMinter.scrAmountCondi()).to.equal(
         bigInt(5_000, await mockPoints.decimals())
       );
     });
@@ -254,7 +250,7 @@ describe("SeedMinter", function () {
     });
   });
 
-  describe("Function setHasClaimed", function () {
+  describe("Function setClaimed", function () {
     it("Should revert when caller is not owner", async function () {
       const { seedMinter, secondAccount } = await loadFixture(
         deploySeedMinterFixture
@@ -263,22 +259,22 @@ describe("SeedMinter", function () {
       const { addresses } = await loadFixture(addressArray);
 
       await expect(
-        seedMinter.connect(secondAccount).setHasClaimed(addresses)
+        seedMinter.connect(secondAccount).setClaimed(addresses)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
-    it("Should call setHasClaimed success", async function () {
+    it("Should call setClaimed success", async function () {
       const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
       const { addresses } = await loadFixture(addressArray);
-      await seedMinter.setHasClaimed(addresses);
+      await seedMinter.setClaimed(addresses);
 
       expect(await seedMinter.claimed(addresses[0])).to.equal(true);
       expect(await seedMinter.claimed(addresses[1])).to.equal(true);
       expect(await seedMinter.claimed(addresses[2])).to.equal(true);
     });
 
-    it("Should revert when claim again by whitelist and points after called setHasClaimed", async function () {
+    it("Should revert when claim again by whitelist and SCR after called setClaimed", async function () {
       const {
         mockPoints,
         seed,
@@ -288,7 +284,7 @@ describe("SeedMinter", function () {
         thirdAccount,
       } = await loadFixture(deploySeedMinterFixture);
 
-      await seedMinter.setHasClaimed([secondAccount.address]);
+      await seedMinter.setClaimed([secondAccount.address]);
 
       // claim with white list will revert
       await seedMinter.unpauseClaimWithWhiteList();
@@ -302,12 +298,12 @@ describe("SeedMinter", function () {
           .connect(secondAccount)
           .claimWithWhiteList(whiteListId, proofOfSecondAccount)
       ).to.be.revertedWith("You have claimed");
-      // claim with points will revert
-      await seedMinter.unpauseClaimWithPoints();
+      // claim with SCR will revert
+      await seedMinter.unpauseClaimWithSCR();
       const bigInt5k = bigInt(5_000, await mockPoints.decimals());
       await mockPoints.mint(secondAccount.address, bigInt5k);
       await expect(
-        seedMinter.connect(secondAccount).claimWithPoints()
+        seedMinter.connect(secondAccount).claimWithSCR()
       ).to.be.revertedWith("You have claimed");
     });
   });
@@ -390,7 +386,6 @@ describe("SeedMinter", function () {
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(1));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(1)
@@ -432,7 +427,7 @@ describe("SeedMinter", function () {
         ).to.be.revertedWith("You have claimed");
       });
 
-      it("Should revert when claim again by points", async function () {
+      it("Should revert when claim again by SCR", async function () {
         const { mockPoints, seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture
         );
@@ -456,45 +451,45 @@ describe("SeedMinter", function () {
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
 
-        // claim with points will revert
-        await seedMinter.unpauseClaimWithPoints();
+        // claim with SCR will revert
+        await seedMinter.unpauseClaimWithSCR();
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt5k);
         await expect(
-          seedMinter.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithSCR()
         ).to.be.revertedWith("You have claimed");
       });
     });
   });
 
-  describe("Function claimWithPoints", function () {
+  describe("Function claimWithSCR", function () {
     describe("Validations", function () {
-      it("Should revert when not enableClaimWithPoints", async function () {
+      it("Should revert when not enableClaimWithSCR", async function () {
         const { seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture
         );
 
         await expect(
-          seedMinter.connect(secondAccount).claimWithPoints()
-        ).to.be.revertedWith("Claim with point is not open");
+          seedMinter.connect(secondAccount).claimWithSCR()
+        ).to.be.revertedWith("Claim with SCR is not open");
       });
 
-      it("Should revert when not set points token address", async function () {
+      it("Should revert when not set SCR contract address", async function () {
         const { seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithPoints();
+        await seedMinter.unpauseClaimWithSCR();
 
-        await seedMinter.setPointsTokenAddress(ethers.ZeroAddress);
+        await seedMinter.setSCR(ethers.ZeroAddress);
 
         await expect(
-          seedMinter.connect(secondAccount).claimWithPoints()
-        ).to.be.revertedWith("Points token address is not set");
+          seedMinter.connect(secondAccount).claimWithSCR()
+        ).to.be.revertedWith("SCR address is not set");
       });
 
-      it("Should revert when not have enough points", async function () {
+      it("Should revert when not have enough SCR", async function () {
         const { mockPoints, seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture
         );
@@ -504,26 +499,26 @@ describe("SeedMinter", function () {
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithPoints();
+        await seedMinter.unpauseClaimWithSCR();
 
-        // revert because of `pointsCondi == 0`
+        // revert because of `scrAmountCondi == 0`
         await expect(
-          seedMinter.connect(secondAccount).claimWithPoints()
-        ).to.be.revertedWith("You don't have enough points");
+          seedMinter.connect(secondAccount).claimWithSCR()
+        ).to.be.revertedWith("You don't have enough SCR");
 
         // set condition to 5k
-        await seedMinter.setPointsCountCondition(ethers.getBigInt(5_000));
-        // only mint 2k points
+        await seedMinter.setSCRAmountCondi(ethers.getBigInt(5_000));
+        // only mint 2k SCR
         const bigInt2k = bigInt(2_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt2k);
         expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
           bigInt2k
         );
 
-        // revert because of `points < pointsCondi`
+        // revert because of `scrBalance < scrAmountCondi`
         await expect(
-          seedMinter.connect(secondAccount).claimWithPoints()
-        ).to.be.revertedWith("You don't have enough points");
+          seedMinter.connect(secondAccount).claimWithSCR()
+        ).to.be.revertedWith("You don't have enough SCR");
       });
 
       it("Should claim success", async function () {
@@ -535,9 +530,9 @@ describe("SeedMinter", function () {
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithPoints();
-        // default points condition is 5k
-        // mint 5k points
+        await seedMinter.unpauseClaimWithSCR();
+        // default SCR amount condition is 5k
+        // mint 5k SCR
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt5k);
         expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
@@ -548,11 +543,10 @@ describe("SeedMinter", function () {
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(false);
-        await seedMinter.connect(secondAccount).claimWithPoints();
+        await seedMinter.connect(secondAccount).claimWithSCR();
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(1));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(1)
@@ -572,9 +566,9 @@ describe("SeedMinter", function () {
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithPoints();
-        // default points condition is 5k
-        // mint 5k points
+        await seedMinter.unpauseClaimWithSCR();
+        // default SCR amount condition is 5k
+        // mint 5k SCR
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt5k);
         expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
@@ -585,14 +579,14 @@ describe("SeedMinter", function () {
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(false);
-        await seedMinter.connect(secondAccount).claimWithPoints();
+        await seedMinter.connect(secondAccount).claimWithSCR();
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
 
         // claim again should revert
         await expect(
-          seedMinter.connect(secondAccount).claimWithPoints()
+          seedMinter.connect(secondAccount).claimWithSCR()
         ).to.be.revertedWith("You have claimed");
       });
 
@@ -606,9 +600,9 @@ describe("SeedMinter", function () {
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithPoints();
-        // default points condition is 5k
-        // mint 5k points
+        await seedMinter.unpauseClaimWithSCR();
+        // default SCR amount condition is 5k
+        // mint 5k SCR
         const bigInt5k = bigInt(5_000, await mockPoints.decimals());
         await mockPoints.mint(secondAccount.address, bigInt5k);
         expect(await mockPoints.balanceOf(secondAccount.address)).to.equal(
@@ -619,7 +613,7 @@ describe("SeedMinter", function () {
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(false);
-        await seedMinter.connect(secondAccount).claimWithPoints();
+        await seedMinter.connect(secondAccount).claimWithSCR();
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
@@ -640,7 +634,7 @@ describe("SeedMinter", function () {
     });
   });
 
-  describe("Function migrate", function () {
+  describe("Function airdrop", function () {
     describe("Validations", function () {
       it("Should revert when caller is not minter", async function () {
         const { seedMinter, secondAccount } = await loadFixture(
@@ -649,22 +643,19 @@ describe("SeedMinter", function () {
         const { addresses } = await loadFixture(addressArray);
 
         await expect(
-          seedMinter.connect(secondAccount).migrate(addresses)
+          seedMinter.connect(secondAccount).airdrop(addresses)
         ).to.be.revertedWith("Only minter can call this method");
       });
 
-      it("Should migrate success", async function () {
+      it("Should airdrop success", async function () {
         const { seed, seedMinter, owner } = await loadFixture(
           deploySeedMinterFixture
         );
         const { addresses } = await loadFixture(addressArray);
 
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(0));
+        // airdrop 3 nfts
+        await seedMinter.airdrop(addresses); // minted nft id: 0, 1, 2
 
-        // batch mint 3 nfts
-        await seedMinter.migrate(addresses); // minted nft id: 0, 1, 2
-
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
 
         for (let i = 0; i < addresses.length; i++) {
@@ -765,7 +756,6 @@ describe("SeedMinter", function () {
           .connect(secondAccount)
           .mint(ethers.getBigInt(2), { value: ethers.parseEther("4.5") }); // minted nft id: 1, 2
         //
-        // expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
         //
         expect(await seed.balanceOf(secondAccount.address)).to.equal(

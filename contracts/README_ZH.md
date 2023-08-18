@@ -18,7 +18,7 @@ $ REPORT_GAS=true npx hardhat test
 
 #### 3.1 (可选，部署到主网时不需要) 部署 `MockPoints` 合约
 
-`MockPoints` 合约用于模拟积分 token 合约，仅用于测试，部署到主网时不需要部署。
+`MockPoints` 合约用于模拟 SCR 合约，仅用于测试，部署到主网时不需要部署。
 
 ```bash
 $ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
@@ -26,7 +26,7 @@ $ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
 
 #### 3.2 部署 `Seed` 合约
 
-请先在 `scripts/1_deploy_seed.ts` #9 行修改和确认积分 token 合约的地址，然后执行部署命令：
+请先在 `scripts/1_deploy_seed.ts` #9 行修改和确认 SCR 合约的地址，然后执行部署命令：
 
 ```bash
 $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
@@ -39,7 +39,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 `Seed` 合约支持的管理方法：
 
 - `transferOwnership(address)` : 修改 owner 地址
-- `setPointsTokenAddress(address)` 设置积分 token 合约地址
+- `setSCR(address)` 设置 SCR 合约地址
 - `setMaxSupply(uint256)` : 设置 NFT 的最大供应量
 - `setURILevelRange(uint256[])` : 设置 NFT 的 URI 等级参数规则
 - `setBaseURI(string)` : 设置 NFT 的 base URI
@@ -48,15 +48,15 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 
 #### 3.3 部署 `SeedManger` 合约
 
-请先在 `scripts/2_deploy_seedminter.ts` #9 #11 #13 行修改和确认 `Seed` 合约的地址、积分 token 合约的地址和积分数量条件的值，然后执行部署命令：
+请先在 `scripts/2_deploy_seedminter.ts` #9 #11 #13 行修改和确认 `Seed` 合约的地址、SCR 合约的地址和 SCR 数量条件的值，然后执行部署命令：
 
 ```bash
 $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 ```
 
-!! 在 `scripts/2_deploy_seedminter.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `changeMinter(address)` 方法修改其 minter 的地址为 `SeedManger` 合约的地址 !!
+!! 在 `scripts/2_deploy_seedminter.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `transferOwnership(address)` 方法修改其 owner 的地址为 `SeedManger` 合约的地址 !!
 
-> 调用 `migrate(address[])` 方法迁移 SGN 到 SEED，一次最多可以传200个地址，如果需要迁移更多的地址，可以多次调用该方法。
+> 可以调用 `airdrop(address[])` 方法迁移 SGN 到 SEED，一次最多可以传200个地址，如果需要迁移更多的地址，可以多次调用该方法。
 
 > 开启白名单免费 claim 功能，需要调用：
 
@@ -65,11 +65,11 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 
 调用 `unpauseClaimWithWhiteList()` 关闭白名单免费 claim 功能。
 
-> 开启积分免费 claim 功能，需要调用：
+> 开启 SCR 免费 claim 功能，需要调用：
 
-- `unpauseClaimWithPoints()` : 开启积分免费 claim 功能
+- `unpauseClaimWithSCR()` : 开启 SCR 免费 claim 功能
 
-可以调用`setPointsTokenAddress(address)` 重新设置积分 token 合约地址，调用 `setPointsCountCondition(uint256)` 重新设置积分数量条件，调用 `pauseClaimWithPoints()` 关闭积分免费 claim 功能。
+可以调用`setSCR(address)` 设置积分 token 合约地址，调用 `setSCRAmountCondi(uint256)` 设置 SCR 数量条件，调用 `pauseClaimWithSCR()` 关闭 SCR 免费 claim 功能。
 
 > 开启付费 mint 功能，需要调用：
 
@@ -80,9 +80,16 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 
 > 其他方法：
 
-- `transferSeedOwnership(address)` : 修改 Seed 合约的 owner 地址
-- `setHasClaimed(address[]` : 设置已经 claim 过的地址
+- `setClaimed(address[]` : 设置已经 claim 过的地址
 - `changeMinter(address)` : 修改 minter 地址
+- `withdraw()` : 提取合约中的原生币到 owner 地址
+- `setSeedMaxSupply(uint256)` : 设置 `Seed` 合约的最大供应量
+- `setSeedSCR(address)` : 设置 `Seed` 合约的 SCR 地址
+- `setSeedBaseURI(string)` : 设置 `Seed` 合约的 base URI
+- `setSeedURILevelRange(uint256[])` : 设置 `Seed` 合约的 URI 等级参数规则
+- `pauseSeed()` : 暂停 `Seed` 合约
+- `unpauseSeed()` : 取消暂停 `Seed` 合约
+- `transferSeedOwnership(address)` : 修改 Seed 合约的 owner 地址
 
 ## 4. 升级 `SeedManager` 合约
 
@@ -94,8 +101,8 @@ $ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
 
 ```bash
 # 验证 `Seed` 合约
-$ npx hardhat verify --network mainnet [Seed 合约地址] [积分 token 合约地址]
+$ npx hardhat verify --network mainnet [Seed 合约地址] [SCR 合约地址]
 
 # 验证 `SeedManager` 合约
-$ npx hardhat verify --network mainnet []SeedManger 合约地址]
+$ npx hardhat verify --network mainnet [SeedManger 合约地址]
 ```

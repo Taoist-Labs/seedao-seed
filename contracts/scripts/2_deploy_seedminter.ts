@@ -8,19 +8,19 @@ async function main() {
   // TODO WARNING: check me when deploying !!!
   const seedContractAddress = deployed.getSeedContract();
   // TODO WARNING: check me when deploying !!!
-  const pointsTokenAddress = deployed.getMockPointsContract();
+  const SCRAddress = deployed.getMockPointsContract();
   // TODO WARNING: check me when deploying !!!
-  const pointsCountCondi_ = ethers.getBigInt(5_000);
+  const SCRAmountCondi = ethers.getBigInt(5_000);
 
   // deploy SeedManager contract
   console.log(
-    `Deploying [SeedManager] with params (${seedContractAddress}) ...`
+    `Deploying [SeedManager] with params (seed_: ${seedContractAddress}, scr_: ${SCRAddress}, scrAmountCondi_: ${SCRAmountCondi}) ...`
   );
   const SeedManager = await ethers.getContractFactory("SeedManager");
   const seedManager = await upgrades.deployProxy(SeedManager, [
     seedContractAddress,
-    pointsTokenAddress,
-    pointsCountCondi_,
+    SCRAddress,
+    SCRAmountCondi,
   ]);
   await seedManager.waitForDeployment();
 

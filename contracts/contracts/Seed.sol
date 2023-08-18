@@ -20,14 +20,14 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   string public baseURI;
   // URI level range rules
   uint256[] public uriLevelRanges;
-  // points token address
-  address public pointsToken;
+  // SCR contract address
+  address public scr;
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  constructor(address pointsToken_) ERC721("SeeDAO Seed NFT", "SEED") {
-    pointsToken = pointsToken_;
+  constructor(address scr_) ERC721("SeeDAO Seed NFT", "SEED") {
+    scr = scr_;
 
     // set default max supply
     maxSupply = 100_000;
@@ -59,14 +59,14 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     maxSupply = maxSupply_;
   }
 
-  /// @dev set points token contract address
-  function setPointsTokenAddress(address pointsToken_) external onlyOwner {
-    pointsToken = pointsToken_;
+  /// @dev set SCR contract address
+  function setSCR(address scr_) external onlyOwner {
+    scr = scr_;
   }
 
   /// @dev set NFT URI base, don't include the last "/"
   /// e.g：ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD
-  function setBaseURI(string memory baseURI_) public onlyOwner {
+  function setBaseURI(string memory baseURI_) external onlyOwner {
     baseURI = baseURI_;
   }
 
@@ -89,7 +89,7 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev get NFT URI, the method will return different NFT URI according to the the `tokenId` owner's amount of points, so as to realize Dynamic NFT
+  /// @dev get NFT URI, the method will return different NFT URI according to the the `tokenId` owner's amount of SCR, so as to realize Dynamic NFT
   /// e.g：
   /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_1.json
   /// ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD/1_2.json
@@ -120,13 +120,13 @@ contract Seed is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     }
   }
 
-  /// @dev get level by owner's points amount
+  /// @dev get level by owner's SCR amount
   function _parseLevel(uint256 tokenId) internal view returns (uint256) {
-    uint256 de = 10 ** IERC20Metadata(pointsToken).decimals();
-    uint256 points = IERC20(pointsToken).balanceOf(ownerOf(tokenId));
+    uint256 de = 10 ** IERC20Metadata(scr).decimals();
+    uint256 scrBalance = IERC20(scr).balanceOf(ownerOf(tokenId));
 
     for (uint i = 0; i < uriLevelRanges.length; i++) {
-      if (points < uriLevelRanges[i] * de) {
+      if (scrBalance < uriLevelRanges[i] * de) {
         return i + 1;
       }
     }

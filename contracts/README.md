@@ -18,7 +18,7 @@ $ REPORT_GAS=true npx hardhat test
 
 #### 3.1 (Optional, not required when deploying to mainnet) Deploy `MockPoints` contract
 
-`MockPoints` contract is used to simulate the points token contract, which is only used for testing and does not need to be deployed to the mainnet when deploying.
+`MockPoints` contract is used to simulate the SCR contract, which is only used for testing and does not need to be deployed to the mainnet when deploying.
 
 ```bash
 $ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
@@ -26,7 +26,7 @@ $ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
 
 #### 3.2 Deploy `Seed` contract
 
-Please modify and confirm the address of the points token contract in `scripts/1_deploy_seed.ts` #9 line, and then execute the deployment command:
+Please modify and confirm the address of the SCR contract in `scripts/1_deploy_seed.ts` #9 line, and then execute the deployment command:
 
 ```bash
 $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
@@ -39,7 +39,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 Management methods supported by `Seed` contract:
 
 - `transferOwnership(address)` : change owner address
-- `setPointsTokenAddress(address)` : set points token contract address
+- `setSCR(address)` : set SCR contract address
 - `setMaxSupply(uint256)` : set the maximum supply of NFT
 - `setURILevelRange(uint256[])` : set the URI level parameter rule of NFT
 - `setBaseURI(string)` : set the base URI of NFT
@@ -48,15 +48,15 @@ Management methods supported by `Seed` contract:
 
 #### 3.3 Deploy `SeedManger` contract
 
-Please modify and confirm the value of the `Seed` contract address, the points token address and the points count condition in `scripts/2_deploy_seedminter.ts` #9 #11 #13 line, and then execute the deployment command:
+Please modify and confirm the value of the `Seed` contract address, the SCR address and the SCR amount condition in `scripts/2_deploy_seedminter.ts` #9 #11 #13 line, and then execute the deployment command:
 
 ```bash
 $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 ```
 
-!! After the `SeedManger` contract is deployed successfully in the `scripts/2_deploy_seedminter.ts` script, the `changeMinter(address)` method of the `Seed` contract is called to modify its minter address to the address of the `SeedManger` contract !!
+!! After the `SeedManger` contract is deployed successfully in the `scripts/2_deploy_seedminter.ts` script, the `transferOwnership(address)` method of the `Seed` contract is called to modify its owner address to the address of the `SeedManger` contract !!
 
-> call `migrate(address[])` method to migrate SGN to SEED, up to 200 addresses can be passed at one time, if you need to migrate more addresses, you can call this method multiple times.
+> You can call `airdrop(address[])` method to migrate SGN to SEED, up to 200 addresses can be passed at one time, if you need to migrate more addresses, you can call this method multiple times.
 
 > To enable the whitelist free claim feature, you need to call:
 
@@ -65,11 +65,11 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 
 Call `unpauseClaimWithWhiteList()` to disable the whitelist free claim feature.
 
-> To enable the points free claim feature, you need to call:
+> To enable the SCR free claim feature, you need to call:
 
-- `unpauseClaimWithPoints()` : enable points claim feature
+- `unpauseClaimWithSCR()` : enable SCR free claim feature
 
-You can call `setPointsTokenAddress(address)` to set the points token contract address, call `setPointsCountCondition(uint256)` to set the points count condition, call `pauseClaimWithPoints()` to disable the points free claim feature.
+You can call `setSCR(address)` to set the SCR contract address, call `setSCRAmountCondi(uint256)` to set the SCR amount condition, call `pauseClaimWithSCR()` to disable the SCR free claim feature.
 
 > To enable payed mint feature, you need to call:
 
@@ -80,9 +80,16 @@ Call `pauseMint()` to disable the payed mint feature.
 
 > Other methods:
 
-- `transferSeedOwnership(address)` : change Seed contract's owner address
-- `setHasClaimed(address[]` : set has claimed addresses
+- `setClaimed(address[]` : set has claimed addresses
 - `changeMinter(address)` : change minter address
+- `withdraw()` : withdraw native token from contract to owner address
+- `setSeedMaxSupply(uint256)` : set `Seed` contract's max supply
+- `setSeedSCR(address)` : set `Seed` contract's SCR address
+- `setSeedBaseURI(string)` : set `Seed` contract's base URI
+- `setSeedURILevelRange(uint256[])` : set `Seed` contract's URI level range
+- `pauseSeed()` : pause `Seed` contract
+- `unpauseSeed()` : unpause `Seed` contract
+- `transferSeedOwnership(address)` : change Seed contract's owner address
 
 ## 4. Upgrade `SeedManager` contracts
 
@@ -94,7 +101,7 @@ $ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
 
 ```bash
 # verify `Seed` contract
-$ npx hardhat verify --network mainnet [Seed address] [Points Token address]
+$ npx hardhat verify --network mainnet [Seed address] [SCR address]
 
 # verify `SeedManager` contract
 $ npx hardhat verify --network mainnet [SeedManger address]

@@ -35,10 +35,10 @@ describe("Seed", function () {
   }
 
   describe("Deployment", function () {
-    it("Should set the right pointsToken", async function () {
+    it("Should set the right SCR", async function () {
       const { mockPoints, seed } = await loadFixture(deploySeedFixture);
 
-      expect(await seed.pointsToken()).to.equal(await mockPoints.getAddress());
+      expect(await seed.scr()).to.equal(await mockPoints.getAddress());
     });
 
     it("Should set the right maxSupply", async function () {
@@ -98,27 +98,23 @@ describe("Seed", function () {
     });
   });
 
-  describe("Function setPointsTokenAddress", function () {
+  describe("Function setSCR", function () {
     it("Should revert when caller is not owner", async function () {
       const { mockPoints, seed, secondAccount } = await loadFixture(
-          deploySeedFixture
+        deploySeedFixture
       );
 
       await expect(
-          seed.connect(secondAccount).setPointsTokenAddress(mockPoints)
+        seed.connect(secondAccount).setSCR(mockPoints)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("Should set points token address success", async function () {
-      const { mockPoints, seed } = await loadFixture(
-          deploySeedFixture
-      );
+      const { mockPoints, seed } = await loadFixture(deploySeedFixture);
 
-      expect(await seed.pointsToken()).to.equal(
-          await mockPoints.getAddress()
-      );
-      await seed.setPointsTokenAddress(ethers.ZeroAddress);
-      expect(await seed.pointsToken()).to.equal(ethers.ZeroAddress);
+      expect(await seed.scr()).to.equal(await mockPoints.getAddress());
+      await seed.setSCR(ethers.ZeroAddress);
+      expect(await seed.scr()).to.equal(ethers.ZeroAddress);
     });
   });
 
@@ -208,7 +204,6 @@ describe("Seed", function () {
 
         await seed.mint(secondAccount.address, ethers.getBigInt(0)); // minted nft id: 0
         //
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(1));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(1));
         //
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
@@ -221,7 +216,6 @@ describe("Seed", function () {
         await seed.mint(secondAccount.address, ethers.getBigInt(1)); // minted nft id: 1
         await seed.mint(secondAccount.address, ethers.getBigInt(2)); // minted nft id: 2
         //
-        //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(3));
         expect(await seed.totalSupply()).to.equal(ethers.getBigInt(3));
         //
         expect(await seed.balanceOf(secondAccount.address)).to.equal(

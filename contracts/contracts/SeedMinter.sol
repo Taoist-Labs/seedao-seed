@@ -20,22 +20,22 @@ contract SeedMinter is
 
   // seed NFT sale price of native token
   uint256 public price;
-  // points token address
-  address public pointsToken;
-  // points token amount condition of free claim
-  uint256 public pointsCountCondi;
+  // SCR contract address
+  address public scr;
+  // SCR amount condition of free claim
+  uint256 public scrAmountCondi;
   // store the merkle root hash of whitelist
   mapping(uint256 => bytes32) public whiteListRootHashes;
   // user claimed flag, true means claimed; user can only
-  // free claim once whenever the claim method is whitelist or points
+  // free claim once whenever the claim method is whitelist or SCR
   mapping(address => bool) public claimed;
 
   // flag of payed mint feature gate
   bool public onMint;
   // flag of free claim with white list feature gate
   bool public onClaimWithWhiteList;
-  // flag of free claim with points feature gate
-  bool public onClaimWithPoints;
+  // flag of free claim with SCR feature gate
+  bool public onClaimWithSCR;
 
   // NFT minter address
   address public minter;
@@ -50,9 +50,9 @@ contract SeedMinter is
 
   event ClaimWithWhiteListDisabled(address account);
 
-  event ClaimWithPointsEnabled(address account);
+  event ClaimWithSCREnabled(address account);
 
-  event ClaimWithPointsDisabled(address account);
+  event ClaimWithSCRDisabled(address account);
 
   event MinterChanged(address indexed oldMinter, address indexed newMinter);
 
@@ -82,9 +82,9 @@ contract SeedMinter is
     _;
   }
 
-  /// @dev used to restrict methods that only can call when claim with points feature gate is open
-  modifier enableClaimWithPoints() {
-    require(onClaimWithPoints, "Claim with point is not open");
+  /// @dev used to restrict methods that only can call when claim with SCR feature gate is open
+  modifier enableClaimWithSCR() {
+    require(onClaimWithSCR, "Claim with SCR is not open");
     _;
   }
 
@@ -98,21 +98,19 @@ contract SeedMinter is
 
   function initialize(
     address seed_,
-    address pointsToken_,
-    uint256 pointsCountCondi_
+    address scr_,
+    uint256 scrAmountCondi_
   ) public initializer {
     seed = seed_;
 
-    pointsToken = pointsToken_;
-    pointsCountCondi =
-      pointsCountCondi_ *
-      10 ** IERC20Metadata(pointsToken_).decimals();
+    scr = scr_;
+    scrAmountCondi = scrAmountCondi_ * 10 ** IERC20Metadata(scr_).decimals();
 
     // set default minter
     minter = msg.sender;
     // `onMint` is disabled by default
     // `onClaimWithWhiteList` is disabled by default
-    // `onClaimWithPoints` is disabled by default
+    // `onClaimWithSCR` is disabled by default
 
     __Ownable_init();
     __ReentrancyGuard_init();
@@ -137,22 +135,17 @@ contract SeedMinter is
     _mint(_msgSender());
   }
 
-  /// claim for free with points
-  /// `enableClaimWithPoints` modifier is used to restrict methods that only can call when claim with points feature gate is open
-  /// `noClaimed` modifier is used to restrict that each user can only free claim once, whether it is through the whitelist condition or the points condition, they can only free claim for free once
+  /// claim for free with SCR
+  /// `enableClaimWithSCR` modifier is used to restrict methods that only can call when claim with SCR feature gate is open
+  /// `noClaimed` modifier is used to restrict that each user can only free claim once, whether it is through the whitelist condition or the SCR condition, they can only free claim for free once
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
-  function claimWithPoints()
-    external
-    enableClaimWithPoints
-    noClaimed
-    nonReentrant
-  {
-    require(pointsToken != address(0), "Points token address is not set");
+  function claimWithSCR() external enableClaimWithSCR noClaimed nonReentrant {
+    require(scr != address(0), "SCR address is not set");
 
-    uint256 points = IERC20(pointsToken).balanceOf(_msgSender());
+    uint256 scrBalance = IERC20(scr).balanceOf(_msgSender());
     require(
-      pointsCountCondi != 0 && points >= pointsCountCondi,
-      "You don't have enough points"
+      scrAmountCondi != 0 && scrBalance >= scrAmountCondi,
+      "You don't have enough SCR"
     );
 
     // set claimed flag to true
@@ -161,8 +154,8 @@ contract SeedMinter is
     _mint(_msgSender());
   }
 
-  /// migrate from SGN to SEED, only minter can call, need to specify the receiving addresses, can be used for batch airdrop
-  function migrate(address[] calldata to) external onlyMinter {
+  /// used for airdrop, only minter can call, need to specify the receiving addresses
+  function airdrop(address[] calldata to) external onlyMinter {
     for (uint256 i = 0; i < to.length; i++) {
       _mint(to[i]);
     }
@@ -225,21 +218,17 @@ contract SeedMinter is
     emit MinterChanged(oldMinter, minter_);
   }
 
-  /// @dev set points token contract address
-  function setPointsTokenAddress(address pointsToken_) external onlyOwner {
-    pointsToken = pointsToken_;
+  /// @dev set SCR contract address
+  function setSCR(address scr_) external onlyOwner {
+    scr = scr_;
   }
 
-  /// @dev set the points count condition for free claim NFT
-  /// for example: if the condition is `50_000` points, then pass in the integer `50_000`
-  function setPointsCountCondition(
-    uint256 pointsCountCondi_
-  ) external onlyOwner {
-    require(pointsToken != address(0), "Points token address is not set");
+  /// @dev set the SCR amount condition for free claim NFT
+  /// for example: if the condition is `50_000` SCR, then pass in the integer `50_000`
+  function setSCRAmountCondi(uint256 scrAmountCondi_) external onlyOwner {
+    require(scr != address(0), "SCR address is not set");
 
-    pointsCountCondi =
-      pointsCountCondi_ *
-      10 ** IERC20Metadata(pointsToken).decimals();
+    scrAmountCondi = scrAmountCondi_ * 10 ** IERC20Metadata(scr).decimals();
   }
 
   /// @dev set whitelist, need to pass in whitelist ID and Merkle Tree Root Hash when calling
@@ -252,8 +241,8 @@ contract SeedMinter is
     whiteListRootHashes[whiteListId] = rootHash;
   }
 
-  /// @dev set has claimed addresses
-  function setHasClaimed(address[] calldata addr) external onlyOwner {
+  /// @dev set claimed addresses
+  function setClaimed(address[] calldata addr) external onlyOwner {
     for (uint256 i = 0; i < addr.length; i++) {
       claimed[addr[i]] = true;
     }
@@ -291,16 +280,16 @@ contract SeedMinter is
     emit ClaimWithWhiteListEnabled(_msgSender());
   }
 
-  /// @dev pause free claim with points feature, after paused, can't free claim new NFT with points
-  function pauseClaimWithPoints() public onlyOwner {
-    onClaimWithPoints = false;
-    emit ClaimWithPointsDisabled(_msgSender());
+  /// @dev pause free claim with SCR feature, after paused, can't free claim new NFT with SCR
+  function pauseClaimWithSCR() public onlyOwner {
+    onClaimWithSCR = false;
+    emit ClaimWithSCRDisabled(_msgSender());
   }
 
-  /// @dev unpause free claim with points feature, after unpaused, can free claim new NFT with points
-  function unpauseClaimWithPoints() public onlyOwner {
-    onClaimWithPoints = true;
-    emit ClaimWithPointsEnabled(_msgSender());
+  /// @dev unpause free claim with SCR feature, after unpaused, can free claim new NFT with SCR
+  function unpauseClaimWithSCR() public onlyOwner {
+    onClaimWithSCR = true;
+    emit ClaimWithSCREnabled(_msgSender());
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------

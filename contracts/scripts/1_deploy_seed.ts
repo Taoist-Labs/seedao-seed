@@ -6,10 +6,10 @@ async function main() {
   console.log("current signer: ", signer.address);
 
   // TODO WARNING: check me when deploying !!!
-  const pointsTokenAddress = deployed.getMockPointsContract();
+  const SCRAddress = deployed.getMockPointsContract();
 
-  console.log(`Deploying [Seed] with params (${pointsTokenAddress}) ...`);
-  const seed = await ethers.deployContract("Seed", [pointsTokenAddress]);
+  console.log(`Deploying [Seed] with params (scr_: ${SCRAddress}) ...`);
+  const seed = await ethers.deployContract("Seed", [SCRAddress]);
   await seed.waitForDeployment();
 
   deployed.setSeedContract(seed.target.toString());
