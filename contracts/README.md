@@ -1,6 +1,6 @@
 # SEED Contract
 
-[Seed Now, See the DAO](https://seed.seedao.tech/)
+[Seed Now, See the DAO](https://seed.seedao.xyz/)
 
 ## 1. Prepare for development and deployment
 

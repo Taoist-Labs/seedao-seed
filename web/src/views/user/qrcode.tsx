@@ -14,7 +14,7 @@ export default function QrcodeBox({ imgCode, handleClose }: IProps) {
       <QRCodeSVG
         width={150}
         height={150}
-        value={`https://seed.seedao.tech/#/share?img=${imgCode}`}
+        value={`https://seed.seedao.xyz/#/share?img=${imgCode}`}
       />
       <div className="tip">{t("user.openWechat")}</div>
       <div className="close">
