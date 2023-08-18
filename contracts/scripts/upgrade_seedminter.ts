@@ -2,16 +2,16 @@ import { ethers, upgrades } from "hardhat";
 import deployed from "./deployed";
 
 async function main() {
-  console.log("Upgrading [SeedManager]...");
+  console.log("Upgrading [SeedMinter]...");
 
-  const SeedManager = await ethers.getContractFactory("SeedManager");
-  const seedManager = await upgrades.upgradeProxy(
+  const SeedMinter = await ethers.getContractFactory("SeedMinter");
+  const seedMinter = await upgrades.upgradeProxy(
     deployed.getSeedMinterContract(),
-    SeedManager
+      SeedMinter
   );
-  await seedManager.waitForDeployment();
+  await seedMinter.waitForDeployment();
 
-  console.log("[SeedManager] upgraded");
+  console.log("[SeedMinter] upgraded");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

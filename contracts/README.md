@@ -91,7 +91,7 @@ Call `pauseMint()` to disable the payed mint feature.
 - `unpauseSeed()` : unpause `Seed` contract
 - `transferSeedOwnership(address)` : change Seed contract's owner address
 
-## 4. Upgrade `SeedManager` contracts
+## 4. Upgrade `SeedMinter` contracts
 
 ```bash
 $ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
@@ -103,6 +103,6 @@ $ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
 # verify `Seed` contract
 $ npx hardhat verify --network mainnet [Seed address] [SCR address]
 
-# verify `SeedManager` contract
-$ npx hardhat verify --network mainnet [SeedManger address]
+# verify `SeedMinter` contract
+$ npx hardhat verify --network mainnet [SeedMinter address]
 ```

@@ -12,28 +12,28 @@ async function main() {
   // TODO WARNING: check me when deploying !!!
   const SCRAmountCondi = ethers.getBigInt(5_000);
 
-  // deploy SeedManager contract
+  // deploy SeedMinter contract
   console.log(
-    `Deploying [SeedManager] with params (seed_: ${seedContractAddress}, scr_: ${SCRAddress}, scrAmountCondi_: ${SCRAmountCondi}) ...`
+    `Deploying [SeedMinter] with params (seed_: ${seedContractAddress}, scr_: ${SCRAddress}, scrAmountCondi_: ${SCRAmountCondi}) ...`
   );
-  const SeedManager = await ethers.getContractFactory("SeedManager");
-  const seedManager = await upgrades.deployProxy(SeedManager, [
+  const SeedMinter = await ethers.getContractFactory("SeedMinter");
+  const seedMinter = await upgrades.deployProxy(SeedMinter, [
     seedContractAddress,
     SCRAddress,
     SCRAmountCondi,
   ]);
-  await seedManager.waitForDeployment();
+  await seedMinter.waitForDeployment();
 
-  deployed.setSeedMinterContract(seedManager.target.toString());
-  console.log(`[SeedManager] deployed to ${seedManager.target}`);
+  deployed.setSeedMinterContract(seedMinter.target.toString());
+  console.log(`[SeedMinter] deployed to ${seedMinter.target}`);
 
-  // transfer Seed's owner to SeedManager contract
+  // transfer Seed's ownership to SeedMinter contract
   console.log(
-    `Transfer [Seed]'s owner to [SeedManager]@${seedManager.target} ...`
+    `Transfer [Seed]'s ownership to [SeedMinter]@${seedMinter.target} ...`
   );
   const seed = await ethers.getContractAt("Seed", deployed.getSeedContract());
-  await seed.transferOwnership(seedManager.target.toString());
-  console.log("[Seed]'s owner transferred");
+  await seed.transferOwnership(seedMinter.target.toString());
+  console.log("[Seed]'s ownership transferred");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

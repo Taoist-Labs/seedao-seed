@@ -91,7 +91,7 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 - `unpauseSeed()` : 取消暂停 `Seed` 合约
 - `transferSeedOwnership(address)` : 修改 Seed 合约的 owner 地址
 
-## 4. 升级 `SeedManager` 合约
+## 4. 升级 `SeedMinter` 合约
 
 ```bash
 $ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
@@ -103,6 +103,6 @@ $ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
 # 验证 `Seed` 合约
 $ npx hardhat verify --network mainnet [Seed 合约地址] [SCR 合约地址]
 
-# 验证 `SeedManager` 合约
-$ npx hardhat verify --network mainnet [SeedManger 合约地址]
+# 验证 `SeedMinter` 合约
+$ npx hardhat verify --network mainnet [SeedMinter 合约地址]
 ```
