@@ -25,7 +25,7 @@ describe("SeedMinter", function () {
       ethers.getBigInt(5000),
     ])) as unknown as SeedMinter;
 
-    // transfer Seed's owner to SeedManager contract
+    // transfer Seed's owner to SeedMinter contract
     await seed.transferOwnership(seedMinter.target.toString());
 
     return {
