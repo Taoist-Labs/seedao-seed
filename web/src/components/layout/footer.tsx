@@ -1,13 +1,35 @@
 import styled from "@emotion/styled";
+import { CenterBox } from "style";
 
-export default function Footer() {
-  return <FooterStyle>footer</FooterStyle>;
+type props = {
+  color?: string;
+};
+
+export default function Footer({ color }: props) {
+  return (
+    <FooterStyle color={color}>
+      <FooterCenter>
+        <span>© 2023 SeeDAO. All Rights Reserved.</span>
+        <span>
+          Powered with <span className="heart">❤️</span> by SeeDAO Seed Team.
+        </span>
+      </FooterCenter>
+    </FooterStyle>
+  );
 }
 
-const FooterStyle = styled.footer`
+const FooterStyle = styled.footer<props>`
   height: 60px;
   line-height: 60px;
-  border-top: 1px solid #ddd;
-  text-align: center;
   box-sizing: border-box;
+  background-color: ${(props) => props.color || "#FBF5EF"};
+  font-size: 12px;
+`;
+
+const FooterCenter = styled(CenterBox)`
+  display: flex;
+  justify-content: space-between;
+  .heart {
+    color: darkred;
+  }
 `;
