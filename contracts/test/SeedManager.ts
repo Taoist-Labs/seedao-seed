@@ -66,8 +66,8 @@ describe("SeedMinter", function () {
     return { rootHash, proofOfSecondAccount, proofOfFakeAccount };
   }
 
-  // generate batch mint param TODO rename me
-  async function fakeBatchMintParam() {
+  // generate address array
+  async function addressArray() {
     const [owner, secondAccount, thirdAccount] = await ethers.getSigners();
 
     const addresses = [
@@ -260,7 +260,7 @@ describe("SeedMinter", function () {
         deploySeedMinterFixture
       );
 
-      const { addresses } = await loadFixture(fakeBatchMintParam);
+      const { addresses } = await loadFixture(addressArray);
 
       await expect(
         seedMinter.connect(secondAccount).setHasClaimed(addresses)
@@ -270,7 +270,7 @@ describe("SeedMinter", function () {
     it("Should call setHasClaimed success", async function () {
       const { seedMinter } = await loadFixture(deploySeedMinterFixture);
 
-      const { addresses } = await loadFixture(fakeBatchMintParam);
+      const { addresses } = await loadFixture(addressArray);
       await seedMinter.setHasClaimed(addresses);
 
       expect(await seedMinter.claimed(addresses[0])).to.equal(true);
@@ -395,10 +395,9 @@ describe("SeedMinter", function () {
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(1)
         );
-        // TODO FIXME
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
-        // ).to.equal(ethers.getBigInt(0));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
       });
 
       it("Should revert when has claimed", async function () {
@@ -558,10 +557,9 @@ describe("SeedMinter", function () {
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(1)
         );
-        // TODO FIXME
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
-        // ).to.equal(ethers.getBigInt(0));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
       });
 
       it("Should revert when has claimed", async function () {
@@ -648,7 +646,7 @@ describe("SeedMinter", function () {
         const { seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture
         );
-        const { addresses } = await loadFixture(fakeBatchMintParam);
+        const { addresses } = await loadFixture(addressArray);
 
         await expect(
           seedMinter.connect(secondAccount).migrate(addresses)
@@ -659,7 +657,7 @@ describe("SeedMinter", function () {
         const { seed, seedMinter, owner } = await loadFixture(
           deploySeedMinterFixture
         );
-        const { addresses } = await loadFixture(fakeBatchMintParam);
+        const { addresses } = await loadFixture(addressArray);
 
         //expect(await seed.tokenIndex()).to.equal(ethers.getBigInt(0));
 
@@ -759,10 +757,9 @@ describe("SeedMinter", function () {
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(1)
         );
-        // TODO FIXME
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
-        // ).to.equal(ethers.getBigInt(0));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
 
         await seedMinter
           .connect(secondAccount)
@@ -774,16 +771,15 @@ describe("SeedMinter", function () {
         expect(await seed.balanceOf(secondAccount.address)).to.equal(
           ethers.getBigInt(3)
         );
-        // TODO FIXME
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
-        // ).to.equal(ethers.getBigInt(0));
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 1)
-        // ).to.equal(ethers.getBigInt(1));
-        // expect(
-        //   await seed.tokenOfOwnerByIndex(secondAccount.address, 2)
-        // ).to.equal(ethers.getBigInt(2));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 0)
+        ).to.equal(ethers.getBigInt(0));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 1)
+        ).to.equal(ethers.getBigInt(1));
+        expect(
+          await seed.tokenOfOwnerByIndex(secondAccount.address, 2)
+        ).to.equal(ethers.getBigInt(2));
       });
 
       it("Should refund the extra native token", async function () {

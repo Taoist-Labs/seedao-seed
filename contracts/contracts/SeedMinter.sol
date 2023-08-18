@@ -130,6 +130,8 @@ contract SeedMinter is
       _verifyWhiteList(whiteListId, proof, _msgSender()),
       "You are not in the white list"
     );
+
+    // set claimed flag to true
     claimed[_msgSender()] = true;
 
     _mint(_msgSender());
@@ -152,6 +154,8 @@ contract SeedMinter is
       pointsCountCondi != 0 && points >= pointsCountCondi,
       "You don't have enough points"
     );
+
+    // set claimed flag to true
     claimed[_msgSender()] = true;
 
     _mint(_msgSender());
@@ -164,7 +168,7 @@ contract SeedMinter is
     }
   }
 
-  /// @dev direct buy SEED with payment, support buy multiple NFTs at once
+  /// @dev buy SEED directly with payment, supporting buy multiple NFTs at once
   /// `payable` modifier indicates that the current method can receive native token
   /// `enableMint` modifier is used to restrict methods that only can call when payed mint feature gate is open
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
