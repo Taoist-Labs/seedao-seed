@@ -1,6 +1,6 @@
 # SEED Contract
 
-[Seed Now, See the DAO](https://seed.seedao.tech/)
+[Seed Now, See the DAO](https://seed.seedao.xyz/)
 
 ## 1. Prepare for development and deployment
 
@@ -94,8 +94,8 @@ $ npx hardhat run --network mainnet scripts/upgrade_seedminter.ts
 
 ```bash
 # verify `Seed` contract
-$ npx hardhat verify --network mainnet [Seed 合约地址] [积分 token 合约地址]
+$ npx hardhat verify --network mainnet [Seed address] [Points Token address]
 
 # verify `SeedManager` contract
-$ npx hardhat verify --network mainnet []SeedManger 合约地址]
+$ npx hardhat verify --network mainnet [SeedManger address]
 ```
