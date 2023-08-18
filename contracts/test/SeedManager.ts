@@ -801,8 +801,182 @@ describe("SeedMinter", function () {
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
+  describe("Function setSeedMaxSupply", function () {
+    const maxSupply = ethers.getBigInt(1000);
+    describe("Validations", function () {
+      it("Should revert when caller is not owner", async function () {
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await expect(
+          seedMinter.connect(secondAccount).setSeedMaxSupply(maxSupply)
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
+
+      it("Should call setSeedMaxSupply success", async function () {
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await seedMinter.setSeedMaxSupply(maxSupply);
+
+        expect(await seed.maxSupply()).to.equal(maxSupply);
+      });
+    });
+  });
+
+  describe("Function setSeedSCR", function () {
+    const scr = "0x0000000000000000000000000000000000000001";
+
+    describe("Validations", function () {
+      it("Should revert when caller is not owner", async function () {
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await expect(
+          seedMinter.connect(secondAccount).setSeedSCR(scr)
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
+
+      it("Should call setSeedMaxSupply success", async function () {
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await seedMinter.setSeedSCR(scr);
+
+        expect(await seed.scr()).to.equal(scr);
+      });
+    });
+  });
+
+  describe("Function setSeedBaseURI", function () {
+    const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
+
+    describe("Validations", function () {
+      it("Should revert when caller is not owner", async function () {
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await expect(
+          seedMinter.connect(secondAccount).setSeedBaseURI(baseURI)
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
+
+      it("Should call setSeedMaxSupply success", async function () {
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await seedMinter.setSeedBaseURI(baseURI);
+
+        expect(await seed.baseURI()).to.equal(baseURI);
+      });
+    });
+  });
+
+  describe("Function setSeedURILevelRange", function () {
+    const levelRange = [
+      ethers.getBigInt(100),
+      ethers.getBigInt(1_000),
+      ethers.getBigInt(10_000),
+      ethers.getBigInt(100_000),
+    ];
+
+    describe("Validations", function () {
+      it("Should revert when caller is not owner", async function () {
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await expect(
+          seedMinter.connect(secondAccount).setSeedURILevelRange(levelRange)
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
+
+      it("Should call setSeedMaxSupply success", async function () {
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await seedMinter.setSeedURILevelRange(levelRange);
+
+        expect(await seed.uriLevelRanges(0)).to.equal(levelRange[0]);
+        expect(await seed.uriLevelRanges(1)).to.equal(levelRange[1]);
+        expect(await seed.uriLevelRanges(2)).to.equal(levelRange[2]);
+        expect(await seed.uriLevelRanges(3)).to.equal(levelRange[3]);
+        await expect(seed.uriLevelRanges(4)).to.be.revertedWithoutReason();
+      });
+    });
+  });
+
+  describe("Function pauseSeed", function () {
+    describe("Validations", function () {
+      it("Should revert when caller is not owner", async function () {
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await expect(
+          seedMinter.connect(secondAccount).pauseSeed()
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
+
+      it("Should call setSeedMaxSupply success", async function () {
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+        expect(await seed.paused()).to.equal(true);
+        await seedMinter.unpauseSeed();
+        expect(await seed.paused()).to.equal(false);
+
+        await seedMinter.pauseSeed();
+        expect(await seed.paused()).to.equal(true);
+      });
+    });
+  });
+
+  describe("Function unpauseSeed", function () {
+    describe("Validations", function () {
+      it("Should revert when caller is not owner", async function () {
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await expect(
+          seedMinter.connect(secondAccount).unpauseSeed()
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
+
+      it("Should call setSeedMaxSupply success", async function () {
+        const { seed, seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        expect(await seed.paused()).to.equal(true);
+        await seedMinter.unpauseSeed();
+        expect(await seed.paused()).to.equal(false);
+      });
+    });
+  });
+
   describe("Function transferSeedOwnership", function () {
     describe("Validations", function () {
+      it("Should revert when caller is not owner", async function () {
+        const { seedMinter, secondAccount } = await loadFixture(
+          deploySeedMinterFixture
+        );
+
+        await expect(
+          seedMinter
+            .connect(secondAccount)
+            .transferSeedOwnership("0x0000000000000000000000000000000000000001")
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+      });
+
       it("Should transferSeedOwnership success", async function () {
         const { seed, seedMinter, secondAccount } = await loadFixture(
           deploySeedMinterFixture

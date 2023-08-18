@@ -293,6 +293,39 @@ contract SeedMinter is
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
+  // ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+  /// @dev set `Seed` contract's max supply
+  function setSeedMaxSupply(uint256 maxSupply) external onlyOwner {
+    ISeed(seed).setMaxSupply(maxSupply);
+  }
+
+  /// @dev set `Seed` contract's SCR contract address
+  function setSeedSCR(address scr_) external onlyOwner {
+    ISeed(seed).setSCR(scr_);
+  }
+
+  /// @dev set `Seed` contract's base URI
+  function setSeedBaseURI(string memory baseURI) external onlyOwner {
+    ISeed(seed).setBaseURI(baseURI);
+  }
+
+  /// @dev set `Seed` contract's URI level range rules
+  function setSeedURILevelRange(
+    uint256[] calldata uriLevelRanges
+  ) external onlyOwner {
+    ISeed(seed).setURILevelRange(uriLevelRanges);
+  }
+
+  /// @dev pause `Seed` contract
+  function pauseSeed() external onlyOwner {
+    ISeed(seed).pause();
+  }
+
+  /// @dev unpause `Seed` contract
+  function unpauseSeed() external onlyOwner {
+    ISeed(seed).unpause();
+  }
 
   /// @dev transfer `Seed` contract's ownership
   function transferSeedOwnership(address newOwner) external onlyOwner {
