@@ -108,11 +108,11 @@ describe("SeedMinter", function () {
       expect(await seedMinter.minter()).to.equal(owner.address);
     });
 
-    it("Should disable `onMint` `onClaimWithWhiteList` `onClaimWithSCR` default", async function () {
+    it("Should disable `onMint` `onClaimWithWhitelist` `onClaimWithSCR` default", async function () {
       const { seedMinter, owner } = await loadFixture(deploySeedMinterFixture);
 
       expect(await seedMinter.onMint()).to.equal(false);
-      expect(await seedMinter.onClaimWithWhiteList()).to.equal(false);
+      expect(await seedMinter.onClaimWithWhitelist()).to.equal(false);
       expect(await seedMinter.onClaimWithSCR()).to.equal(false);
     });
 
@@ -205,7 +205,7 @@ describe("SeedMinter", function () {
       await seedMinter.setSCR(ethers.ZeroAddress);
 
       await expect(seedMinter.setSCRAmountCondi(Big5k)).to.be.revertedWith(
-        "SCR address is not set"
+        "SCR is not set"
       );
     });
 
@@ -224,8 +224,8 @@ describe("SeedMinter", function () {
     });
   });
 
-  describe("Function setWhiteList", function () {
-    const whiteListId = ethers.getBigInt(1);
+  describe("Function setWhitelist", function () {
+    const whitelistId = ethers.getBigInt(1);
     const rootHash = ethers.randomBytes(32);
 
     it("Should revert when caller is not owner", async function () {
@@ -234,7 +234,7 @@ describe("SeedMinter", function () {
       );
 
       await expect(
-        seedMinter.connect(secondAccount).setWhiteList(whiteListId, rootHash)
+        seedMinter.connect(secondAccount).setWhitelist(whitelistId, rootHash)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
@@ -243,8 +243,8 @@ describe("SeedMinter", function () {
 
       // TODO FIXME
       // expect(await seedMinter.whiteListRootHashes(whiteListId)).to.equal(ethers.hexlify(ethers.randomBytes(0)));
-      await seedMinter.setWhiteList(whiteListId, rootHash);
-      expect(await seedMinter.whiteListRootHashes(whiteListId)).to.equal(
+      await seedMinter.setWhitelist(whitelistId, rootHash);
+      expect(await seedMinter.whitelistRootHashes(whitelistId)).to.equal(
         ethers.hexlify(rootHash)
       );
     });
@@ -286,17 +286,17 @@ describe("SeedMinter", function () {
 
       await seedMinter.setClaimed([secondAccount.address]);
 
-      // claim with white list will revert
-      await seedMinter.unpauseClaimWithWhiteList();
-      const whiteListId = ethers.getBigInt(1);
+      // claim with whitelist will revert
+      await seedMinter.unpauseClaimWithWhitelist();
+      const whitelistId = ethers.getBigInt(1);
       const { rootHash, proofOfSecondAccount } = await loadFixture(
         generateMerkleTreeAndProof
       );
-      await seedMinter.setWhiteList(whiteListId, rootHash);
+      await seedMinter.setWhitelist(whitelistId, rootHash);
       await expect(
         seedMinter
           .connect(secondAccount)
-          .claimWithWhiteList(whiteListId, proofOfSecondAccount)
+          .claimWithWhitelist(whitelistId, proofOfSecondAccount)
       ).to.be.revertedWith("You have claimed");
       // claim with SCR will revert
       await seedMinter.unpauseClaimWithSCR();
@@ -334,33 +334,33 @@ describe("SeedMinter", function () {
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  describe("Function claimWithWhiteList", function () {
-    const whiteListId = ethers.getBigInt(1);
+  describe("Function claimWithWhitelist", function () {
+    const whitelistId = ethers.getBigInt(1);
 
     describe("Validations", function () {
-      it("Should revert when not enableClaimWithWhiteList", async function () {
+      it("Should revert when not enableClaimWithWhitelist", async function () {
         const { seedMinter } = await loadFixture(deploySeedMinterFixture);
         const { proofOfSecondAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
 
         await expect(
-          seedMinter.claimWithWhiteList(whiteListId, proofOfSecondAccount)
-        ).to.be.revertedWith("Claim with white list is not open");
+          seedMinter.claimWithWhitelist(whitelistId, proofOfSecondAccount)
+        ).to.be.revertedWith("Claim with whitelist is not open");
       });
 
-      it("Should revert when not int whiteList", async function () {
+      it("Should revert when not int whitelist", async function () {
         const { seedMinter } = await loadFixture(deploySeedMinterFixture);
         const { proofOfFakeAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithWhiteList();
+        await seedMinter.unpauseClaimWithWhitelist();
 
         await expect(
-          seedMinter.claimWithWhiteList(whiteListId, proofOfFakeAccount)
-        ).to.be.revertedWith("You are not in the white list");
+          seedMinter.claimWithWhitelist(whitelistId, proofOfFakeAccount)
+        ).to.be.revertedWith("You are not in the whitelist");
       });
 
       it("Should claim success", async function () {
@@ -372,9 +372,9 @@ describe("SeedMinter", function () {
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithWhiteList();
-        // set white list
-        await seedMinter.setWhiteList(whiteListId, rootHash);
+        await seedMinter.unpauseClaimWithWhitelist();
+        // set whitelist
+        await seedMinter.setWhitelist(whitelistId, rootHash);
 
         // claim
         expect(
@@ -382,7 +382,7 @@ describe("SeedMinter", function () {
         ).to.equal(false);
         await seedMinter
           .connect(secondAccount)
-          .claimWithWhiteList(whiteListId, proofOfSecondAccount);
+          .claimWithWhitelist(whitelistId, proofOfSecondAccount);
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
@@ -404,9 +404,9 @@ describe("SeedMinter", function () {
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithWhiteList();
-        // set white list
-        await seedMinter.setWhiteList(whiteListId, rootHash);
+        await seedMinter.unpauseClaimWithWhitelist();
+        // set whitelist
+        await seedMinter.setWhitelist(whitelistId, rootHash);
 
         // claim
         expect(
@@ -414,7 +414,7 @@ describe("SeedMinter", function () {
         ).to.equal(false);
         await seedMinter
           .connect(secondAccount)
-          .claimWithWhiteList(whiteListId, proofOfSecondAccount);
+          .claimWithWhitelist(whitelistId, proofOfSecondAccount);
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
@@ -423,7 +423,7 @@ describe("SeedMinter", function () {
         await expect(
           seedMinter
             .connect(secondAccount)
-            .claimWithWhiteList(whiteListId, proofOfSecondAccount)
+            .claimWithWhitelist(whitelistId, proofOfSecondAccount)
         ).to.be.revertedWith("You have claimed");
       });
 
@@ -436,9 +436,9 @@ describe("SeedMinter", function () {
         );
 
         // enable claim
-        await seedMinter.unpauseClaimWithWhiteList();
-        // set white list
-        await seedMinter.setWhiteList(whiteListId, rootHash);
+        await seedMinter.unpauseClaimWithWhitelist();
+        // set whitelist
+        await seedMinter.setWhitelist(whitelistId, rootHash);
 
         // claim
         expect(
@@ -446,7 +446,7 @@ describe("SeedMinter", function () {
         ).to.equal(false);
         await seedMinter
           .connect(secondAccount)
-          .claimWithWhiteList(whiteListId, proofOfSecondAccount);
+          .claimWithWhitelist(whitelistId, proofOfSecondAccount);
         expect(
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
@@ -486,7 +486,7 @@ describe("SeedMinter", function () {
 
         await expect(
           seedMinter.connect(secondAccount).claimWithSCR()
-        ).to.be.revertedWith("SCR address is not set");
+        ).to.be.revertedWith("SCR is not set");
       });
 
       it("Should revert when not have enough SCR", async function () {
@@ -618,17 +618,17 @@ describe("SeedMinter", function () {
           await seedMinter.connect(secondAccount).claimed(secondAccount.address)
         ).to.equal(true);
 
-        // claim with white list will revert
-        await seedMinter.unpauseClaimWithWhiteList();
-        const whiteListId = ethers.getBigInt(1);
+        // claim with whitelist will revert
+        await seedMinter.unpauseClaimWithWhitelist();
+        const whitelistId = ethers.getBigInt(1);
         const { rootHash, proofOfSecondAccount } = await loadFixture(
           generateMerkleTreeAndProof
         );
-        await seedMinter.setWhiteList(whiteListId, rootHash);
+        await seedMinter.setWhitelist(whitelistId, rootHash);
         await expect(
           seedMinter
             .connect(secondAccount)
-            .claimWithWhiteList(whiteListId, proofOfSecondAccount)
+            .claimWithWhitelist(whitelistId, proofOfSecondAccount)
         ).to.be.revertedWith("You have claimed");
       });
     });

@@ -40,7 +40,7 @@
         "type": "address"
       }
     ],
-    "name": "ClaimWithWhiteListDisabled",
+    "name": "ClaimWithWhitelistDisabled",
     "type": "event"
   },
   {
@@ -53,7 +53,7 @@
         "type": "address"
       }
     ],
-    "name": "ClaimWithWhiteListEnabled",
+    "name": "ClaimWithWhitelistEnabled",
     "type": "event"
   },
   {
@@ -170,7 +170,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "whiteListId",
+        "name": "whitelistId",
         "type": "uint256"
       },
       {
@@ -179,7 +179,7 @@
         "type": "bytes32[]"
       }
     ],
-    "name": "claimWithWhiteList",
+    "name": "claimWithWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -267,7 +267,7 @@
   },
   {
     "inputs": [],
-    "name": "onClaimWithWhiteList",
+    "name": "onClaimWithWhitelist",
     "outputs": [
       {
         "internalType": "bool",
@@ -313,7 +313,7 @@
   },
   {
     "inputs": [],
-    "name": "pauseClaimWithWhiteList",
+    "name": "pauseClaimWithWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -499,7 +499,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "whiteListId",
+        "name": "whitelistId",
         "type": "uint256"
       },
       {
@@ -508,7 +508,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "setWhiteList",
+    "name": "setWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -548,7 +548,7 @@
   },
   {
     "inputs": [],
-    "name": "unpauseClaimWithWhiteList",
+    "name": "unpauseClaimWithWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -575,7 +575,7 @@
         "type": "uint256"
       }
     ],
-    "name": "whiteListRootHashes",
+    "name": "whitelistRootHashes",
     "outputs": [
       {
         "internalType": "bytes32",

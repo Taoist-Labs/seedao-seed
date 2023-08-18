@@ -25,15 +25,15 @@ contract SeedMinter is
   // SCR amount condition of free claim
   uint256 public scrAmountCondi;
   // store the merkle root hash of whitelist
-  mapping(uint256 => bytes32) public whiteListRootHashes;
+  mapping(uint256 => bytes32) public whitelistRootHashes;
   // user claimed flag, true means claimed; user can only
   // free claim once whenever the claim method is whitelist or SCR
   mapping(address => bool) public claimed;
 
   // flag of payed mint feature gate
   bool public onMint;
-  // flag of free claim with white list feature gate
-  bool public onClaimWithWhiteList;
+  // flag of free claim with whitelist feature gate
+  bool public onClaimWithWhitelist;
   // flag of free claim with SCR feature gate
   bool public onClaimWithSCR;
 
@@ -46,9 +46,9 @@ contract SeedMinter is
 
   event MintDisabled(address account);
 
-  event ClaimWithWhiteListEnabled(address account);
+  event ClaimWithWhitelistEnabled(address account);
 
-  event ClaimWithWhiteListDisabled(address account);
+  event ClaimWithWhitelistDisabled(address account);
 
   event ClaimWithSCREnabled(address account);
 
@@ -77,8 +77,8 @@ contract SeedMinter is
   }
 
   /// @dev used to restrict methods that only can call when claim with whitelist feature gate is open
-  modifier enableClaimWithWhiteList() {
-    require(onClaimWithWhiteList, "Claim with white list is not open");
+  modifier enableClaimWithWhitelist() {
+    require(onClaimWithWhitelist, "Claim with whitelist is not open");
     _;
   }
 
@@ -109,24 +109,24 @@ contract SeedMinter is
     // set default minter
     minter = msg.sender;
     // `onMint` is disabled by default
-    // `onClaimWithWhiteList` is disabled by default
+    // `onClaimWithWhitelist` is disabled by default
     // `onClaimWithSCR` is disabled by default
 
     __Ownable_init();
     __ReentrancyGuard_init();
   }
 
-  /// @dev claim for free with whitelist, need to specify white list ID and Merkle Proof when calling
-  /// `enableClaimWithWhiteList` modifier is used to restrict methods that only can call when claim with whitelist feature gate is open
+  /// @dev claim for free with whitelist, need to specify whitelist ID and Merkle Proof when calling
+  /// `enableClaimWithWhitelist` modifier is used to restrict methods that only can call when claim with whitelist feature gate is open
   /// `noClaimed` modifier is used to restrict that each user can only free claim once, whether it is through the whitelist condition or the points condition, they can only free claim for free once
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
-  function claimWithWhiteList(
-    uint256 whiteListId,
+  function claimWithWhitelist(
+    uint256 whitelistId,
     bytes32[] calldata proof
-  ) external enableClaimWithWhiteList noClaimed nonReentrant {
+  ) external enableClaimWithWhitelist noClaimed nonReentrant {
     require(
-      _verifyWhiteList(whiteListId, proof, _msgSender()),
-      "You are not in the white list"
+      _verifyWhitelist(whitelistId, proof, _msgSender()),
+      "You are not in the whitelist"
     );
 
     // set claimed flag to true
@@ -140,7 +140,7 @@ contract SeedMinter is
   /// `noClaimed` modifier is used to restrict that each user can only free claim once, whether it is through the whitelist condition or the SCR condition, they can only free claim for free once
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function claimWithSCR() external enableClaimWithSCR noClaimed nonReentrant {
-    require(scr != address(0), "SCR address is not set");
+    require(scr != address(0), "SCR is not set");
 
     uint256 scrBalance = IERC20(scr).balanceOf(_msgSender());
     require(
@@ -184,8 +184,8 @@ contract SeedMinter is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
   /// @dev verify whether an address is in the whitelist
-  function _verifyWhiteList(
-    uint256 whiteListId,
+  function _verifyWhitelist(
+    uint256 whitelistId,
     bytes32[] calldata proof,
     address addr
   ) internal view returns (bool) {
@@ -193,7 +193,7 @@ contract SeedMinter is
     return
       MerkleProofUpgradeable.verify(
         proof,
-        whiteListRootHashes[whiteListId],
+        whitelistRootHashes[whitelistId],
         leaf
       );
   }
@@ -226,7 +226,7 @@ contract SeedMinter is
   /// @dev set the SCR amount condition for free claim NFT
   /// for example: if the condition is `50_000` SCR, then pass in the integer `50_000`
   function setSCRAmountCondi(uint256 scrAmountCondi_) external onlyOwner {
-    require(scr != address(0), "SCR address is not set");
+    require(scr != address(0), "SCR is not set");
 
     scrAmountCondi = scrAmountCondi_ * 10 ** IERC20Metadata(scr).decimals();
   }
@@ -234,11 +234,11 @@ contract SeedMinter is
   /// @dev set whitelist, need to pass in whitelist ID and Merkle Tree Root Hash when calling
   /// the whitelist has different batches, when adding a new whitelist, a new whitelist ID is required
   /// start from 0 !!
-  function setWhiteList(
-    uint256 whiteListId,
+  function setWhitelist(
+    uint256 whitelistId,
     bytes32 rootHash
   ) external onlyOwner {
-    whiteListRootHashes[whiteListId] = rootHash;
+    whitelistRootHashes[whitelistId] = rootHash;
   }
 
   /// @dev set claimed addresses
@@ -269,15 +269,15 @@ contract SeedMinter is
   }
 
   /// @dev pause free claim with whitelist feature, after paused, can't free claim new NFT with whitelist
-  function pauseClaimWithWhiteList() public onlyOwner {
-    onClaimWithWhiteList = false;
-    emit ClaimWithWhiteListDisabled(_msgSender());
+  function pauseClaimWithWhitelist() public onlyOwner {
+    onClaimWithWhitelist = false;
+    emit ClaimWithWhitelistDisabled(_msgSender());
   }
 
   /// @dev unpause free claim with whitelist feature, after unpaused, can free claim new NFT with whitelist
-  function unpauseClaimWithWhiteList() public onlyOwner {
-    onClaimWithWhiteList = true;
-    emit ClaimWithWhiteListEnabled(_msgSender());
+  function unpauseClaimWithWhitelist() public onlyOwner {
+    onClaimWithWhitelist = true;
+    emit ClaimWithWhitelistEnabled(_msgSender());
   }
 
   /// @dev pause free claim with SCR feature, after paused, can't free claim new NFT with SCR

@@ -60,10 +60,10 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 
 > 开启白名单免费 claim 功能，需要调用：
 
-- `setWhiteList(uint256, bytes32)` : 设置白名单
-- `unpauseClaimWithWhiteList()` : 开启白名单免费 claim 功能
+- `setWhitelist(uint256, bytes32)` : 设置白名单
+- `unpauseClaimWithWhitelist()` : 开启白名单免费 claim 功能
 
-调用 `unpauseClaimWithWhiteList()` 关闭白名单免费 claim 功能。
+调用 `unpauseClaimWithWhitelist()` 关闭白名单免费 claim 功能。
 
 > 开启 SCR 免费 claim 功能，需要调用：
 

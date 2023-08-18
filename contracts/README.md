@@ -60,10 +60,10 @@ $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 
 > To enable the whitelist free claim feature, you need to call:
 
-- `setWhiteList(uint256, bytes32)` : set whitelist
-- `unpauseClaimWithWhiteList()` : enable whitelist claim feature
+- `setWhitelist(uint256, bytes32)` : set whitelist
+- `unpauseClaimWithWhitelist()` : enable whitelist claim feature
 
-Call `unpauseClaimWithWhiteList()` to disable the whitelist free claim feature.
+Call `unpauseClaimWithWhitelist()` to disable the whitelist free claim feature.
 
 > To enable the SCR free claim feature, you need to call:
 
