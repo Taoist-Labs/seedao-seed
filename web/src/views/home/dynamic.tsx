@@ -209,7 +209,7 @@ const Content = styled.div`
 const NFTCard = styled.ul`
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 18px;
   justify-content: space-between;
   @media (max-width: 680px) {
     flex-direction: column;
