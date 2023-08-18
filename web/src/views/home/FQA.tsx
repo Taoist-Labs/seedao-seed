@@ -65,7 +65,7 @@ export default function FQA({ color }: { color: string }) {
   return (
     <FQAStyle color={color}>
       <CenterBox>
-        <Title>FQA</Title>
+        <Title>FAQ</Title>
         <div className="question-box">
           {(i18n.language === "zh" ? FQA_LIST_ZH : FQA_LIST_EN).map((q, i) => (
             <QuestionItem
