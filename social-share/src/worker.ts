@@ -42,7 +42,7 @@ export default {
 
 function parseParams(request: Request) {
   const { searchParams } = new URL(request.url);
-  let url = searchParams.get('url') || 'https://seed.seedao.tech/';
+  let url = searchParams.get('url') || 'https://seed.seedao.xyz/';
   let title = searchParams.get('title') || "SeeDAO Seed NFT";
   let desc = searchParams.get('desc') || 'Seed Now, See the DAO';
   let image = searchParams.get('image');

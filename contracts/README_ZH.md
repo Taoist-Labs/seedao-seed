@@ -1,6 +1,6 @@
 # SEED 合约
 
-[Seed Now, See the DAO](https://seed.seedao.tech/)
+[Seed Now, See the DAO](https://seed.seedao.xyz/)
 
 ## 1. 开发和部署前的准备工作
 
