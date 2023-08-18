@@ -86,11 +86,11 @@ const DynamicNFTs = [
     levels: [
       {
         title: "L8",
-        points: "30m-1t",
+        points: "30m-100m",
       },
       {
         title: "L9",
-        points: "1t",
+        points: "100m",
       },
     ],
   },
