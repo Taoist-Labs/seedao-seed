@@ -119,7 +119,7 @@ export default function FQA({ color }: { color: string }) {
           </a>
           {/* TODO opensea is to be checked */}
           <a
-            href="https://opensea.io/collection/seednft"
+            href="https://opensea.io/collection/seedaogenesis"
             target="_blank"
             rel="noopener noreferrer"
           >
