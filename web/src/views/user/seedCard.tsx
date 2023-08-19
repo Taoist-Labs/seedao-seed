@@ -23,7 +23,7 @@ import {
   SEED_MANAGER_CONTRACTS,
 } from "utils/contract";
 import SeedABI from "data/abi/Seed.json";
-import SeedMgrABI from "data/abi/SeedManager.json";
+import SeedMgrABI from "data/abi/SeedMinter.json";
 import ScrABI from "data/abi/SCR.json";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
@@ -234,7 +234,7 @@ export default function SeedCard() {
         return;
       }
       try {
-        const _isOpenMint = await seedMgrContract.onClaimWithPoints();
+        const _isOpenMint = await seedMgrContract.onClaimWithSCR();
         setIsOpenMint(_isOpenMint);
       } catch (error) {
         console.error("getSwitch error", error);
@@ -273,13 +273,13 @@ export default function SeedCard() {
           (p) => p.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
         );
         if (proof_item) {
-          res = await seedMgrContract.claimWithWhiteList(
+          res = await seedMgrContract.claimWithWhitelist(
             findIdx,
             proof_item.proof,
           );
         }
       } else {
-        res = await seedMgrContract.claimWithPoints();
+        res = await seedMgrContract.claimWithSCR();
       }
       setLoading(true);
       setShowMintModal(false);
