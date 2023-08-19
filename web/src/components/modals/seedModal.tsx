@@ -104,7 +104,7 @@ const ModalContainer = styled(Box)`
   }
   @media (max-width: 414px) {
     width: calc(100% - 30px);
-    transform: translate(-50%, -53%);
+    transform: translate(-50%, -52%);
     .sm-title {
       font-size: 15px;
       padding-inline: 15px;
@@ -209,12 +209,14 @@ const AttrBox = styled.ul`
     li {
       min-height: 32px;
       padding-inline: 8px;
+      margin-bottom: 8px;
       gap: 4px;
       img {
         width: 17px;
       }
       .value {
         font-size: 12px;
+        line-height: unset;
       }
     }
   }
