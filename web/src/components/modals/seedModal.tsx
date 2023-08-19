@@ -94,9 +94,9 @@ const ModalContainer = styled(Box)`
     width: calc(100% - 60px);
     flex-direction: column;
     padding: 0;
-    height: 80%;
-    min-height: 900px;
-    max-height: 99%;
+    /* height: 80vh; */
+    /* min-height: 900px; */
+    max-height: 100vh;
     gap: 0;
     .sm-title {
       display: flex;
@@ -111,7 +111,7 @@ const ModalContainer = styled(Box)`
     }
     height: unset;
     min-height: unset;
-    padding-bottom: 54px;
+    padding-bottom: 10px;
   }
 `;
 
@@ -120,6 +120,7 @@ const ModalLeft = styled.div`
   img {
     width: 500px;
     max-width: 100%;
+    display: block;
   }
   @media (max-width: 750px) {
     width: 100%;
@@ -159,22 +160,26 @@ const ModalRight = styled.div`
 `;
 
 const AttrBox = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
+  /* display: flex;
+  flex-wrap: wrap; */
   li {
-    width: calc(50% - 10px);
+    float: left;
+    width: calc(50% - 5px);
     border-radius: 8px;
     border: 1px solid #d8d8d8;
     background: #fff;
 
     box-sizing: border-box;
-    margin-inline: 5px;
+    margin-right: 10px;
     margin-bottom: 10px;
     padding: 8px 20px;
     display: flex;
     align-items: center;
     gap: 10px;
     min-height: 56px;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
     img {
       width: 30px;
     }
@@ -202,6 +207,7 @@ const AttrBox = styled.ul`
   @media (max-width: 414px) {
     li {
       min-height: 32px;
+      padding-inline: 10px;
       img {
         width: 17px;
       }
