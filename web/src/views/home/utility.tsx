@@ -112,6 +112,7 @@ const Box = styled.ul`
       text-align: center;
       img {
         width: 140px;
+        height: 140px;
       }
     }
 
