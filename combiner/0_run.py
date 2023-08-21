@@ -11,7 +11,7 @@ def load_images(path):
     images = []
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            sufix = fileName.rsplit('.', 1)[1]
             # directory = fileName.rsplit('.')[0]
             if sufix == 'png':
                 f = os.path.join(root, fileName)

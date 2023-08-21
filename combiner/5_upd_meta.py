@@ -6,6 +6,7 @@ import json
 from multiprocessing import Pool
 from PIL import Image, ImageOps
 
+# Need up
 
 def load_images(path):
     images = []
@@ -26,15 +27,8 @@ def gen_metadata(params):
     save_name, _ = params
     name = os.path.splitext(os.path.basename(save_name))[0].split('-', 1)[1]
     print(name)
-    # n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
-    #     '#')
-    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = '', '', '', '', '', '', ''
-    splited = name.split('#')
-    if len(splited) == 6:
-        n_background, n_body, n_eye, n_star, n_head, n_cloth = splited
-    else:
-        n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = splited
-
+    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
+        '#')
     # todo: save metadata
     metadata = {'attributes': [], 'image': "ipfs://"}
 

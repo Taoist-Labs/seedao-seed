@@ -10,24 +10,27 @@ def load_images(path):
     images = []
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            sufix = fileName.rsplit('.', 1)[1]
             # directory = fileName.rsplit('.')[0]
             if sufix == 'png':
                 f = os.path.join(root, fileName)
                 # images.append((os.path.basename(fileName), Image.open(f)))
                 img = Image.open(f)
-                print(f, img.size, img.mode)
+                # print(f, img.size, img.mode)
                 images.append((f, img))
+            else: 
+                print('ignore', fileName)
     return images
 
 
-def load_stars(path, filer='-'):
+def load_stars(path):
     images = []
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            print(fileName)
+            sufix = fileName.rsplit('.', 1)[1]
             # directory = fileName.rsplit('.')[0]
-            if sufix == 'png' and fileName.contain(filer) and not fileName.startswith('W.png'):
+            if sufix == 'png':
                 f = os.path.join(root, fileName)
                 # images.append((os.path.basename(fileName), Image.open(f)))
                 img = Image.open(f)
@@ -72,10 +75,17 @@ def gen_comp(nfts, star_, directory):
         n_star, star = star_
 
         name = os.path.splitext(n_nft)[0].split('-')[1]
-        print(name)
+        # print(name)
 
-        n_background, n_body, n_eye, _, n_head, n_ring, n_cloth = name.split(
-            '#')
+        # n_background, n_body, n_eye, _, n_head, n_ring, n_cloth = name.split(
+        #     '#')
+        n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = '', '', '', '', '', '', ''
+
+        splited = name.split('#')
+        if len(splited) == 6:
+            n_background, n_body, n_eye, n_star, n_head, n_cloth = splited
+        else:
+            n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = splited
 
         name = '#'.join(list(map(lambda n: os.path.splitext(os.path.basename(n))
                         [0], [n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth])))
@@ -96,14 +106,14 @@ def merge(items):
 
 
 def main():
-    nfts = load_images('./meta/seed/')
+    nfts = load_images('./.tmp/FinalChoose/')
     stars = load_stars('./meta/4.star/')
 
     print(len(nfts), len(stars))
 
     for star in stars:
         # nft, star
-        combinations = gen_comp(nfts, star, './final/')
+        combinations = gen_comp(nfts, star, './.tmp/FinalChooseWithStars/')
         merge(combinations)
         pass
 

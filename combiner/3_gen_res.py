@@ -1,3 +1,12 @@
+#
+# 3_gen_res.py:
+# This script is used to generate thumbnail and metadata for each image.
+# The outputs are:
+# 1. thumbnail image and scaled image - 750px
+# 2. nfts.json - metadata for each image
+#
+# The input is the folder of images, which is the output of 2_gen_meta.py
+
 import itertools
 import os
 import random
@@ -33,8 +42,15 @@ def get_res_json(path, save_path, img_base_url='./'):
             if sufix == 'png' and not prefix.startswith('thumb-'):
                 name = os.path.splitext(os.path.basename(fileName))[
                     0].split('-', 1)[1]
-                n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
-                    '#')
+                print(name)
+
+                n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = '', '', '', '', '', '', ''
+                splited = name.split('#')
+                if len(splited) == 6:
+                    n_background, n_body, n_eye, n_star, n_head, n_cloth = splited
+                else:
+                    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = splited
+
                 # todo: save metadata
                 metadata = {'attributes': [], 'image': "ipfs://"}
 
@@ -94,9 +110,9 @@ def get_res_json(path, save_path, img_base_url='./'):
 
 def main():
 
-    # scale_images('./output', 750, './.tmp/result')
+    # scale_images('./520', 750, './.tmp/20230819')
 
-    get_res_json('./.tmp/result', './.tmp/',
+    get_res_json('./.tmp/20230819', './.tmp/',
                  'https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/')
     pass
 
