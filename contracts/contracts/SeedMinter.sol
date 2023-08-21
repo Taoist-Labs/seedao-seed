@@ -132,7 +132,7 @@ contract SeedMinter is
     // set claimed flag to true
     claimed[_msgSender()] = true;
 
-    _mint(_msgSender());
+    _mint(_msgSender(), ISeed(seed).totalSupply());
   }
 
   /// @dev claim for free with SCR
@@ -151,13 +151,15 @@ contract SeedMinter is
     // set claimed flag to true
     claimed[_msgSender()] = true;
 
-    _mint(_msgSender());
+    _mint(_msgSender(), ISeed(seed).totalSupply());
   }
 
   /// @dev used for airdrop, only minter can call, need to specify the receiving addresses
   function airdrop(address[] calldata to) external onlyMinter {
+    uint256 id = ISeed(seed).totalSupply();
     for (uint256 i = 0; i < to.length; i++) {
-      _mint(to[i]);
+      _mint(to[i], id);
+      id++;
     }
   }
 
@@ -176,8 +178,10 @@ contract SeedMinter is
       payable(_msgSender()).transfer(msg.value - payValue);
     }
 
+    uint256 id = ISeed(seed).totalSupply();
     for (uint256 i = 0; i < amount; i++) {
-      _mint(_msgSender());
+      _mint(_msgSender(), id);
+      id++;
     }
   }
 
@@ -198,14 +202,9 @@ contract SeedMinter is
       );
   }
 
-  //  /// mint SEED
-  //  function _mint(address to, uint256 tokenId) internal {
-  //    ISeed(seed).mint(to, tokenId);
-  //  }
-  //
   /// @dev mint SEED
-  function _mint(address to) internal {
-    ISeed(seed).mint(to, ISeed(seed).totalSupply());
+  function _mint(address to, uint256 tokenId) internal {
+    ISeed(seed).mint(to, tokenId);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
