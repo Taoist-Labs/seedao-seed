@@ -46,7 +46,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 - `pause()` : 暂停合约
 - `unpause()` : 取消暂停合约
 
-#### 3.3 部署 `SeedManger` 合约
+#### 3.3 部署 `SeedMinter` 合约
 
 请先在 `scripts/2_deploy_seedminter.ts` #9 #11 #13 行修改和确认 `Seed` 合约的地址、SCR 合约的地址和 SCR 数量条件的值，然后执行部署命令：
 
@@ -54,7 +54,7 @@ $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
 $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 ```
 
-!! 在 `scripts/2_deploy_seedminter.ts` 脚本中当部署 `SeedManger` 成功后接着调用了 `Seed` 合约的 `transferOwnership(address)` 方法修改其 owner 的地址为 `SeedManger` 合约的地址 !!
+!! 在 `scripts/2_deploy_seedminter.ts` 脚本中当部署 `SeedMinter` 成功后接着调用了 `Seed` 合约的 `transferOwnership(address)` 方法修改其 owner 的地址为 `SeedMinter` 合约的地址 !!
 
 > 可以调用 `airdrop(address[])` 方法迁移 SGN 到 SEED，一次最多可以传200个地址，如果需要迁移更多的地址，可以多次调用该方法。
 
