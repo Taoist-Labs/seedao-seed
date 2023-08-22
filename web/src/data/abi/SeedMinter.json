@@ -14,7 +14,7 @@
         "type": "address"
       }
     ],
-    "name": "ClaimWithPointsDisabled",
+    "name": "ClaimWithSCRDisabled",
     "type": "event"
   },
   {
@@ -27,7 +27,7 @@
         "type": "address"
       }
     ],
-    "name": "ClaimWithPointsEnabled",
+    "name": "ClaimWithSCREnabled",
     "type": "event"
   },
   {
@@ -40,7 +40,7 @@
         "type": "address"
       }
     ],
-    "name": "ClaimWithWhiteListDisabled",
+    "name": "ClaimWithWhitelistDisabled",
     "type": "event"
   },
   {
@@ -53,7 +53,7 @@
         "type": "address"
       }
     ],
-    "name": "ClaimWithWhiteListEnabled",
+    "name": "ClaimWithWhitelistEnabled",
     "type": "event"
   },
   {
@@ -141,7 +141,7 @@
         "type": "address[]"
       }
     ],
-    "name": "batchMint",
+    "name": "airdrop",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -161,7 +161,7 @@
   },
   {
     "inputs": [],
-    "name": "claimWithPoints",
+    "name": "claimWithSCR",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -170,7 +170,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "whiteListId",
+        "name": "whitelistId",
         "type": "uint256"
       },
       {
@@ -179,7 +179,7 @@
         "type": "bytes32[]"
       }
     ],
-    "name": "claimWithWhiteList",
+    "name": "claimWithWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -209,6 +209,16 @@
         "internalType": "address",
         "name": "seed_",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "scr_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "scrAmountCondi_",
+        "type": "uint256"
       }
     ],
     "name": "initialize",
@@ -244,7 +254,7 @@
   },
   {
     "inputs": [],
-    "name": "onClaimWithPoints",
+    "name": "onClaimWithSCR",
     "outputs": [
       {
         "internalType": "bool",
@@ -257,7 +267,7 @@
   },
   {
     "inputs": [],
-    "name": "onClaimWithWhiteList",
+    "name": "onClaimWithWhitelist",
     "outputs": [
       {
         "internalType": "bool",
@@ -296,14 +306,14 @@
   },
   {
     "inputs": [],
-    "name": "pauseClaimWithPoints",
+    "name": "pauseClaimWithSCR",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "pauseClaimWithWhiteList",
+    "name": "pauseClaimWithWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -317,28 +327,9 @@
   },
   {
     "inputs": [],
-    "name": "pointsCountCondi",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "pointsToken",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "pauseSeed",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -363,6 +354,32 @@
   },
   {
     "inputs": [],
+    "name": "scr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "scrAmountCondi",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "seed",
     "outputs": [
       {
@@ -377,25 +394,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "pointsCountCondi_",
-        "type": "uint256"
+        "internalType": "address[]",
+        "name": "addr",
+        "type": "address[]"
       }
     ],
-    "name": "setPointsCountCondition",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "pointsToken_",
-        "type": "address"
-      }
-    ],
-    "name": "setPointsTokenAddress",
+    "name": "setClaimed",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -416,8 +420,86 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "scr_",
+        "type": "address"
+      }
+    ],
+    "name": "setSCR",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
-        "name": "whiteListId",
+        "name": "scrAmountCondi_",
+        "type": "uint256"
+      }
+    ],
+    "name": "setSCRAmountCondi",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "baseURI",
+        "type": "string"
+      }
+    ],
+    "name": "setSeedBaseURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "maxSupply",
+        "type": "uint256"
+      }
+    ],
+    "name": "setSeedMaxSupply",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "scr_",
+        "type": "address"
+      }
+    ],
+    "name": "setSeedSCR",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "uriLevelRanges",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setSeedURILevelRange",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "whitelistId",
         "type": "uint256"
       },
       {
@@ -426,7 +508,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "setWhiteList",
+    "name": "setWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -445,15 +527,28 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "unpauseClaimWithPoints",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferSeedOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "unpauseClaimWithWhiteList",
+    "name": "unpauseClaimWithSCR",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unpauseClaimWithWhitelist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -466,6 +561,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "unpauseSeed",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -473,7 +575,7 @@
         "type": "uint256"
       }
     ],
-    "name": "whiteListRootHashes",
+    "name": "whitelistRootHashes",
     "outputs": [
       {
         "internalType": "bytes32",
