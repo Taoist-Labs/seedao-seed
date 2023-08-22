@@ -1,6 +1,7 @@
 # SEED
 
-[![Deploy to github page](https://github.com/Taoist-Labs/seedao-seed/actions/workflows/deploy.yml/badge.svg)](https://github.com/Taoist-Labs/seedao-seed/actions/workflows/deploy.yml)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/abeb231a-e02b-47c6-96ce-1359bb59a254/deploy-status)](https://app.netlify.com/sites/seed-taoist-labs/deploys)
+
 
 SeeDAO Seed NFT serves as citizenship proof within the SeeDAO network polis and is a prerequisite to obtaining governance rights.
 
