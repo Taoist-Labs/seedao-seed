@@ -53,7 +53,7 @@ def filterNames(fileList):
 
 
 def rename_nfts(randomList, srcPath, outPath):
-    idx = 1
+    idx = 0
     for _name in randomList:
         n_background, n_body, n_eye, n_head, n_ring, n_cloth = _name.split('#')
 
@@ -92,7 +92,7 @@ def rename_nft(rawName, newName, srcPath, outPath):
         os.mkdir(outPath)
         os.mkdir(os.path.join(outPath, 'png'))
         os.mkdir(os.path.join(outPath, 'json'))
-        
+
     src = os.path.join(srcPath, rawName + '.png')
     dst = os.path.join(outPath, 'png', newName + '.png')
     shutil.copyfile(src, dst)
