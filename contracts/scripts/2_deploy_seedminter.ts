@@ -10,7 +10,7 @@ async function main() {
   // TODO WARNING: check me when deploying !!!
   const SCRAddress = deployed.getMockPointsContract();
   // TODO WARNING: check me when deploying !!!
-  const SCRAmountCondi = ethers.getBigInt(5_000);
+  const SCRAmountCondi = ethers.getBigInt(50_000); // Default need 5w SCR !!
 
   // deploy SeedMinter contract
   console.log(

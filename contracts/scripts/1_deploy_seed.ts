@@ -7,6 +7,8 @@ async function main() {
 
   // TODO WARNING: check me when deploying !!!
   const SCRAddress = deployed.getMockPointsContract();
+  // TODO WARNING: check me when deploying !!!
+  const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
 
   console.log(`Deploying [Seed] with params (scr_: ${SCRAddress}) ...`);
   const seed = await ethers.deployContract("Seed", [SCRAddress]);
@@ -14,6 +16,10 @@ async function main() {
 
   deployed.setSeedContract(seed.target.toString());
   console.log(`[Seed] deployed to ${seed.target}`);
+
+  console.log(`Calling [Seed]'s setBaseURI(baseURI_: ${baseURI}) ...`);
+  await seed.setBaseURI(baseURI);
+  console.log(`[Seed]'s setBaseURI(...) called`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

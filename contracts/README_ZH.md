@@ -26,7 +26,7 @@ $ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
 
 #### 3.2 部署 `Seed` 合约
 
-请先在 `scripts/1_deploy_seed.ts` #9 行修改和确认 SCR 合约的地址，然后执行部署命令：
+请先在 `scripts/1_deploy_seed.ts` #9 行修改和确认 SCR 合约的地址、#11 行修改和确认 baseURI 的值，然后执行部署命令：
 
 ```bash
 $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts

@@ -26,7 +26,7 @@ $ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
 
 #### 3.2 Deploy `Seed` contract
 
-Please modify and confirm the address of the SCR contract in `scripts/1_deploy_seed.ts` #9 line, and then execute the deployment command:
+Please modify and confirm the address of the SCR contract in `scripts/1_deploy_seed.ts` #9 line, confirm baseURI's value at #11 line too, and then execute the deployment command:
 
 ```bash
 $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
