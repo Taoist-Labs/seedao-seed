@@ -114,10 +114,10 @@ def merge(items):
 
 
 def main():
-    # nfts = load_images('./.tmp/FinalChoose/')
-    # stars = load_stars('./meta/4.star/')
-    nfts = load_images('/Volumes/“RAMDisk”/FinalChoose')
-    stars = load_stars('/Volumes/“RAMDisk”/4.star')
+    nfts = load_images('./.tmp/520/')
+    stars = load_stars('./meta/4.star/')
+    # nfts = load_images('/Volumes/“RAMDisk”/FinalChoose')
+    # stars = load_stars('/Volumes/“RAMDisk”/4.star')
 
     print(len(nfts), len(stars))
 
@@ -125,7 +125,8 @@ def main():
 
     for star in stars:
         # nft, star
-        combinations = gen_comp(nfts, star, '/Volumes/“RAMDisk”/FinalChooseWithStars/')
+        combinations = gen_comp(nfts, star, './.tmp/520WithStars/')
+        # combinations = gen_comp(nfts, star, '/Volumes/“RAMDisk”/FinalChooseWithStars/')
         merge(combinations)
 
         # list(map(lambda item: add_star(item), combinations))

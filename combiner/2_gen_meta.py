@@ -96,7 +96,8 @@ def gen(items):
 
 
 def main():
-    nfts = load_images('./output')
+    # nfts = load_images('./output')
+    nfts = load_images('./.tmp/520WithStars/')
 
     print(len(nfts))
 

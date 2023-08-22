@@ -6,21 +6,17 @@ import json
 from multiprocessing import Pool
 from PIL import Image, ImageOps
 
-# Need up
+# Need update json metadata
 
-def load_images(path):
-    images = []
+def load_jsons(path):
+    jsons = []
     for root, _, files in os.walk(path):
         for fileName in files:
             sufix = fileName.rsplit('.')[1]
-            # directory = fileName.rsplit('.')[0]
-            if sufix == 'png':
+            if sufix == 'json':
                 f = os.path.join(root, fileName)
-                # images.append((os.path.basename(fileName), Image.open(f)))
-                img = Image.open(f)
-                print(f, img.size, img.mode)
-                images.append((f, None))
-    return images
+                jsons.append(f)
+    return jsons
 
 
 def gen_metadata(params):
@@ -83,18 +79,26 @@ def gen_metadata(params):
     pass
 
 
-def gen(items):
-    pool = Pool(processes=4)
-    pool.map(gen_metadata, items)
-    pool.close()
+def updateJsons(jsonFiles, cid):
+    for file in jsonFiles:
+        name = os.path.splitext(os.path.basename(file))[0]
+        metadata = json.load(open(file))
+        metadata['image'] = 'ipfs://' + cid + '/' + name + '.png'
+        # print(meta)
+        with open(file, 'w+') as f:
+            js = json.dumps(metadata, indent=4)
+            # print(js)
+            f.write(js)
 
+    pass
 
 def main():
-    nfts = load_images('./output')
+    cid = 'bafybeif7zcefrblohgf5tde3eh2g4pkieg25ym7fdklrv5kqlyftxcbwlu'
+    jsons = load_jsons('./.tmp/520done/json/')
 
-    print(len(nfts))
+    print(len(jsons))
 
-    gen(nfts)
+    updateJsons(jsons, cid)
     pass
 
 
