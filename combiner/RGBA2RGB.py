@@ -19,9 +19,17 @@ def listFiles(path):
                 # print(f, img.size, img.mode)
                 if img.mode != 'RGB':
                     print("not RGB, ", f, img.size, img.mode)
-                    
-                filelist.append(f)
+                    filelist.append(f)
     return filelist
+
+def check_truncated(files):
+    for file in files:
+        img = Image.open(file)
+        try:
+            img.load()
+        except IOError:
+            print("truncated image: ", os.path.basename(file))
+            pass
 
 def convert(filename):
     img = Image.open(filename)
@@ -39,9 +47,11 @@ def main():
     files = listFiles('./.tmp/FinalChooseWithStars/')
     print(len(files))
 
-    # pool = Pool(processes=16)
-    # pool.map(convert, files)
-    # pool.close()
+    # check_truncated(files)
+
+    pool = Pool(processes=1)
+    pool.map(convert, files)
+    pool.close()
 
     pass
 
