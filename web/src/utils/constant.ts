@@ -15,5 +15,6 @@ export const ATTR_ICON_MAP: { [k: string]: string } = {
   Head: HairIcon,
   Ear: EarIcon,
   Eyes: faceIcon,
+  Ring: EarIcon,
   Style: ClothIcon,
 };
