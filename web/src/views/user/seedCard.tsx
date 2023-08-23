@@ -13,7 +13,6 @@ import ShareModal from "./shareModal";
 import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
 import SeedDisplay from "./seedDisplay";
-import { getNftByAccount } from "utils/request";
 import { GALLERY_ATTRS } from "data/gallery";
 import OpeningModal from "./opening";
 import useSelectAccount from "hooks/useSelectAccout";
