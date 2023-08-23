@@ -20,7 +20,7 @@ import urllib.parse
 def scale_images(path, size, save_path):
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            sufix = fileName.rsplit('.', 1)[1]
             if sufix == 'png':
                 f = os.path.join(root, fileName)
                 s = os.path.join(save_path, fileName)

@@ -19,7 +19,7 @@ def load_nfts(path):
     nfts = []
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            sufix = fileName.rsplit('.', 1)[1]
             if sufix == 'png':
                 f = os.path.join(root, fileName)
                 nfts.append(f)
@@ -103,8 +103,8 @@ def rename_nft(rawName, newName, srcPath, outPath):
     pass
 
 def main():
-    src = './.tmp/520WithStars/'
-    out = './.tmp/520done/'
+    src = './.tmp/FinalChooseWithStars/'
+    out = './.tmp/FinalDone/'
     nfts = load_nfts(src)
 
     print(len(nfts))

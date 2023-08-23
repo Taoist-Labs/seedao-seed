@@ -30,7 +30,7 @@ def convert(filename):
     pass
 
 def main():
-    files = listFiles('./.tmp/FinalChoose/')
+    files = listFiles('./.tmp/FinalSpecials/')
     print(len(files))
 
     pool = Pool(processes=16)
