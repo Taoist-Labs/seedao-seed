@@ -1,2 +1,27 @@
 [
+    {
+        "rootHash": "0xfabbd53cdc57c35a3c37d4756e1de60c9e882c37064cbf5fde73126c5d0c02ab",
+        "proofs": [
+            {
+                "address": "0x02C4DEdFF203fA7aA296B55FBC5208EbFDe7BBF7",
+                "proof": [
+                    "0xeba560d5c5bbece4e21e8375ad0408cc5ca8354eddedd6ed4be570d9c00c7857"
+                ]
+            },
+            {
+                "address": "0x4ed7779cc2ff314d06d38691eb9021abfc943403",
+                "proof": [
+                    "0x8a6c087d08426319766914c150092cacd27b24eb2b98081f1bcda6185505f44e",
+                    "0xdddf2a8e676eb85a10754367d50b3425e2201d17a7e6296d32c7a4cf74f45926"
+                ]
+            },
+            {
+                "address": "0xEBAEf7C0F5Bd0fa3E15D188a7545FcEdA76609C7",
+                "proof": [
+                    "0x015b7e2dabe8e9f1cd14d9b9192c534775479a3f9bf78462c722435dea72db1f",
+                    "0xdddf2a8e676eb85a10754367d50b3425e2201d17a7e6296d32c7a4cf74f45926"
+                ]
+            }
+        ]
+    }
 ]
