@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import LevelStar from "components/svg/levelStar";
 import LevelStrokeStar from "components/svg/levelStrokeStar";
 
-import { formatNumber } from "utils/index";
+import { formatNumber, getShortDisplay } from "utils/index";
 
 interface IProps {
   points: number;
@@ -30,9 +30,14 @@ export default function LevelItem({ data, points }: IProps) {
     if (isCurrent) {
       return {
         leftPoints: data.maxPoints - points + 1,
-        percent: Math.floor(
-          ((points - data.minPoints) * 100) /
-            (data.maxPoints - data.minPoints + 1),
+        percent: Number(
+          getShortDisplay(
+            String(
+              ((points - data.minPoints) * 100) /
+                (data.maxPoints - data.minPoints + 1),
+            ),
+            1,
+          ),
         ),
       };
     } else {
