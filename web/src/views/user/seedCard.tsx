@@ -330,7 +330,7 @@ export default function SeedCard() {
             const _new_nft: INFT = {
               tokenId: tokenId.toString(),
               tokenIdFormat: `SEED No.${tokenId.toString()}`,
-              image: res.image, // TODO handle image url
+              image: formatImg(res.image),
               attrs: res.attributes.map((attr: any) => ({
                 name: attr.trait_type,
                 value: attr.value,
@@ -449,12 +449,7 @@ export default function SeedCard() {
       const ukeys = Object.keys(uresults.results);
       ukeys.forEach((k) => {
         uresults.results[k].callsReturnContext.forEach((d) => {
-          const u = d.returnValues[0].replace(
-            "ipfs://",
-            "https://dweb.link/ipfs/",
-          );
-
-          uris.push(u);
+          uris.push(formatImg(d.returnValues[0]));
         });
       });
     } catch (error) {
