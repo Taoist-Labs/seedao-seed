@@ -27,6 +27,7 @@ import SeedMgrABI from "data/abi/SeedMinter.json";
 import ScrABI from "data/abi/SCR.json";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
+import { Multicall } from "ethereum-multicall";
 
 const whiteList = WhiteListData as {
   rootHash: string;
@@ -102,6 +103,10 @@ const LEVELS = [
 //   const arr = name.split("_");
 //   return { tokenId: Number(arr[0]), level: Number(arr[1]) };
 // };
+
+const formatImg = (img: string) => {
+  return img.replace("ipfs://", "https://dweb.link/ipfs/");
+};
 
 export default function SeedCard() {
   const { t } = useTranslation();
@@ -360,37 +365,141 @@ export default function SeedCard() {
     setShowShareModal(true);
   };
 
-  useEffect(() => {
-    const getMySeeds = () => {
-      if (!account) return;
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      getNftByAccount(account)
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("getMySeeds res:", res);
-          const lst: INFT[] = res.data.content.map((item: any) => ({
-            tokenId: item.token_id,
-            tokenIdFormat: `SEED No.${item.token_id}`,
-            attrs: item.attributes?.length
-              ? item.attributes.map((attr: any) => ({
-                  name: attr.attribute_name,
-                  value: attr.attribute_value,
-                }))
-              : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
-            image: item.image_uri,
-          }));
-          setNfts(lst);
-          if (lst.length) {
-            setSelectSeedIdx(0);
-          }
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+  const hideLoad = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: false });
+  };
+
+  const getMySeeds = async () => {
+    if (!seedContract || !account || !provider) {
+      return;
+    }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+    const caller = new Multicall({
+      ethersProvider: provider,
+      tryAggregate: true,
+    });
+    // 1. get balance
+    let balance;
+    try {
+      balance = await seedContract.balanceOf(account);
+    } catch (error) {
+      console.error("[my] get balance failed", error);
+      hideLoad();
+      return;
+    }
+    if (balance.eq(ethers.BigNumber.from(0))) {
+      return;
+    }
+    console.log("[my] balance:", balance);
+
+    const indexList: number[] = new Array(balance.toNumber()).fill(1);
+    // 2. get token id
+    const tokenIds: ethers.BigNumber[] = [];
+    try {
+      const result = await caller.call(
+        indexList.map((_, i) => ({
+          reference: `token_${i}`,
+          contractAddress: SEED_CONTRACTS.POLYGON,
+          abi: SeedABI,
+          calls: [
+            {
+              reference: "tokenOfOwnerByIndex",
+              methodName: "tokenOfOwnerByIndex",
+              methodParameters: [account, i],
+            },
+          ],
+        })),
+      );
+      const keys = Object.keys(result.results);
+      keys.forEach((k) => {
+        result.results[k].callsReturnContext.forEach((d) => {
+          const _id = ethers.BigNumber.from(d.returnValues[0].hex);
+          tokenIds.push(_id);
         });
-    };
-    process.env.NODE_ENV !== "development" && getMySeeds();
-  }, [account]);
+      });
+    } catch (error) {
+      console.error("[my] tokenOfOwnerByIndex failed", error);
+      hideLoad();
+      return;
+    }
+
+    if (!tokenIds.length) {
+      return;
+    }
+    console.log("[my] tokenIds:", tokenIds);
+    // 3. get token uri
+    const uris: string[] = [];
+
+    try {
+      const uresults = await caller.call(
+        tokenIds.map((id) => ({
+          reference: `token_${id.toString()}`,
+          contractAddress: SEED_CONTRACTS.POLYGON,
+          abi: SeedABI,
+          calls: [
+            {
+              reference: "tokenURI",
+              methodName: "tokenURI",
+              methodParameters: [id],
+            },
+          ],
+        })),
+      );
+      const ukeys = Object.keys(uresults.results);
+      ukeys.forEach((k) => {
+        uresults.results[k].callsReturnContext.forEach((d) => {
+          const u = d.returnValues[0].replace(
+            "ipfs://",
+            "https://dweb.link/ipfs/",
+          );
+
+          uris.push(u);
+        });
+      });
+    } catch (error) {
+      console.error("[my] tokenURI failed", error);
+      hideLoad();
+      return;
+    }
+
+    console.log("[my] uris:", uris);
+    if (!uris.length) {
+      return;
+    }
+    // 4. fetch metadata
+    console.log("tokenIds--0:", tokenIds[0].toString());
+    try {
+      const reqs = uris.map((uri) => fetch(uri, { method: "GET" }));
+      const resps = await Promise.all(reqs);
+      const res = await Promise.all(resps.map((r) => r.json()));
+      console.log("res: ", res);
+      const lst: INFT[] = res.map((r, i) => ({
+        image: formatImg(r.image),
+        tokenId: tokenIds[i].toString(),
+        tokenIdFormat: `SEED No.${tokenIds[i].toString()}`,
+        attrs: r.attributes?.length
+          ? r.attributes.map((attr: any) => ({
+              name: attr.trait_type,
+              value: attr.value,
+            }))
+          : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
+      }));
+      setNfts(lst);
+      if (lst.length) {
+        setSelectSeedIdx(0);
+      }
+    } catch (error) {
+      console.error("[my] fetch failed", error);
+      hideLoad();
+      return;
+    }
+    hideLoad();
+  };
+
+  useEffect(() => {
+    getMySeeds();
+  }, [account, provider, seedContract]);
 
   // check network
   const checkNetwork = async () => {
