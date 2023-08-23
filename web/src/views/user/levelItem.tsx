@@ -31,7 +31,8 @@ export default function LevelItem({ data, points }: IProps) {
       return {
         leftPoints: data.maxPoints - points + 1,
         percent: Math.floor(
-          ((points - data.minPoints) * 100) / (data.maxPoints - data.minPoints),
+          ((points - data.minPoints) * 100) /
+            (data.maxPoints - data.minPoints + 1),
         ),
       };
     } else {
