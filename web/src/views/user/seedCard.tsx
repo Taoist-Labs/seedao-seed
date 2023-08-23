@@ -323,7 +323,7 @@ export default function SeedCard() {
 
         // setShowSeedModal(true);
         // setLoading(false);
-        fetch(uri, { method: "GET" })
+        fetch(formatImg(uri), { method: "GET" })
           .then((res) => res.json())
           .then((res: any) => {
             const _new_nft: INFT = {
