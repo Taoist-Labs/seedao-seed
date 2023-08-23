@@ -388,6 +388,7 @@ export default function SeedCard() {
       return;
     }
     if (balance.eq(ethers.BigNumber.from(0))) {
+      setNfts([]);
       hideLoad();
       return;
     }
