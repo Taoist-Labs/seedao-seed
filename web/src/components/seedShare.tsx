@@ -124,7 +124,7 @@ const AttrBox = styled.ul`
     display: flex;
     align-items: center;
     gap: 10px;
-    height: 64px;
+    min-height: 64px;
     img {
       width: 34px;
     }
