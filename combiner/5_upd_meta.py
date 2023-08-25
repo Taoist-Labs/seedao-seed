@@ -32,8 +32,8 @@ def update_metadatas(jsonFiles, cid):
     pass
 
 def main():
-    cid = 'bafybeif7zcefrblohgf5tde3eh2g4pkieg25ym7fdklrv5kqlyftxcbwlu'
-    jsons = load_jsons('./.tmp/520done/json/')
+    cid = 'bafybeibkqsq54qsehbj6yv5z2nof4m2vdwobchbjnrzy45errhzq42vooe'
+    jsons = load_jsons('./.tmp/FinalDone/json/')
 
     print(len(jsons))
 

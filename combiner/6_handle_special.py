@@ -113,37 +113,7 @@ def gen_metadata(params):
     metadata = {'attributes': [], 'image': "ipfs://"}
 
     metadata['attributes'].append({
-        "trait_type": "Background",
-        "value": "Special"
-    })
-
-    metadata['attributes'].append({
-        "trait_type": "Body",
-        "value": "Special"
-    })
-
-    metadata['attributes'].append({
-        "trait_type": "Eyes",
-        "value": "Special"
-    })
-
-    metadata['attributes'].append({
-        "trait_type": "Tai Chi Star",
-        "value": n_star.title()
-    })
-
-    metadata['attributes'].append({
-        "trait_type": "Head",
-        "value": "Special"
-    })
-
-    metadata['attributes'].append({
-        "trait_type": "Ear",
-        "value": "Special"
-    })
-
-    metadata['attributes'].append({
-        "trait_type": "Style",
+        "trait_type": "Special",
         "value": "Special"
     })
 
@@ -213,7 +183,7 @@ def main():
         combinations = gen_comp(nfts, star, addedStarPath)
 
         # 1. add stars
-        list(map(lambda item: add_star(item), combinations))
+        # list(map(lambda item: add_star(item), combinations))
 
         # 2. gen meta
         list(map(lambda item: gen_metadata(item), combinations))

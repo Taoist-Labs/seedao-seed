@@ -18,21 +18,22 @@ def listFiles(path):
     return filelist
 
 
-def check_truncated(files):
-    for file in files:
-        img = Image.open(file)
-        try:
-            img.load()
-        except IOError:
-            print("truncated image: ", os.path.basename(file))
-            pass
+def check_truncated(file):
+    img = Image.open(file)
+    try:
+        img.load()
+    except IOError:
+        print("truncated image: ", os.path.basename(file))
+        pass
 
 
 def main():
     files = listFiles('./.tmp/FinalDone/png/')
     print(len(files))
 
-    check_truncated(files)
+    pool = Pool(processes=10)
+    pool.map(check_truncated, files)
+    pool.close()
     pass
 
 

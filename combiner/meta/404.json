@@ -2,31 +2,31 @@
     "attributes": [
         {
             "trait_type": "Background",
-            "value": "404"
+            "value": "Unknown"
         },
         {
             "trait_type": "Body",
-            "value": "404"
+            "value": "Unknown"
         },
         {
             "trait_type": "Eyes",
-            "value": "404"
+            "value": "Unknown"
         },
         {
             "trait_type": "Tai Chi Star",
-            "value": "404"
+            "value": "Unknown"
         },
         {
             "trait_type": "Ear",
-            "value": "404"
+            "value": "Unknown"
         },
         {
             "trait_type": "Head",
-            "value": "404"
+            "value": "Unknown"
         },
         {
             "trait_type": "Style",
-            "value": "404"
+            "value": "Unknown"
         }
     ],
     "image": "ipfs://bafybeiclerid2gw3pwp676xhs7nr6gm2sbu2xgqfo4sbf4exnqdxh5if2i"
