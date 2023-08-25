@@ -17,19 +17,28 @@ from PIL import Image, ImageOps
 import urllib.parse
 
 
-def scale_images(path, size, save_path):
+def list_images(path, size, save_path):
+    images = []
     for root, _, files in os.walk(path):
         for fileName in files:
             sufix = fileName.rsplit('.', 1)[1]
             if sufix == 'png':
                 f = os.path.join(root, fileName)
                 s = os.path.join(save_path, fileName)
-                img = Image.open(f)
-                print(f, s, img.size, img.mode)
-                # ImageOps.scale(img, size/img.size[0], Image.NEAREST).save(s)
-                ImageOps.scale(img, size/img.size[0]).save(s)
-                img.thumbnail((230, 230))  # gen thumbnail
-                img.save(os.path.join(save_path, 'thumb-'+fileName))
+                images.append((f, size, save_path))
+    return images
+    pass
+
+def scale_image(param):
+    file, size, save_path = param
+    fileName = os.path.basename(file)
+    s = os.path.join(save_path, fileName)
+    img = Image.open(file)
+    print(file, s, img.size, img.mode)
+    # ImageOps.scale(img, size/img.size[0], Image.NEAREST).save(s)
+    ImageOps.scale(img, size/img.size[0]).save(s)
+    img.thumbnail((230, 230))  # gen thumbnail
+    img.save(os.path.join(save_path, 'thumb-'+fileName))
     pass
 
 
@@ -110,9 +119,13 @@ def get_res_json(path, save_path, img_base_url='./'):
 
 def main():
 
-    # scale_images('./520', 750, './.tmp/20230819')
+    images = list_images('./.tmp/FinalChoose', 750, './.tmp/FinalRes')
 
-    get_res_json('./.tmp/20230819', './.tmp/',
+    pool = Pool(processes=10)
+    pool.map(scale_image, images)
+    pool.close()
+
+    get_res_json('./.tmp/FinalRes', './.tmp/',
                  'https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/')
     pass
 
