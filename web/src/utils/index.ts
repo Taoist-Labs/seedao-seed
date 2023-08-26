@@ -12,3 +12,13 @@ export const addressToShow = (address: string, num?: number) => {
 export const formatNumber = (num: number) => {
   return num.toLocaleString("en-US");
 };
+
+export const getShortDisplay = (v: string, num: number) => {
+  if (!v) return v;
+  const arr = v.split(".");
+  let res = arr[0];
+  if (arr[1]) {
+    res += `.${arr[1].slice(0, num || 6)}`;
+  }
+  return res;
+};

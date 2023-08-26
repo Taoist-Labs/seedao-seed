@@ -1,3 +1,12 @@
+#
+# 3_gen_res.py:
+# This script is used to generate thumbnail and metadata for each image.
+# The outputs are:
+# 1. thumbnail image and scaled image - 750px
+# 2. nfts.json - metadata for each image
+#
+# The input is the folder of images, which is the output of 2_gen_meta.py
+
 import itertools
 import os
 import random
@@ -8,19 +17,28 @@ from PIL import Image, ImageOps
 import urllib.parse
 
 
-def scale_images(path, size, save_path):
+def list_images(path, size, save_path):
+    images = []
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            sufix = fileName.rsplit('.', 1)[1]
             if sufix == 'png':
                 f = os.path.join(root, fileName)
                 s = os.path.join(save_path, fileName)
-                img = Image.open(f)
-                print(f, s, img.size, img.mode)
-                # ImageOps.scale(img, size/img.size[0], Image.NEAREST).save(s)
-                ImageOps.scale(img, size/img.size[0]).save(s)
-                img.thumbnail((230, 230))  # gen thumbnail
-                img.save(os.path.join(save_path, 'thumb-'+fileName))
+                images.append((f, size, save_path))
+    return images
+    pass
+
+def scale_image(param):
+    file, size, save_path = param
+    fileName = os.path.basename(file)
+    s = os.path.join(save_path, fileName)
+    img = Image.open(file)
+    print(file, s, img.size, img.mode)
+    # ImageOps.scale(img, size/img.size[0], Image.NEAREST).save(s)
+    ImageOps.scale(img, size/img.size[0]).save(s)
+    img.thumbnail((230, 230))  # gen thumbnail
+    img.save(os.path.join(save_path, 'thumb-'+fileName))
     pass
 
 
@@ -33,8 +51,15 @@ def get_res_json(path, save_path, img_base_url='./'):
             if sufix == 'png' and not prefix.startswith('thumb-'):
                 name = os.path.splitext(os.path.basename(fileName))[
                     0].split('-', 1)[1]
-                n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
-                    '#')
+                print(name)
+
+                n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = '', '', '', '', '', '', ''
+                splited = name.split('#')
+                if len(splited) == 6:
+                    n_background, n_body, n_eye, n_star, n_head, n_cloth = splited
+                else:
+                    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = splited
+
                 # todo: save metadata
                 metadata = {'attributes': [], 'image': "ipfs://"}
 
@@ -94,9 +119,13 @@ def get_res_json(path, save_path, img_base_url='./'):
 
 def main():
 
-    # scale_images('./output', 750, './.tmp/result')
+    images = list_images('./.tmp/FinalChoose', 750, './.tmp/FinalRes')
 
-    get_res_json('./.tmp/result', './.tmp/',
+    pool = Pool(processes=10)
+    pool.map(scale_image, images)
+    pool.close()
+
+    get_res_json('./.tmp/FinalRes', './.tmp/',
                  'https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts/')
     pass
 

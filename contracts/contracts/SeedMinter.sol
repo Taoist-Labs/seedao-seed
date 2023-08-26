@@ -30,7 +30,7 @@ contract SeedMinter is
   // free claim once whenever the claim method is whitelist or SCR
   mapping(address => bool) public claimed;
 
-  // flag of payed mint feature gate
+  // flag of pay mint feature gate
   bool public onMint;
   // flag of free claim with whitelist feature gate
   bool public onClaimWithWhitelist;
@@ -70,7 +70,7 @@ contract SeedMinter is
     _;
   }
 
-  /// @dev used to restrict methods that only can call when payed mint feature gate is open
+  /// @dev used to restrict methods that only can call when pay mint feature gate is open
   modifier enableMint() {
     require(onMint, "Mint is not open");
     _;
@@ -132,10 +132,10 @@ contract SeedMinter is
     // set claimed flag to true
     claimed[_msgSender()] = true;
 
-    _mint(_msgSender());
+    _mint(_msgSender(), ISeed(seed).totalSupply());
   }
 
-  /// claim for free with SCR
+  /// @dev claim for free with SCR
   /// `enableClaimWithSCR` modifier is used to restrict methods that only can call when claim with SCR feature gate is open
   /// `noClaimed` modifier is used to restrict that each user can only free claim once, whether it is through the whitelist condition or the SCR condition, they can only free claim for free once
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
@@ -151,19 +151,21 @@ contract SeedMinter is
     // set claimed flag to true
     claimed[_msgSender()] = true;
 
-    _mint(_msgSender());
+    _mint(_msgSender(), ISeed(seed).totalSupply());
   }
 
-  /// used for airdrop, only minter can call, need to specify the receiving addresses
+  /// @dev used for airdrop, only minter can call, need to specify the receiving addresses
   function airdrop(address[] calldata to) external onlyMinter {
+    uint256 id = ISeed(seed).totalSupply();
     for (uint256 i = 0; i < to.length; i++) {
-      _mint(to[i]);
+      _mint(to[i], id);
+      id++;
     }
   }
 
   /// @dev buy SEED directly with payment, supporting buy multiple NFTs at once
   /// `payable` modifier indicates that the current method can receive native token
-  /// `enableMint` modifier is used to restrict methods that only can call when payed mint feature gate is open
+  /// `enableMint` modifier is used to restrict methods that only can call when pay mint feature gate is open
   /// `nonReentrant` modifier is used to restrict the current method from re-entering
   function mint(uint256 amount) external payable enableMint nonReentrant {
     require(amount > 0, "Mint amount must bigger than zero");
@@ -176,8 +178,10 @@ contract SeedMinter is
       payable(_msgSender()).transfer(msg.value - payValue);
     }
 
+    uint256 id = ISeed(seed).totalSupply();
     for (uint256 i = 0; i < amount; i++) {
-      _mint(_msgSender());
+      _mint(_msgSender(), id);
+      id++;
     }
   }
 
@@ -198,14 +202,9 @@ contract SeedMinter is
       );
   }
 
-  //  /// mint SEED
-  //  function _mint(address to, uint256 tokenId) internal {
-  //    ISeed(seed).mint(to, tokenId);
-  //  }
-  //
   /// @dev mint SEED
-  function _mint(address to) internal {
-    ISeed(seed).mint(to, ISeed(seed).totalSupply());
+  function _mint(address to, uint256 tokenId) internal {
+    ISeed(seed).mint(to, tokenId);
   }
 
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
@@ -256,13 +255,13 @@ contract SeedMinter is
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
   // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-  /// @dev pause payed mint feature, after paused, can't mint new NFT
+  /// @dev pause pay mint feature, after paused, can't mint new NFT
   function pauseMint() public onlyOwner {
     onMint = false;
     emit MintDisabled(_msgSender());
   }
 
-  /// @dev unpause payed mint feature, after unpaused, can mint new NFT
+  /// @dev unpause pay mint feature, after unpaused, can mint new NFT
   function unpauseMint() public onlyOwner {
     onMint = true;
     emit MintEnabled(_msgSender());

@@ -24,6 +24,18 @@ const FooterStyle = styled.footer<props>`
   box-sizing: border-box;
   background-color: ${(props) => props.color || "#FBF5EF"};
   font-size: 12px;
+  padding-inline: 120px;
+  @media (max-width: 960px) {
+    padding-inline: 40px;
+  }
+  @media (max-width: 750px) {
+    padding-inline: 30px;
+  }
+  @media (max-width: 414px) {
+    padding-bottom: 20px;
+    height: unset;
+    line-height: 30px;
+  }
 `;
 
 const FooterCenter = styled(CenterBox)`
@@ -31,5 +43,9 @@ const FooterCenter = styled(CenterBox)`
   justify-content: space-between;
   .heart {
     color: darkred;
+  }
+  @media (max-width: 414px) {
+    flex-direction: column;
+    text-align: center;
   }
 `;

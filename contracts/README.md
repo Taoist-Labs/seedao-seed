@@ -26,7 +26,7 @@ $ npx hardhat run --network sepolia scripts/0_deploy_mockpoints.ts
 
 #### 3.2 Deploy `Seed` contract
 
-Please modify and confirm the address of the SCR contract in `scripts/1_deploy_seed.ts` #9 line, and then execute the deployment command:
+Please modify and confirm the address of the SCR contract in `scripts/1_deploy_seed.ts` #9 line, confirm baseURI's value at #11 line too, and then execute the deployment command:
 
 ```bash
 $ npx hardhat run --network mainnet scripts/1_deploy_seed.ts
@@ -46,7 +46,7 @@ Management methods supported by `Seed` contract:
 - `pause()` : pause contract
 - `unpause()` : unpause contract
 
-#### 3.3 Deploy `SeedManger` contract
+#### 3.3 Deploy `SeedMinter` contract
 
 Please modify and confirm the value of the `Seed` contract address, the SCR address and the SCR amount condition in `scripts/2_deploy_seedminter.ts` #9 #11 #13 line, and then execute the deployment command:
 
@@ -54,7 +54,7 @@ Please modify and confirm the value of the `Seed` contract address, the SCR addr
 $ npx hardhat run --network mainnet scripts/2_deploy_seedminter.ts
 ```
 
-!! After the `SeedManger` contract is deployed successfully in the `scripts/2_deploy_seedminter.ts` script, the `transferOwnership(address)` method of the `Seed` contract is called to modify its owner address to the address of the `SeedManger` contract !!
+!! After the `SeedMinter` contract is deployed successfully in the `scripts/2_deploy_seedminter.ts` script, the `transferOwnership(address)` method of the `Seed` contract is called to modify its owner address to the address of the `SeedMinter` contract !!
 
 > You can call `airdrop(address[])` method to migrate SGN to SEED, up to 200 addresses can be passed at one time, if you need to migrate more addresses, you can call this method multiple times.
 
@@ -71,12 +71,12 @@ Call `unpauseClaimWithWhitelist()` to disable the whitelist free claim feature.
 
 You can call `setSCR(address)` to set the SCR contract address, call `setSCRAmountCondi(uint256)` to set the SCR amount condition, call `pauseClaimWithSCR()` to disable the SCR free claim feature.
 
-> To enable payed mint feature, you need to call:
+> To enable pay mint feature, you need to call:
 
 - `setPrice(uint256)` : set NFT price
-- `unpauseMint()` : enable payed mint feature
+- `unpauseMint()` : enable pay mint feature
 
-Call `pauseMint()` to disable the payed mint feature.
+Call `pauseMint()` to disable the pay mint feature.
 
 > Other methods:
 

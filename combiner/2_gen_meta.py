@@ -11,7 +11,7 @@ def load_images(path):
     images = []
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            sufix = fileName.rsplit('.', 1)[1]
             # directory = fileName.rsplit('.')[0]
             if sufix == 'png':
                 f = os.path.join(root, fileName)
@@ -19,58 +19,66 @@ def load_images(path):
                 img = Image.open(f)
                 print(f, img.size, img.mode)
                 images.append((f, None))
+
     return images
 
 
 def gen_metadata(params):
     save_name, _ = params
     name = os.path.splitext(os.path.basename(save_name))[0].split('-', 1)[1]
-    print(name)
-    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
-        '#')
+    # print(name)
+    # n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = name.split(
+    #     '#')
+    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = '', '', '', '', '', '', ''
+    splited = name.split('#')
+    if len(splited) == 6:
+        n_background, n_body, n_eye, n_star, n_head, n_cloth = splited
+    else:
+        n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = splited
+
     # todo: save metadata
     metadata = {'attributes': [], 'image': "ipfs://"}
 
     if len(n_background) > 0:
         metadata['attributes'].append({
             "trait_type": "Background",
-            "value": n_background
+            "value": n_background.title()
         })
 
     if len(n_body) > 0:
         metadata['attributes'].append({
             "trait_type": "Body",
-            "value": n_body
+            "value": n_body.title()
         })
 
     if len(n_eye) > 0:
         metadata['attributes'].append({
             "trait_type": "Eyes",
-            "value": n_eye
+            "value": n_eye.title()
         })
 
     if len(n_star) > 0:
         metadata['attributes'].append({
             "trait_type": "Tai Chi Star",
-            "value": n_star
+            "value": n_star.title()
         })
 
     if len(n_head) > 0:
         metadata['attributes'].append({
             "trait_type": "Head",
-            "value": n_head
+            "value": n_head.title()
         })
 
     if len(n_ring) > 0:
         metadata['attributes'].append({
             "trait_type": "Ear",
-            "value": n_ring
+            "value": n_ring.title()
         })
 
     if len(n_cloth) > 0:
         metadata['attributes'].append({
             "trait_type": "Style",
-            "value": n_cloth
+            "value": n_cloth.title()
         })
 
     # print(metadata)
@@ -89,7 +97,9 @@ def gen(items):
 
 
 def main():
-    nfts = load_images('./output')
+    # nfts = load_images('./output')
+    # nfts = load_images('./.tmp/520WithStars/')
+    nfts = load_images('./.tmp/FinalChooseWithStars/')
 
     print(len(nfts))
 

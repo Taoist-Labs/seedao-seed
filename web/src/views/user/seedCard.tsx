@@ -13,7 +13,6 @@ import ShareModal from "./shareModal";
 import EmptyIcon from "assets/images/user/empty.svg";
 import WhiteListData from "data/whitelist.json";
 import SeedDisplay from "./seedDisplay";
-import { getNftByAccount } from "utils/request";
 import { GALLERY_ATTRS } from "data/gallery";
 import OpeningModal from "./opening";
 import useSelectAccount from "hooks/useSelectAccout";
@@ -23,10 +22,12 @@ import {
   SEED_MANAGER_CONTRACTS,
 } from "utils/contract";
 import SeedABI from "data/abi/Seed.json";
-import SeedMgrABI from "data/abi/SeedManager.json";
+import SeedMgrABI from "data/abi/SeedMinter.json";
 import ScrABI from "data/abi/SCR.json";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
+import { Multicall } from "ethereum-multicall";
+import { USE_NETWORK } from "utils/constant";
 
 const whiteList = WhiteListData as {
   rootHash: string;
@@ -103,6 +104,10 @@ const LEVELS = [
 //   return { tokenId: Number(arr[0]), level: Number(arr[1]) };
 // };
 
+const formatImg = (img: string) => {
+  return img.replace("ipfs://", "https://dweb.link/ipfs/");
+};
+
 export default function SeedCard() {
   const { t } = useTranslation();
   const { account, provider, chainId, connector } = useSelectAccount();
@@ -147,7 +152,7 @@ export default function SeedCard() {
     }
     const signer = provider.getSigner(account);
     const contract = new ethers.Contract(
-      SEED_MANAGER_CONTRACTS.POLYGON,
+      SEED_MANAGER_CONTRACTS[USE_NETWORK],
       SeedMgrABI,
       signer,
     );
@@ -161,7 +166,7 @@ export default function SeedCard() {
     }
 
     const contract = new ethers.Contract(
-      SEED_CONTRACTS.POLYGON,
+      SEED_CONTRACTS[USE_NETWORK],
       SeedABI,
       provider,
     );
@@ -182,11 +187,11 @@ export default function SeedCard() {
 
   const getSCR = async () => {
     const provider = new ethers.providers.StaticJsonRpcProvider(
-      Chain.POLYGON.rpcUrls[0],
+      Chain[USE_NETWORK].rpcUrls[0],
     );
     try {
       const contract = new ethers.Contract(
-        SCR_CONTRACTS.POLYGON,
+        SCR_CONTRACTS[USE_NETWORK],
         ScrABI,
         provider,
       );
@@ -206,11 +211,13 @@ export default function SeedCard() {
   }, [account]);
 
   useEffect(() => {
-    chainId === Chain.POLYGON.chainId && getSeedContract();
+    chainId === Chain[USE_NETWORK].chainId && getSeedContract();
   }, [chainId, provider]);
 
   useEffect(() => {
-    chainId === Chain.POLYGON.chainId && account && getSeedManagerContract();
+    chainId === Chain[USE_NETWORK].chainId &&
+      account &&
+      getSeedManagerContract();
   }, [chainId, account, provider]);
 
   useEffect(() => {
@@ -234,7 +241,7 @@ export default function SeedCard() {
         return;
       }
       try {
-        const _isOpenMint = await seedMgrContract.onClaimWithPoints();
+        const _isOpenMint = await seedMgrContract.onClaimWithSCR();
         setIsOpenMint(_isOpenMint);
       } catch (error) {
         console.error("getSwitch error", error);
@@ -257,8 +264,8 @@ export default function SeedCard() {
       return;
     }
     // check network
-    if (chainId !== Chain.POLYGON.chainId) {
-      await connector.activate(Chain.POLYGON);
+    if (chainId !== Chain[USE_NETWORK].chainId) {
+      await connector.activate(Chain[USE_NETWORK]);
       return;
     }
     if (!seedMgrContract || !seedContract) {
@@ -273,13 +280,13 @@ export default function SeedCard() {
           (p) => p.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
         );
         if (proof_item) {
-          res = await seedMgrContract.claimWithWhiteList(
+          res = await seedMgrContract.claimWithWhitelist(
             findIdx,
             proof_item.proof,
           );
         }
       } else {
-        res = await seedMgrContract.claimWithPoints();
+        res = await seedMgrContract.claimWithSCR();
       }
       setLoading(true);
       setShowMintModal(false);
@@ -319,13 +326,13 @@ export default function SeedCard() {
 
         // setShowSeedModal(true);
         // setLoading(false);
-        fetch(uri, { method: "GET" })
+        fetch(formatImg(uri), { method: "GET" })
           .then((res) => res.json())
           .then((res: any) => {
             const _new_nft: INFT = {
               tokenId: tokenId.toString(),
               tokenIdFormat: `SEED No.${tokenId.toString()}`,
-              image: res.image, // TODO handle image url
+              image: formatImg(res.image),
               attrs: res.attributes.map((attr: any) => ({
                 name: attr.trait_type,
                 value: attr.value,
@@ -360,43 +367,144 @@ export default function SeedCard() {
     setShowShareModal(true);
   };
 
-  useEffect(() => {
-    const getMySeeds = () => {
-      if (!account) return;
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      getNftByAccount(account)
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("getMySeeds res:", res);
-          const lst: INFT[] = res.data.content.map((item: any) => ({
-            tokenId: item.token_id,
-            tokenIdFormat: `SEED No.${item.token_id}`,
-            attrs: item.attributes?.length
-              ? item.attributes.map((attr: any) => ({
-                  name: attr.attribute_name,
-                  value: attr.attribute_value,
-                }))
-              : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
-            image: item.image_uri,
-          }));
-          setNfts(lst);
-          if (lst.length) {
-            setSelectSeedIdx(0);
-          }
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+  const hideLoad = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: false });
+  };
+
+  const getMySeeds = async () => {
+    if (!seedContract || !account || !provider) {
+      return;
+    }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+    const caller = new Multicall({
+      ethersProvider: provider,
+      tryAggregate: true,
+    });
+    // 1. get balance
+    let balance;
+    try {
+      balance = await seedContract.balanceOf(account);
+    } catch (error) {
+      console.error("[my] get balance failed", error);
+      hideLoad();
+      return;
+    }
+    if (balance.eq(ethers.BigNumber.from(0))) {
+      setNfts([]);
+      hideLoad();
+      return;
+    }
+    console.log("[my] balance:", balance);
+
+    const indexList: number[] = new Array(balance.toNumber()).fill(1);
+    // 2. get token id
+    const tokenIds: ethers.BigNumber[] = [];
+    try {
+      const result = await caller.call(
+        indexList.map((_, i) => ({
+          reference: `token_${i}`,
+          contractAddress: SEED_CONTRACTS[USE_NETWORK],
+          abi: SeedABI,
+          calls: [
+            {
+              reference: "tokenOfOwnerByIndex",
+              methodName: "tokenOfOwnerByIndex",
+              methodParameters: [account, i],
+            },
+          ],
+        })),
+      );
+      const keys = Object.keys(result.results);
+      keys.forEach((k) => {
+        result.results[k].callsReturnContext.forEach((d) => {
+          const _id = ethers.BigNumber.from(d.returnValues[0].hex);
+          tokenIds.push(_id);
         });
-    };
-    process.env.NODE_ENV !== "development" && getMySeeds();
-  }, [account]);
+      });
+    } catch (error) {
+      console.error("[my] tokenOfOwnerByIndex failed", error);
+      hideLoad();
+      return;
+    }
+
+    if (!tokenIds.length) {
+      return;
+    }
+    console.log("[my] tokenIds:", tokenIds);
+    // 3. get token uri
+    const uris: string[] = [];
+
+    try {
+      const uresults = await caller.call(
+        tokenIds.map((id) => ({
+          reference: `token_${id.toString()}`,
+          contractAddress: SEED_CONTRACTS[USE_NETWORK],
+          abi: SeedABI,
+          calls: [
+            {
+              reference: "tokenURI",
+              methodName: "tokenURI",
+              methodParameters: [id],
+            },
+          ],
+        })),
+      );
+      const ukeys = Object.keys(uresults.results);
+      ukeys.forEach((k) => {
+        uresults.results[k].callsReturnContext.forEach((d) => {
+          uris.push(formatImg(d.returnValues[0]));
+        });
+      });
+    } catch (error) {
+      console.error("[my] tokenURI failed", error);
+      hideLoad();
+      return;
+    }
+
+    console.log("[my] uris:", uris);
+    if (!uris.length) {
+      return;
+    }
+    // 4. fetch metadata
+    console.log("tokenIds--0:", tokenIds[0].toString());
+    try {
+      const reqs = uris.map((uri) => fetch(uri, { method: "GET" }));
+      const resps = await Promise.all(reqs);
+      const res = await Promise.all(resps.map((r) => r.json()));
+      console.log("res: ", res);
+      const lst: INFT[] = res.map((r, i) => ({
+        image: formatImg(r.image),
+        tokenId: tokenIds[i].toString(),
+        tokenIdFormat: `SEED No.${tokenIds[i].toString()}`,
+        attrs: r.attributes?.length
+          ? r.attributes.map((attr: any) => ({
+              name: attr.trait_type,
+              value: attr.value,
+            }))
+          : GALLERY_ATTRS.map((attr) => ({ name: attr, value: "" })),
+      }));
+      setNfts(lst);
+      if (lst.length) {
+        setSelectSeedIdx(0);
+      }
+    } catch (error) {
+      console.error("[my] fetch failed", error);
+      hideLoad();
+      return;
+    }
+    hideLoad();
+  };
+
+  useEffect(() => {
+    getMySeeds();
+  }, [account, provider, seedContract]);
 
   // check network
   const checkNetwork = async () => {
-    if (connector && chainId && chainId !== Chain.POLYGON.chainId) {
+    if (connector && chainId && chainId !== Chain[USE_NETWORK].chainId) {
       try {
-        await connector.activate(Chain.POLYGON);
+        await connector.activate(Chain[USE_NETWORK]);
         return true;
       } catch (error) {
         console.error(error);

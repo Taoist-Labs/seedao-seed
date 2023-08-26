@@ -2,14 +2,16 @@ import itertools
 import os
 import random
 import math
-from multiprocessing import Pool
-from PIL import Image, ImageOps
+from PIL import Image
+import json
+import shutil
 
 
 def load_images(path):
     images = []
     for root, _, files in os.walk(path):
         for fileName in files:
+            print(fileName)
             sufix = fileName.rsplit('.', 1)[1]
             # directory = fileName.rsplit('.')[0]
             if sufix == 'png':
@@ -82,21 +84,11 @@ def gen_comp(nfts, star_, directory):
         n_nft, nft = nfts[x]
         n_star, _ = star_
 
-        name = os.path.splitext(n_nft)[0].split('-')[1]
-        # print(name)
+        name = os.path.splitext(n_nft)[0].split('-', 1)[1]
+        print(name)
 
-        # n_background, n_body, n_eye, _, n_head, n_ring, n_cloth = name.split(
-        #     '#')
-        n_background, n_body, n_eye, _, n_head, n_ring, n_cloth = '', '', '', '', '', '', ''
-
-        splited = name.split('#')
-        if len(splited) == 6:
-            n_background, n_body, n_eye, _, n_head, n_cloth = splited
-        else:
-            n_background, n_body, n_eye, _, n_head, n_ring, n_cloth = splited
-
-        name = '#'.join(list(map(lambda n: os.path.splitext(os.path.basename(n))
-                        [0], [n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth])))
+        name = '#'.join(
+            list(map(lambda n: os.path.splitext(os.path.basename(n))[0], [name, n_star])))
 
         save_name = os.path.join(directory, 'seed-' + name + '.png')
         items.append((save_name, (n_nft, n_star)))
@@ -107,29 +99,97 @@ def gen_comp(nfts, star_, directory):
     pass
 
 
-def merge(items):
-    pool = Pool(processes=10)
-    pool.map(add_star, items)
-    pool.close()
+def add_stars(nfts, stars):
+    pass
+
+
+def gen_metadata(params):
+    save_name, _ = params
+    name = os.path.splitext(os.path.basename(save_name))[0].split('-', 1)[1]
+
+    _, n_star = name.split('#')
+
+    # todo: save metadata
+    metadata = {'attributes': [], 'image': "ipfs://"}
+
+    metadata['attributes'].append({
+        "trait_type": "Special",
+        "value": "Special"
+    })
+
+    with open(f'{save_name}'.replace('.png', '.json'), 'w') as f:
+        js = json.dumps(metadata, indent=4)
+        # print(js)
+        f.write(js)
+    pass
+
+
+def rename_nft(rawName, newName, srcPath, outPath):
+    if not os.path.exists(outPath):
+        os.mkdir(outPath)
+        os.mkdir(os.path.join(outPath, 'png'))
+        os.mkdir(os.path.join(outPath, 'json'))
+
+    src = os.path.join(srcPath, rawName + '.png')
+    dst = os.path.join(outPath, 'png', newName + '.png')
+    shutil.copyfile(src, dst)
+
+    src = os.path.join(srcPath, rawName + '.json')
+    dst = os.path.join(outPath, 'json', newName + '.json')
+    shutil.copyfile(src, dst)
+    pass
+
+
+def rename(params, srcPath, outPath):
+    save_name, _ = params
+    name = os.path.splitext(os.path.basename(save_name))[0].split('-', 1)[1]
+
+    nnn, n_star = name.split('#')
+    new_name = nnn
+    if n_star == 'Red':
+        new_name = nnn + '_1'
+    elif n_star == 'Green':
+        new_name = nnn + '_2'
+    elif n_star == 'White':
+        new_name = nnn + '_3'
+    elif n_star == 'Purple':
+        new_name = nnn + '_4'
+    elif n_star == 'Blue':
+        new_name = nnn + '_5'
+    else:
+        print('error, invlid name ', n_star)
+        return
+
+    rename_nft('seed-' + name, new_name, srcPath, outPath)
+    pass
 
 
 def main():
-    nfts = load_images('./.tmp/520/')
-    stars = load_stars('./meta/4.star/')
-    # nfts = load_images('/Volumes/“RAMDisk”/FinalChoose')
-    # stars = load_stars('/Volumes/“RAMDisk”/4.star')
+
+    imagePath = './.tmp/FinalSpecials/'
+    starPath = './meta/4.star/'
+
+    addedStarPath = './.tmp/FinalSpecialsWithStars/'
+    
+    renamedPath = './.tmp/FInalSpecialsDone/'
+
+    nfts = load_images(imagePath)
+    stars = load_stars(starPath)
 
     print(len(nfts), len(stars))
 
-    print(stars)
-
     for star in stars:
         # nft, star
-        combinations = gen_comp(nfts, star, './.tmp/520WithStars/')
-        # combinations = gen_comp(nfts, star, '/Volumes/“RAMDisk”/FinalChooseWithStars/')
-        merge(combinations)
+        combinations = gen_comp(nfts, star, addedStarPath)
 
+        # 1. add stars
         # list(map(lambda item: add_star(item), combinations))
+
+        # 2. gen meta
+        list(map(lambda item: gen_metadata(item), combinations))
+
+        # 3. rename
+        list(map(lambda item: rename(item, addedStarPath, renamedPath), combinations))
         pass
 
     pass

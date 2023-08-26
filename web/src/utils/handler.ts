@@ -1,15 +1,6 @@
 import { ATTR_ICON_MAP } from "utils/constant";
 
-type OType = {
-  name: string;
-  metadata: {
-    attributes: { trait_type: string; value: string }[];
-  };
-  image: string;
-  thumb: string;
-};
-
-export const handleNfts = (data: OType[]) => {
+export const handleNfts = (data: NFTRes[]) => {
   const nfts: INFT[] = [];
   const attr_group: {
     [key: string]: {

@@ -42,9 +42,9 @@ export default function SeedModal({
         </ModalLeft>
         <ModalRight>
           <div className="title">{seedTitle}</div>
-          <AttrBox>
+          <AttrBox style={isShare ? { display: "flex", flexWrap: "wrap" } : {}}>
             {seed.attrs.map((attr, idx) => (
-              <li key={idx}>
+              <li key={idx} style={isShare ? {} : { float: "left" }}>
                 <img src={ATTR_ICON_MAP[attr.name]} alt="" />
                 <div>
                   <p className="name">{attr.name}</p>
@@ -157,6 +157,9 @@ const ModalRight = styled.div`
     .title {
       display: none;
     }
+    .share {
+      margin-top: 30px;
+    }
   }
 `;
 
@@ -178,7 +181,7 @@ const AttrBox = styled.ul`
     align-items: center;
     gap: 10px;
     min-height: 56px;
-    &:nth-child(2n) {
+    &:nth-of-type(2n) {
       margin-right: 0;
     }
     img {

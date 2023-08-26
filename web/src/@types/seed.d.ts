@@ -14,3 +14,12 @@ declare interface IAttrGroup {
   icon: string;
   valueNumbers: { [key: string]: number };
 }
+
+declare type NFTRes = {
+  name: string;
+  metadata: {
+    attributes: { trait_type: string; value: string }[];
+  };
+  image: string;
+  thumb: string;
+};
