@@ -44,10 +44,9 @@ export default function GalleryPage() {
       setList(nfts);
     } else {
       const getNfts = () => {
-        fetch(
-          "https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts.json",
-          { method: "GET" },
-        )
+        fetch(`${process.env.REACT_APP_STATIC_HOST}/nfts.json`, {
+          method: "GET",
+        })
           .then((res) => res.json())
           .then((res) => {
             console.log("res", res);
