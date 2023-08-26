@@ -181,7 +181,7 @@ const AttrBox = styled.ul`
     align-items: center;
     gap: 10px;
     min-height: 56px;
-    &:nth-child(2n) {
+    &:nth-of-type(2n) {
       margin-right: 0;
     }
     img {
