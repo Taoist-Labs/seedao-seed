@@ -30,5 +30,15 @@ const CHAIN: { [key: string]: AddEthereumChainParameter } = {
     },
     rpcUrls: ["https://rpc-mainnet.maticvigil.com"],
   },
+  ETHEREUM: {
+    chainId: 1,
+    chainName: "Ethereum Mainnet",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+    rpcUrls: ["https://cloudflare-eth.com", "https://rpc.flashbots.net/"],
+  },
 };
 export default CHAIN;

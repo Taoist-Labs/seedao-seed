@@ -18,3 +18,5 @@ export const ATTR_ICON_MAP: { [k: string]: string } = {
   Ring: EarIcon,
   Style: ClothIcon,
 };
+
+export const USE_NETWORK = "POLYGON";

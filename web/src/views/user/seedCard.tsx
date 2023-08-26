@@ -27,6 +27,7 @@ import ScrABI from "data/abi/SCR.json";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
 import { Multicall } from "ethereum-multicall";
+import { USE_NETWORK } from "utils/constant";
 
 const whiteList = WhiteListData as {
   rootHash: string;
@@ -151,7 +152,7 @@ export default function SeedCard() {
     }
     const signer = provider.getSigner(account);
     const contract = new ethers.Contract(
-      SEED_MANAGER_CONTRACTS.POLYGON,
+      SEED_MANAGER_CONTRACTS[USE_NETWORK],
       SeedMgrABI,
       signer,
     );
@@ -165,7 +166,7 @@ export default function SeedCard() {
     }
 
     const contract = new ethers.Contract(
-      SEED_CONTRACTS.POLYGON,
+      SEED_CONTRACTS[USE_NETWORK],
       SeedABI,
       provider,
     );
@@ -186,11 +187,11 @@ export default function SeedCard() {
 
   const getSCR = async () => {
     const provider = new ethers.providers.StaticJsonRpcProvider(
-      Chain.POLYGON.rpcUrls[0],
+      Chain[USE_NETWORK].rpcUrls[0],
     );
     try {
       const contract = new ethers.Contract(
-        SCR_CONTRACTS.POLYGON,
+        SCR_CONTRACTS[USE_NETWORK],
         ScrABI,
         provider,
       );
@@ -210,11 +211,13 @@ export default function SeedCard() {
   }, [account]);
 
   useEffect(() => {
-    chainId === Chain.POLYGON.chainId && getSeedContract();
+    chainId === Chain[USE_NETWORK].chainId && getSeedContract();
   }, [chainId, provider]);
 
   useEffect(() => {
-    chainId === Chain.POLYGON.chainId && account && getSeedManagerContract();
+    chainId === Chain[USE_NETWORK].chainId &&
+      account &&
+      getSeedManagerContract();
   }, [chainId, account, provider]);
 
   useEffect(() => {
@@ -261,8 +264,8 @@ export default function SeedCard() {
       return;
     }
     // check network
-    if (chainId !== Chain.POLYGON.chainId) {
-      await connector.activate(Chain.POLYGON);
+    if (chainId !== Chain[USE_NETWORK].chainId) {
+      await connector.activate(Chain[USE_NETWORK]);
       return;
     }
     if (!seedMgrContract || !seedContract) {
@@ -401,7 +404,7 @@ export default function SeedCard() {
       const result = await caller.call(
         indexList.map((_, i) => ({
           reference: `token_${i}`,
-          contractAddress: SEED_CONTRACTS.POLYGON,
+          contractAddress: SEED_CONTRACTS[USE_NETWORK],
           abi: SeedABI,
           calls: [
             {
@@ -436,7 +439,7 @@ export default function SeedCard() {
       const uresults = await caller.call(
         tokenIds.map((id) => ({
           reference: `token_${id.toString()}`,
-          contractAddress: SEED_CONTRACTS.POLYGON,
+          contractAddress: SEED_CONTRACTS[USE_NETWORK],
           abi: SeedABI,
           calls: [
             {
@@ -499,9 +502,9 @@ export default function SeedCard() {
 
   // check network
   const checkNetwork = async () => {
-    if (connector && chainId && chainId !== Chain.POLYGON.chainId) {
+    if (connector && chainId && chainId !== Chain[USE_NETWORK].chainId) {
       try {
-        await connector.activate(Chain.POLYGON);
+        await connector.activate(Chain[USE_NETWORK]);
         return true;
       } catch (error) {
         console.error(error);
