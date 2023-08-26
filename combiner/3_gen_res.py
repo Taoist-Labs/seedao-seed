@@ -119,7 +119,7 @@ def get_res_json(path, save_path, img_base_url='./'):
 
 def main():
 
-    images = list_images('./.tmp/FinalChoose', 750, './.tmp/FinalRes')
+    images = list_images('./.tmp/FinalSpecials', 750, './.tmp/FinalRes')
 
     pool = Pool(processes=10)
     pool.map(scale_image, images)

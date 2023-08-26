@@ -19,4 +19,4 @@ export const ATTR_ICON_MAP: { [k: string]: string } = {
   Style: ClothIcon,
 };
 
-export const USE_NETWORK = "POLYGON";
+export const USE_NETWORK: "ETHEREUM" | "POLYGON" = "ETHEREUM";
