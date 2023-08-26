@@ -1,0 +1,200 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0xAC51dF584331cfEA7cc442F09E03686403DBAF9f",
+    "txHash": "0x83b098c75631dcc658f5324883d9cd5eaae1db975c706ff149b56f90a8024ebd"
+  },
+  "proxies": [
+    {
+      "address": "0xaF7bA794bF672B9E23c3c9BFb8C5928a755b8754",
+      "txHash": "0xcd7fb6289a6642ba18397884647f42a92a208147b9908d5e4f84e42b188b088b",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "3282c5c05d9d4a4707e68d13b627219c2d44fdc5873603aedacb564ae38d84db": {
+      "address": "0xfBac0d15d212ac27d7F4bE3069b21bf0599279D6",
+      "txHash": "0x8e052cadedcf4a6d63ff36afc897a79af0d8d2fbb6f4ba15e12708ff1ad063e2",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "seed",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:19"
+          },
+          {
+            "label": "price",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:22"
+          },
+          {
+            "label": "scr",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:24"
+          },
+          {
+            "label": "scrAmountCondi",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:26"
+          },
+          {
+            "label": "whitelistRootHashes",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_mapping(t_uint256,t_bytes32)",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:28"
+          },
+          {
+            "label": "claimed",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:31"
+          },
+          {
+            "label": "onMint",
+            "offset": 0,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:34"
+          },
+          {
+            "label": "onClaimWithWhitelist",
+            "offset": 1,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:36"
+          },
+          {
+            "label": "onClaimWithSCR",
+            "offset": 2,
+            "slot": "157",
+            "type": "t_bool",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:38"
+          },
+          {
+            "label": "minter",
+            "offset": 3,
+            "slot": "157",
+            "type": "t_address",
+            "contract": "SeedMinter",
+            "src": "contracts/SeedMinter.sol:41"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bytes32)": {
+            "label": "mapping(uint256 => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}
