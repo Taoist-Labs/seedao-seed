@@ -44,14 +44,17 @@ export default function GalleryPage() {
       setList(nfts);
     } else {
       const getNfts = () => {
-        fetch(
-          "https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts.json",
-          { method: "GET" },
-        )
+        dispatch({ type: AppActionType.SET_LOADING, payload: true });
+        fetch(`${process.env.REACT_APP_STATIC_HOST}/nfts.json`, {
+          method: "GET",
+        })
           .then((res) => res.json())
           .then((res) => {
             console.log("res", res);
             dispatch({ type: AppActionType.SET_NFT_RES, payload: res });
+          })
+          .finally(() => {
+            dispatch({ type: AppActionType.SET_LOADING, payload: false });
           });
       };
       getNfts();
