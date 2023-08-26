@@ -46,7 +46,7 @@ def get_res_json(path, save_path, img_base_url='./'):
     image_list = []
     for root, _, files in os.walk(path):
         for fileName in files:
-            sufix = fileName.rsplit('.')[1]
+            sufix = fileName.rsplit('.', 1)[1]
             prefix = os.path.splitext(os.path.basename(fileName))[0]
             if sufix == 'png' and not prefix.startswith('thumb-'):
                 name = os.path.splitext(os.path.basename(fileName))[
