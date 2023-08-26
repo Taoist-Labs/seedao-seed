@@ -55,55 +55,64 @@ def get_res_json(path, save_path, img_base_url='./'):
 
                 n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = '', '', '', '', '', '', ''
                 splited = name.split('#')
-                if len(splited) == 6:
-                    n_background, n_body, n_eye, n_star, n_head, n_cloth = splited
-                else:
-                    n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = splited
 
                 # todo: save metadata
                 metadata = {'attributes': [], 'image': "ipfs://"}
-
-                if len(n_background) > 0:
+                
+                if len(splited) < 6:
                     metadata['attributes'].append({
-                        "trait_type": "Background",
-                        "value": n_background
-                    })
+                            "trait_type": "Special",
+                            "value": "Special"
+                        })
+                else: 
+                    if len(splited) == 6:
+                        n_background, n_body, n_eye, n_star, n_head, n_cloth = splited
+                    else:
+                        n_background, n_body, n_eye, n_star, n_head, n_ring, n_cloth = splited
 
-                if len(n_body) > 0:
-                    metadata['attributes'].append({
-                        "trait_type": "Body",
-                        "value": n_body
-                    })
+                    
 
-                if len(n_eye) > 0:
-                    metadata['attributes'].append({
-                        "trait_type": "Eyes",
-                        "value": n_eye
-                    })
+                    if len(n_background) > 0:
+                        metadata['attributes'].append({
+                            "trait_type": "Background",
+                            "value": n_background
+                        })
 
-                if len(n_star) > 0:
-                    metadata['attributes'].append({
-                        "trait_type": "Tai Chi Star",
-                        "value": n_star
-                    })
+                    if len(n_body) > 0:
+                        metadata['attributes'].append({
+                            "trait_type": "Body",
+                            "value": n_body
+                        })
 
-                if len(n_head) > 0:
-                    metadata['attributes'].append({
-                        "trait_type": "Head",
-                        "value": n_head
-                    })
+                    if len(n_eye) > 0:
+                        metadata['attributes'].append({
+                            "trait_type": "Eyes",
+                            "value": n_eye
+                        })
 
-                if len(n_ring) > 0:
-                    metadata['attributes'].append({
-                        "trait_type": "Ear",
-                        "value": n_ring
-                    })
+                    if len(n_star) > 0:
+                        metadata['attributes'].append({
+                            "trait_type": "Tai Chi Star",
+                            "value": n_star
+                        })
 
-                if len(n_cloth) > 0:
-                    metadata['attributes'].append({
-                        "trait_type": "Style",
-                        "value": n_cloth
-                    })
+                    if len(n_head) > 0:
+                        metadata['attributes'].append({
+                            "trait_type": "Head",
+                            "value": n_head
+                        })
+
+                    if len(n_ring) > 0:
+                        metadata['attributes'].append({
+                            "trait_type": "Ear",
+                            "value": n_ring
+                        })
+
+                    if len(n_cloth) > 0:
+                        metadata['attributes'].append({
+                            "trait_type": "Style",
+                            "value": n_cloth
+                        })
 
                 image_list.append({
                     'name': "Seed ????",
