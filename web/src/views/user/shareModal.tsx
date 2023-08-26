@@ -21,7 +21,7 @@ interface IProps {
 }
 
 const SHARE_TEXT =
-  "🌱 Proudly unveiling my Seed NFT avatar, a testament to 500K points earned through creativity and collaboration within SeeDAO! 🚀 Join me in celebrating this achievement and our vibrant community. 🌟";
+  "🌱 Proudly unveiling my Seed NFT avatar, a testament to 50K points earned through creativity and collaboration within SeeDAO! 🚀 Join me in celebrating this achievement and our vibrant community. 🌟";
 const HASH_TAGS = ["SeeDAO", "SeedNFT", "500KPoints"];
 
 export default function ShareModal({ show, seed, handleClose }: IProps) {
