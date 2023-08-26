@@ -6,6 +6,7 @@ interface IState {
   loading: boolean;
   themeMode: "light" | "dark";
   wallet_type?: WalletType;
+  nft_res: NFTRes[];
 }
 
 export enum AppActionType {
@@ -13,6 +14,7 @@ export enum AppActionType {
   SET_LOADING = "set_loading",
   SET_THEME_MODE = "set_theme_mode",
   SET_WALLET_TYPE = "set_wallet_type",
+  SET_NFT_RES = "set_nft_res",
 }
 
 interface IAction {
@@ -24,6 +26,7 @@ const INIT_STATE: IState = {
   show_login_modal: false,
   loading: false,
   themeMode: "light",
+  nft_res: [],
 };
 
 const AuthContext = createContext<{
@@ -44,6 +47,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, themeMode: action.payload };
     case AppActionType.SET_WALLET_TYPE:
       return { ...state, wallet_type: action.payload };
+    case AppActionType.SET_NFT_RES:
+      return { ...state, nft_res: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

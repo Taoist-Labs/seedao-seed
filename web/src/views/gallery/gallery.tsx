@@ -12,23 +12,51 @@ import GalleryFilterMenu, { SelectAttr } from "./filterMenu";
 import FilterSvg from "assets/images/filter.svg";
 import RefreshSvg from "assets/images/refresh.svg";
 import Header from "components/layout/header";
-import NftData from "data/nfts.json";
 import { handleNfts } from "utils/handler";
+import { AppActionType, useAppContext } from "providers/appProvider";
 
-const { attrGroups, nfts: AllNFTs } = handleNfts(NftData);
 const PageSize = 20;
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
   const { t } = useTranslation();
+  const {
+    state: { nft_res },
+    dispatch,
+  } = useAppContext();
   const [showLeft, setshowLeft] = useState<boolean>(!matches);
 
   const [selectAttrs, setSelectAttrs] = useState<SelectAttr[]>([]);
-  const [list, setList] = useState<INFT[]>(AllNFTs);
+  const [list, setList] = useState<INFT[]>([]);
   const [displayList, setDisplayList] = useState<INFT[]>([]);
   const [page, setPage] = useState<number>(0);
   const [showSeed, setShowSeed] = useState<INFT>();
   const [keyword, setKeyword] = useState<string>("");
+
+  const [attrGroups, setAttrGroups] = useState<IAttrGroup[]>([]);
+  const [AllNFTs, setAllNFTs] = useState<INFT[]>([]);
+
+  useEffect(() => {
+    if (nft_res.length) {
+      const { attrGroups: grps, nfts } = handleNfts(nft_res);
+      setAllNFTs(nfts);
+      setAttrGroups(grps);
+      setList(nfts);
+    } else {
+      const getNfts = () => {
+        fetch(
+          "https://raw.githubusercontent.com/Taoist-Labs/test-res/main/nfts.json",
+          { method: "GET" },
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            console.log("res", res);
+            dispatch({ type: AppActionType.SET_NFT_RES, payload: res });
+          });
+      };
+      getNfts();
+    }
+  }, [nft_res]);
 
   const randomList = (arr: INFT[]) => {
     const _list = [...arr.sort(() => Math.random() - 0.5)];
@@ -126,7 +154,7 @@ export default function GalleryPage() {
     } else {
       handleFilter();
     }
-  }, [keyword]);
+  }, [keyword, AllNFTs]);
 
   const filterNums = useMemo(() => {
     if (keyword) {
