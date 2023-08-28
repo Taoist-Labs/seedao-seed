@@ -5,5 +5,6 @@ export const GALLERY_ATTRS = [
   "Tai Chi Star",
   "Head",
   "Style",
-  "Ear",
+  "Ring",
+  "Special",
 ];
