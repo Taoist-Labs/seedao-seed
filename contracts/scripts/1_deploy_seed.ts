@@ -6,9 +6,10 @@ async function main() {
   console.log("current signer: ", signer.address);
 
   // TODO WARNING: check me when deploying !!!
-  const SCRAddress = deployed.getMockPointsContract();
+  // const SCRAddress = deployed.getMockPointsContract();
+  const SCRAddress = "0xc74DEE15a4700D5df797bDD3982EE649A3Bb8c6C";
   // TODO WARNING: check me when deploying !!!
-  const baseURI = "ipfs://QmSDdbLq2QDEgNUQGwRH7iVrcZiTy6PvCnKrdawGbTa7QD";
+  const baseURI = "ipfs://bafybeigmrizljk5jfyoazvdflqggem3icgay2lzf2fliztdicnyclpt22y";
 
   console.log(`Deploying [Seed] with params (scr_: ${SCRAddress}) ...`);
   const seed = await ethers.deployContract("Seed", [SCRAddress]);

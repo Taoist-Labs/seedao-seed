@@ -8,7 +8,8 @@ async function main() {
   // TODO WARNING: check me when deploying !!!
   const seedContractAddress = deployed.getSeedContract();
   // TODO WARNING: check me when deploying !!!
-  const SCRAddress = deployed.getMockPointsContract();
+  // const SCRAddress = deployed.getMockPointsContract();
+  const SCRAddress = "0xc74DEE15a4700D5df797bDD3982EE649A3Bb8c6C";
   // TODO WARNING: check me when deploying !!!
   const SCRAmountCondi = ethers.getBigInt(50_000); // Default need 5w SCR !!
 

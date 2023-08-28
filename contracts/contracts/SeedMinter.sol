@@ -230,6 +230,11 @@ contract SeedMinter is
     scrAmountCondi = scrAmountCondi_ * 10 ** IERC20Metadata(scr).decimals();
   }
 
+  /// @dev set SEED contract address
+  function updateSeed(address seed_) external onlyOwner {
+    seed = seed_;
+  }
+
   /// @dev set whitelist, need to pass in whitelist ID and Merkle Tree Root Hash when calling
   /// the whitelist has different batches, when adding a new whitelist, a new whitelist ID is required
   /// start from 0 !!
