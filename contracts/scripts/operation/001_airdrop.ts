@@ -7,6 +7,7 @@ import * as readline from "node:readline/promises";
 async function main() {
   const [signer] = await ethers.getSigners();
   console.log("current signer: ", signer.address);
+  console.log("Miner contract: ", deployed.getSeedMinterContract());
 
   const seedMinter = await ethers.getContractAt(
     "SeedMinter",
@@ -59,10 +60,10 @@ async function main() {
       continue;
     }
 
-    // for (const add of address) {
-    //   console.log(`address: ${add}`);
-    // }
-    // console.log(`------------------------`);
+    for (const add of addresses[i]) {
+      console.log(`address: ${add}`);
+    }
+    console.log(`------------------------`);
 
     const tx = await seedMinter.airdrop(addresses[i]);
     await tx.wait();
