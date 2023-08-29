@@ -118,7 +118,7 @@ export default function FQA({ color }: { color: string }) {
             <img src={TwitterIcon} alt="" />
           </a>
           <a
-            href="https://opensea.io/collection/seedao-seed"
+            href="https://opensea.io/collection/seedaoseed"
             target="_blank"
             rel="noopener noreferrer"
           >
