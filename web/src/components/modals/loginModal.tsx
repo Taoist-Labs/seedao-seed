@@ -18,6 +18,7 @@ import useSelectAccount from "hooks/useSelectAccout";
 import Chain from "utils/chain";
 import { isMobile } from "utils/userAgent";
 import CallApp from "callapp-lib";
+import { USE_NETWORK } from "utils/constant";
 
 // enum LoginStatus {
 //   Default = 0,
@@ -114,8 +115,8 @@ export default function LoginModal() {
     }
   };
   useEffect(() => {
-    if (connector && chainId && chainId !== Chain.POLYGON.chainId) {
-      connector.activate(Chain.POLYGON);
+    if (connector && chainId && chainId !== Chain[USE_NETWORK].chainId) {
+      connector.activate(Chain[USE_NETWORK]);
     }
   }, [chainId, connector]);
   return (
