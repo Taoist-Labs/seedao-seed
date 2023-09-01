@@ -22,10 +22,11 @@ https://nftstorage.link/ipfs/bafybeif3plkwxzx4brc7k3u2v7thtlgll2bcs7i7f2xe7byopp
 
 # Info
 ```
-json -> bafybeigmrizljk5jfyoazvdflqggem3icgay2lzf2fliztdicnyclpt22y
-png -> bafybeibkqsq54qsehbj6yv5z2nof4m2vdwobchbjnrzy45errhzq42vooe
+json -> bafybeibuaypztm7dad3wshws47qgayawmuaax32jggyigqomuenzdxmqhm
+png -> bafybeihwciazjns5wjehd3464ipqzxn2kzutazj2ovk3bol4oxjvpcl5za
 404 gif -> bafybeiclerid2gw3pwp676xhs7nr6gm2sbu2xgqfo4sbf4exnqdxh5if2i
 
 Example
-https://nftstorage.link/ipfs/bafybeigmrizljk5jfyoazvdflqggem3icgay2lzf2fliztdicnyclpt22y/0_1.json
+https://nftstorage.link/ipfs/bafybeibuaypztm7dad3wshws47qgayawmuaax32jggyigqomuenzdxmqhm/0_1.json
+https://nftstorage.link/ipfs/bafybeihwciazjns5wjehd3464ipqzxn2kzutazj2ovk3bol4oxjvpcl5za/0_1.png
 ```
