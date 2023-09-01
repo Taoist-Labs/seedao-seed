@@ -31,7 +31,7 @@ export default function Banner({ color, bg }: { color: string; bg: string }) {
             <BuyButton
               onClick={() =>
                 window.open(
-                  "https://opensea.io/collection/seedaogenesis",
+                  "https://opensea.io/collection/seedaoseed",
                   "_blank",
                 )
               }

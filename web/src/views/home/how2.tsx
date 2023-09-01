@@ -43,10 +43,7 @@ const CardPart = () => {
           <div
             className="desc"
             onClick={() =>
-              window.open(
-                "https://opensea.io/collection/seedaogenesis",
-                "_blank",
-              )
+              window.open("https://opensea.io/collection/seedaoseed", "_blank")
             }
           >
             {t("home.buyOnOpensea")}
