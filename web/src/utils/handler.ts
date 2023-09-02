@@ -33,6 +33,12 @@ export const handleNfts = (data: NFTRes[]) => {
         attr_group[key][_value].subValues[value] += 1;
       }
     });
+    const _name_split = item.name?.split("#") || [];
+    let _token_id;
+    if (_name_split.length === 2) {
+      _token_id = _name_split[1];
+    }
+
     nfts.push({
       attrs: item.metadata.attributes.map((attr) => ({
         name: attr.trait_type,
@@ -46,10 +52,10 @@ export const handleNfts = (data: NFTRes[]) => {
         : `${process.env.REACT_APP_STATIC_HOST}/nfts/${item.thumb}`,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      tokenId: item.id,
+      tokenId: _token_id,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      tokenIdFormat: `SEED No.${item.id}`,
+      tokenIdFormat: `SEED No.${_token_id}`,
       name: item.name,
     });
   });

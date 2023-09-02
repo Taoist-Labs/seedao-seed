@@ -15,7 +15,7 @@ import Header from "components/layout/header";
 import { handleNfts } from "utils/handler";
 import { AppActionType, useAppContext } from "providers/appProvider";
 
-const PageSize = 20;
+const PageSize = 48;
 
 export default function GalleryPage() {
   const matches = useMediaQuery("(max-width:960px)");
@@ -194,7 +194,7 @@ export default function GalleryPage() {
     const scrollHeight = dom?.scrollHeight || 0;
     const scrollTop = dom?.scrollTop || 0;
     const clientHeight = dom?.clientHeight || 0;
-    if (clientHeight + scrollTop >= scrollHeight) {
+    if (clientHeight + scrollTop + 10 >= scrollHeight) {
       setPage(page + 1);
       handleDisplayList(page + 1, list);
     }
