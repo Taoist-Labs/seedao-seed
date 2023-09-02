@@ -17,7 +17,9 @@ export default function NFTCard({ data, onClick }: IProps) {
       onClick={() => onClick && onClick(data)}
     >
       <SeedImg src={data.thumb || data.image} name={data.name}>
-        <Intro>{data.tokenId ? data.tokenIdFormat : data.name}</Intro>
+        <Intro onClick={(e) => e.stopPropagation()}>
+          {data.tokenId ? data.tokenIdFormat : data.name}
+        </Intro>
       </SeedImg>
     </NFTStyle>
   );
