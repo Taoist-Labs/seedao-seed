@@ -44,12 +44,13 @@ def convert(filename):
     pass
 
 def main():
-    files = listFiles('./.tmp/FinalChooseWithStars/')
+    # files = listFiles('./.tmp/FinalChooseWithStars/')
+    files = listFiles('.tmp/FinalDone/png/')
     print(len(files))
 
     # check_truncated(files)
 
-    pool = Pool(processes=1)
+    pool = Pool(processes=16)
     pool.map(convert, files)
     pool.close()
 

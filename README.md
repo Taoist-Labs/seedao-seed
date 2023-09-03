@@ -7,6 +7,11 @@ Every Seed NFT is a unique seed, capturing your personal imprint on our shared S
 
 Please claim your SEED from https://seed.seedao.xyz
 
+# Deployed
+
+SeeDAO Seed NFT: `0x30093266E34a816a53e302bE3e59a93B52792FD4`
+
+SeedMinter: `0x3E642156851b96E87F05CF1E0b5Be461f3162A5E`
 
 # About
 
