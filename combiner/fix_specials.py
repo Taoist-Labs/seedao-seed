@@ -54,8 +54,8 @@ def main():
 
     print(len(wrong_jsons))
 
-    for wrong_json in wrong_jsons:
-        fix_json(wrong_json)
+    # for wrong_json in wrong_jsons:
+    #     fix_json(wrong_json)
 
     pass
 
