@@ -79,7 +79,10 @@ export default function LoginModal() {
 
   const connect = async (w: LoginWallet) => {
     if (w.value === Wallet.METAMASK) {
-      if (isMobile) {
+      if (!isMobile && !window.ethereum) {
+        window.open("https://metamask.io/download.html", "_blank");
+        return;
+      } else if (isMobile && !window.ethereum) {
         const options = {
           scheme: {
             protocol: "https",
@@ -96,9 +99,6 @@ export default function LoginModal() {
           },
         };
         callLib.open(openParams);
-        return;
-      } else if (!window.ethereum) {
-        window.open("https://metamask.io/download.html", "_blank");
         return;
       }
     }
