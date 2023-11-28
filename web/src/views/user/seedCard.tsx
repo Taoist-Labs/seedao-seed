@@ -186,9 +186,9 @@ export default function SeedCard() {
   };
 
   const getSCR = async () => {
-    const provider = new ethers.providers.StaticJsonRpcProvider(
-      Chain[USE_NETWORK].rpcUrls[0],
-    );
+    if (!provider) {
+      return;
+    }
     try {
       const contract = new ethers.Contract(
         SCR_CONTRACTS[USE_NETWORK],
@@ -207,8 +207,8 @@ export default function SeedCard() {
   }, [seedContract]);
 
   useEffect(() => {
-    account && getSCR();
-  }, [account]);
+    chainId === Chain[USE_NETWORK].chainId && account && getSCR();
+  }, [account, provider, chainId]);
 
   useEffect(() => {
     chainId === Chain[USE_NETWORK].chainId && getSeedContract();
