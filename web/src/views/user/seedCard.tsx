@@ -29,6 +29,8 @@ import { toast } from "react-toastify";
 import { Multicall } from "ethereum-multicall";
 import { USE_NETWORK } from "utils/constant";
 
+const MINT_WITH_TOKNE_AMOUNT = 100000; // 10w
+
 const whiteList = WhiteListData as {
   rootHash: string;
   proofs: [{ address: string; proof: string[] }];
@@ -550,7 +552,8 @@ export default function SeedCard() {
               <RightTopBox>
                 {hadMint ? (
                   <span className="minted">{t("user.hadMint")}</span>
-                ) : checkIfinWhiteList() > -1 || Number(points) >= 50000 ? (
+                ) : checkIfinWhiteList() > -1 ||
+                  Number(points) >= MINT_WITH_TOKNE_AMOUNT ? (
                   <div>
                     <span
                       className="btn mint-btn"
