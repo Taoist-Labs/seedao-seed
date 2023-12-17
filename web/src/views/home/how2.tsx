@@ -15,6 +15,11 @@ import { useAppContext, AppActionType } from "providers/appProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getNftCollection } from "utils/request";
+import { formatNumber } from "utils";
+
+const MINT_WITH_TOKNE_AMOUNT = Number(
+  process.env.REACT_APP_MINT_WITH_TOKNE_AMOUNT,
+);
 
 const CardPart = () => {
   const { t } = useTranslation();
@@ -55,7 +60,11 @@ const CardPart = () => {
         <CardItem>
           <img src={MintIcon} alt="" />
           <div className="title">{t("home.powMint")}</div>
-          <div className="desc">{t("home.powMintDesc")}</div>
+          <div className="desc">
+            {t("home.powMintDesc", {
+              amount: formatNumber(MINT_WITH_TOKNE_AMOUNT),
+            })}
+          </div>
           <div>
             <span className="btn" onClick={onClickView}>
               {t("home.viewPoints")}

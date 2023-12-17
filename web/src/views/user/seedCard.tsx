@@ -28,8 +28,11 @@ import { useAppContext, AppActionType } from "providers/appProvider";
 import { toast } from "react-toastify";
 import { Multicall } from "ethereum-multicall";
 import { USE_NETWORK } from "utils/constant";
+import { formatNumber } from "utils/number";
 
-const MINT_WITH_TOKNE_AMOUNT = 100000; // 10w
+const MINT_WITH_TOKNE_AMOUNT = Number(
+  process.env.REACT_APP_MINT_WITH_TOKNE_AMOUNT,
+);
 
 const whiteList = WhiteListData as {
   rootHash: string;
@@ -568,7 +571,11 @@ export default function SeedCard() {
                     <span className="btn lock-btn">
                       <span>{t("user.lockMint")}</span>
                     </span>
-                    <p className="tip">{t("user.lockTip")}</p>
+                    <p className="tip">
+                      {t("user.lockTip", {
+                        amount: formatNumber(MINT_WITH_TOKNE_AMOUNT),
+                      })}
+                    </p>
                   </div>
                 )}
               </RightTopBox>
