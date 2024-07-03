@@ -110,7 +110,7 @@ const LEVELS = [
 // };
 
 const formatImg = (img: string) => {
-  return img.replace("ipfs://", "https://dweb.link/ipfs/");
+  return img.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
 };
 
 export default function SeedCard() {
