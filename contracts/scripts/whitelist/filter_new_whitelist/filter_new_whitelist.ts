@@ -31,17 +31,14 @@ async function main() {
       `[${i}/${total}]: wallet: ${snapshot.wallet} | SCR: ${scrAmount}`
     );
 
-    // SCR amount >= 1000n and wallet has no SEED
+    // SCR amount >= 1000n and wallet has not mint any SEED
     if (scrAmount >= scrAmountCondition) {
-      const seedBalance = await seed.balanceOf(snapshot.wallet);
-      console.log(
-        `    ℹ️ wallet: ${snapshot.wallet} | SCR: ${scrAmount} | SEED: ${seedBalance}`
+      const events = await seed.queryFilter(
+        seed.filters.Transfer(ethers.ZeroAddress, snapshot.wallet)
       );
 
-      if (seedBalance == 0n) {
-        console.log(
-          `    ✅ wallet: ${snapshot.wallet} | SCR: ${scrAmount} | SEED: ${seedBalance}`
-        );
+      if (events.length == 0) {
+        console.log(`    ✅ wallet: ${snapshot.wallet} | SCR: ${scrAmount}`);
 
         // write to output.json file
         fs.writeFileSync(
@@ -50,6 +47,10 @@ async function main() {
           {
             flag: "a",
           }
+        );
+      } else {
+        console.log(
+          `    ❌ wallet: ${snapshot.wallet} | SCR: ${scrAmount} | SEED TXs: https://etherscan.io/token/0x30093266E34a816a53e302bE3e59a93B52792FD4?a=${snapshot.wallet}`
         );
       }
     }
