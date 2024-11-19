@@ -122,5 +122,22 @@
         ]
       }
     ]
+  },
+  {
+    "rootHash": "0x8c24f415f9fe0824a2c77c02521662038cba52e6a238d386356df65f786d1456",
+    "proofs": [
+      {
+        "address": "0x9C86f8C140C8c8c4eeF3DdC18711D436ffAaC661",
+        "proof": [
+          "0xb8f26ff1a2c57652b120caece6aa524eb76fc621b326fdeed4a324fe6e2e81d5"
+        ]
+      },
+      {
+        "address": "0x84EFC8925c4Fd657759DAc68E4e37701E1793653",
+        "proof": [
+          "0xf4297cec3cdac0292f26b63902a52de75aa0400a2a07b9b43bc036cfd6a0f21e"
+        ]
+      }
+    ]
   }
 ]
