@@ -7,31 +7,50 @@ import styled from "@emotion/styled";
 import { Wallet, WalletType } from "wallet/wallet";
 
 import { SELECT_WALLET } from "utils/constant";
-import { MetaMask } from "@web3-react/metamask";
-import { UniPass } from "@unipasswallet/web3-react";
-import { injected, uniPassWallet } from "wallet/connector";
+// import { MetaMask } from "@web3-react/metamask";
+// import { UniPass } from "@unipasswallet/web3-react";
+// import { injected, uniPassWallet } from "wallet/connector";
 
 import MetamaskIcon from "assets/images/wallet/metamask.png";
 import UnipassIcon from "assets/images/wallet/unipass.svg";
+import WalletIcon from "assets/images/wallet/walletconnect.png";
+import JoyidIcon from "assets/images/wallet/JOYID.png";
+
 import { useTranslation } from "react-i18next";
-import useSelectAccount from "hooks/useSelectAccout";
 import Chain from "utils/chain";
 import { isMobile } from "utils/userAgent";
 import CallApp from "callapp-lib";
 import { USE_NETWORK } from "utils/constant";
+
+
+import {
+  useConnect,
+  useAccount,
+  useSignMessage,
+  useChainId,
+  useDisconnect,
+  ConnectorAlreadyConnectedError,
+} from 'wagmi';
 
 // enum LoginStatus {
 //   Default = 0,
 //   Pending,
 // }
 
-type Connector = MetaMask | UniPass;
+// type Connector = MetaMask | UniPass;
+
+enum CONNECTOR_ID {
+  METAMASK = 'injected',
+  JOYID = 'joyid',
+  UNIPASS = 'unipass',
+  WALLETCONNECT = 'walletConnect',
+}
 
 type LoginWallet = {
   name: string;
   value: Wallet;
-  connector: Connector;
   iconURL: string;
+  loginType: string;
   type: WalletType;
 };
 
@@ -39,21 +58,37 @@ const LOGIN_WALLETS: LoginWallet[] = [
   {
     name: "MetaMask",
     value: Wallet.METAMASK,
-    connector: injected,
     iconURL: MetamaskIcon,
     type: WalletType.EOA,
+    loginType:"injected"
   },
   {
-    name: "Unipass",
-    value: Wallet.UNIPASS,
-    connector: uniPassWallet,
-    iconURL: UnipassIcon,
-    type: WalletType.AA,
+    name: "JoyID",
+    value: Wallet.JOYID,
+    iconURL: JoyidIcon,
+    type: WalletType.EOA,
+    loginType:"joyid"
   },
+  {
+    name: "Wallet Connect",
+    value: Wallet.WALLETCONNECT,
+    iconURL: WalletIcon,
+    type: WalletType.EOA,
+    loginType:"walletConnect"
+  },
+  // {
+  //   name: "Unipass",
+  //   value: Wallet.UNIPASS,
+  //   connector: uniPassWallet,
+  //   iconURL: UnipassIcon,
+  //   type: WalletType.AA,
+  // },
 ];
 
 export default function LoginModal() {
   const { t } = useTranslation();
+
+  const { connectors, isLoading: connectLoading, connectAsync } = useConnect();
 
   const {
     state: { show_login_modal },
@@ -65,7 +100,7 @@ export default function LoginModal() {
   // );
   // const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
 
-  const { chainId, connector } = useSelectAccount();
+  // const { chainId, connector } = useSelectAccount();
 
   const handleClose = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
@@ -77,7 +112,9 @@ export default function LoginModal() {
     localStorage.removeItem(SELECT_WALLET);
   };
 
-  const connect = async (w: LoginWallet) => {
+  const connect = async (item: string,connector:any) => {
+    const w:any = LOGIN_WALLETS.find((x) => x.loginType === item);
+
     if (w.value === Wallet.METAMASK) {
       if (!isMobile && !window.ethereum) {
         window.open("https://metamask.io/download.html", "_blank");
@@ -101,24 +138,70 @@ export default function LoginModal() {
         callLib.open(openParams);
         return;
       }
+      // setChooseWallet(w);
+      // const connector = w.connector;
+      // setLoginStatus(LoginStatus.Pending);
+      // try {
+      //   await connector.activate();
+      //   localStorage.setItem(SELECT_WALLET, w.value);
+      //   dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: w.type });
+      //   handleClose();
+      // } catch (error) {
+      //   handleFailed();
+      // }
     }
-    // setChooseWallet(w);
-    const connector = w.connector;
-    // setLoginStatus(LoginStatus.Pending);
+
     try {
-      await connector.activate();
+      await connectAsync({ connector, chainId: Chain[USE_NETWORK].chainId });
       localStorage.setItem(SELECT_WALLET, w.value);
-      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: w.type });
-      handleClose();
-    } catch (error) {
+    } catch (error: any) {
       handleFailed();
+
     }
   };
-  useEffect(() => {
-    if (connector && chainId && chainId !== Chain[USE_NETWORK].chainId) {
-      connector.activate(Chain[USE_NETWORK]);
+  // useEffect(() => {
+  //   if (connector && chainId && chainId !== Chain[USE_NETWORK].chainId) {
+  //     connector.activate(Chain[USE_NETWORK]);
+  //   }
+  // }, [chainId, connector]);
+
+  const getConnectorButtonText = (connector: any) => {
+    if (connector.id === 'injected') {
+      return 'MetaMask';
     }
-  }, [chainId, connector]);
+    if (connector.ready) {
+      return connector.name;
+    }
+    return 'Unsupport';
+  };
+  const getConnectorStatic = (id: string) => {
+    switch (id) {
+      case CONNECTOR_ID.METAMASK:
+        return {
+          icon: MetamaskIcon,
+          walletType: WalletType.EOA,
+          wallet: Wallet.METAMASK,
+        };
+      case CONNECTOR_ID.JOYID:
+        return {
+          icon: JoyidIcon,
+          walletType: WalletType.EOA,
+          wallet: Wallet.JOYID,
+        };
+      case CONNECTOR_ID.UNIPASS:
+        return {
+          icon: UnipassIcon,
+          walletType: WalletType.AA,
+          wallet: Wallet.UNIPASS,
+        };
+      case CONNECTOR_ID.WALLETCONNECT:
+        return {
+          icon: WalletIcon,
+          walletType: WalletType.EOA,
+          wallet: Wallet.WALLETCONNECT,
+        };
+    }
+  };
   return (
     <Modal
       open={!!show_login_modal}
@@ -133,11 +216,20 @@ export default function LoginModal() {
 
         <Title>{t("header.connectWallet")}</Title>
         <Content>
-          {LOGIN_WALLETS.map((w) => (
-            <WalletOption key={w.value} onClick={() => connect(w)}>
-              <span>{w.name}</span>
+          {/*{LOGIN_WALLETS.map((w) => (*/}
+          {/*  <WalletOption key={w.value} onClick={() => connect(w)}>*/}
+          {/*    <span>{w.name}</span>*/}
+          {/*    <span>*/}
+          {/*      <img src={w.iconURL} alt="" />*/}
+          {/*    </span>*/}
+          {/*  </WalletOption>*/}
+          {/*))}    */}
+
+          {connectors.map((connector) => (
+            <WalletOption key={connector.id} onClick={() => connect(connector.id,connector)}>
+              <span>{getConnectorButtonText(connector)}</span>
               <span>
-                <img src={w.iconURL} alt="" />
+                <img src={getConnectorStatic(connector.id)?.icon} alt="" />
               </span>
             </WalletOption>
           ))}

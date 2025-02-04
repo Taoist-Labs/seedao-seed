@@ -1,31 +1,35 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import LogoIcon from "assets/images/logo.svg";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
 // import GreenStarIcon from "assets/images/home/green_star.svg";
 import MenuIcon from "assets/images/home/menu.svg";
 import LanguageIcon from "assets/images/home/language.svg";
 import { useTranslation } from "react-i18next";
-import useSelectAccount from "../../hooks/useSelectAccout";
 import MenuSeed, { SmMenuSeed } from "./menuSeed";
 import MenuLogin, { SmMenuLogin } from "./menuLogin";
+
+import {
+  useAccount,
+  useSwitchNetwork
+} from 'wagmi';
+import Chain from "../../utils/chain";
+import {USE_NETWORK} from "../../utils/constant";
 
 const SmNav = ({
   handleClose,
   account,
-  connector,
 }: {
   handleClose: () => void;
   account?: string;
-  connector: any;
 }) => {
   return (
     <SmMenu>
       <div className="content">
         <div className="top">
           <SmMenuSeed account={account} />
-          <SmMenuLogin account={account} connector={connector} />
+          <SmMenuLogin account={account}  />
         </div>
         <div className="bottom">
           <Languagebutton />
@@ -76,7 +80,14 @@ const Languagebutton = () => {
 
 export default function Header({ color }: { color?: string }) {
   const [showMenu, setShowMenu] = React.useState(false);
-  const { account, connector } = useSelectAccount();
+  // const { account, connector } = useSelectAccount();
+  const { address:account } = useAccount();
+  const {switchNetwork} =useSwitchNetwork()
+
+  useEffect(() => {
+
+    switchNetwork && switchNetwork(Chain[USE_NETWORK].chainId)
+  }, [switchNetwork]);
 
   return (
     <HeaderStyle color={color || "#fff"}>
@@ -90,7 +101,7 @@ export default function Header({ color }: { color?: string }) {
         <NavStyle>
           <MenuSeed account={account} />
           <Languagebutton />
-          <MenuLogin account={account} connector={connector} />
+          <MenuLogin account={account}  />
           {/* <EnterAppButton /> */}
         </NavStyle>
       </HeaderContainer>
@@ -98,7 +109,6 @@ export default function Header({ color }: { color?: string }) {
         <SmNav
           handleClose={() => setShowMenu(false)}
           account={account}
-          connector={connector}
         />
       )}
     </HeaderStyle>
