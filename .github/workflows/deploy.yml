@@ -23,7 +23,7 @@ jobs:
          node-version: '16.17.0'
 
      - name: Insall dependencies
-       run: npm install
+       run: npm install --force
      - name: Compile 
        run: npm run build
     
