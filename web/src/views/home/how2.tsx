@@ -10,12 +10,12 @@ import NFT_06 from "assets/images/home/nfts/6.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { CenterBox } from "style";
 import { useTranslation } from "react-i18next";
-import { useWeb3React } from "@web3-react/core";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getNftCollection } from "utils/request";
 import { formatNumber } from "utils";
+import {useAccount} from "wagmi";
 
 const MINT_WITH_TOKNE_AMOUNT = Number(
   process.env.REACT_APP_MINT_WITH_TOKNE_AMOUNT,
@@ -23,7 +23,7 @@ const MINT_WITH_TOKNE_AMOUNT = Number(
 
 const CardPart = () => {
   const { t } = useTranslation();
-  const { account } = useWeb3React();
+  const { address:account } = useAccount();
   const { dispatch } = useAppContext();
   const navigate = useNavigate();
 

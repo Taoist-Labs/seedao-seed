@@ -2,16 +2,18 @@ import "./App.css";
 import AppProvider from "./providers/appProvider";
 import RouterLink from "./router";
 import CustomThemeProvider from "./providers/customThemeProvider";
-import Web3Provider from "providers/web3Provider";
+import WagmiProvider from 'providers/wagmiProvider';
 
 function App() {
   return (
     <AppProvider>
-      <Web3Provider>
-        <CustomThemeProvider>
-          <RouterLink />
-        </CustomThemeProvider>
-      </Web3Provider>
+        <WagmiProvider>
+          {/*<Web3Provider>*/}
+            <CustomThemeProvider>
+              <RouterLink />
+            </CustomThemeProvider>
+          {/*</Web3Provider>*/}
+        </WagmiProvider>
     </AppProvider>
   );
 }
