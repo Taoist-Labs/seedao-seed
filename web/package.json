@@ -71,6 +71,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/ua-parser-js": "0.7.36",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
