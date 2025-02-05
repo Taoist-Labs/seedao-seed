@@ -82,7 +82,7 @@ const LOGIN_WALLETS: LoginWallet[] = [
 export default function LoginModal() {
   const { t } = useTranslation();
 
-  const { connectors, isLoading: connectLoading, connectAsync } = useConnect();
+  const { connectors,  connectAsync } = useConnect();
 
   const {
     state: { show_login_modal },
