@@ -28,7 +28,7 @@ import { toast } from "react-toastify";
 import { Multicall } from "ethereum-multicall";
 import { USE_NETWORK } from "utils/constant";
 import { formatNumber } from "utils/number";
-import {useAccount, useConnect, usePublicClient} from "wagmi";
+import {useAccount, useConnect} from "wagmi";
 import {useEthersProvider, useEthersSigner} from "../../hooks/ethersNew";
 
 const MINT_WITH_TOKNE_AMOUNT = Number(

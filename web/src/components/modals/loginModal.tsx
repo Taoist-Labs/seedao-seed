@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -24,12 +23,7 @@ import { USE_NETWORK } from "utils/constant";
 
 
 import {
-  useConnect,
-  useAccount,
-  useSignMessage,
-  useChainId,
-  useDisconnect,
-  ConnectorAlreadyConnectedError,
+  useConnect
 } from 'wagmi';
 
 // enum LoginStatus {

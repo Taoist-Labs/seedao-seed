@@ -11,7 +11,7 @@ import LoginModal from "components/modals/loginModal";
 import Button from "@mui/material/Button";
 import { addressToShow } from "utils/index";
 import { css } from "@emotion/react";
-import { useAccount, useDisconnect } from 'wagmi';
+import { useDisconnect } from 'wagmi';
 
 export default function MenuLogin({
   account
