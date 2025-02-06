@@ -15,7 +15,6 @@ import WhiteListData from "data/whitelist.json";
 import SeedDisplay from "./seedDisplay";
 import { GALLERY_ATTRS } from "data/gallery";
 import OpeningModal from "./opening";
-import useSelectAccount from "hooks/useSelectAccout";
 import {
   SCR_CONTRACTS,
   SEED_CONTRACTS,
@@ -29,6 +28,8 @@ import { toast } from "react-toastify";
 import { Multicall } from "ethereum-multicall";
 import { USE_NETWORK } from "utils/constant";
 import { formatNumber } from "utils/number";
+import {useAccount, useConnect} from "wagmi";
+import {useEthersProvider, useEthersSigner} from "../../hooks/ethersNew";
 
 const MINT_WITH_TOKNE_AMOUNT = Number(
   process.env.REACT_APP_MINT_WITH_TOKNE_AMOUNT,
@@ -115,7 +116,10 @@ const formatImg = (img: string) => {
 
 export default function SeedCard() {
   const { t } = useTranslation();
-  const { account, provider, chainId, connector } = useSelectAccount();
+
+  const { address:account } = useAccount();
+
+  const { connectors,connectAsync } = useConnect();
   const { dispatch } = useAppContext();
 
   const [points, setPoints] = useState("0");
@@ -132,7 +136,10 @@ export default function SeedCard() {
   const [nfts, setNfts] = useState<INFT[]>([]);
 
   const [isOpenMint, setIsOpenMint] = useState(false);
+  const chainId = Chain[USE_NETWORK].chainId;
+  const provider = useEthersProvider({chainId});
 
+  const signer = useEthersSigner({chainId});
   const selectSeed = useMemo(() => {
     if (selectSeedIdx === -1) {
       return undefined;
@@ -152,10 +159,11 @@ export default function SeedCard() {
 
   console.log("points:", points);
   const getSeedManagerContract = () => {
-    if (!provider) {
+    if (!provider || !signer ) {
       return;
     }
-    const signer = provider.getSigner(account);
+    // const signer = provider.getSigner(account);
+    // const signer = useEthersSigner({chainId});
     const contract = new ethers.Contract(
       SEED_MANAGER_CONTRACTS[USE_NETWORK],
       SeedMgrABI,
@@ -166,15 +174,16 @@ export default function SeedCard() {
   };
 
   const getSeedContract = async () => {
-    if (!provider) {
+    if (!provider || !signer) {
       return;
     }
 
     const contract = new ethers.Contract(
       SEED_CONTRACTS[USE_NETWORK],
       SeedABI,
-      provider,
+        signer,
     );
+
     setSeedContract(contract);
   };
 
@@ -217,13 +226,13 @@ export default function SeedCard() {
 
   useEffect(() => {
     chainId === Chain[USE_NETWORK].chainId && getSeedContract();
-  }, [chainId, provider]);
+  }, [chainId, provider,signer]);
 
   useEffect(() => {
     chainId === Chain[USE_NETWORK].chainId &&
       account &&
       getSeedManagerContract();
-  }, [chainId, account, provider]);
+  }, [chainId, account, provider,signer]);
 
   useEffect(() => {
     const getUserMintState = async () => {
@@ -264,15 +273,22 @@ export default function SeedCard() {
     );
   };
 
+  const getConnector = () =>{
+    const rt = connectors.find((connector)=>connector.id  )
+    return rt;
+  }
+
   const goMint = async () => {
-    if (!connector) {
-      return;
-    }
+
     // check network
     if (chainId !== Chain[USE_NETWORK].chainId) {
-      await connector.activate(Chain[USE_NETWORK]);
-      return;
+
+      const connector= getConnector();
+
+      await connectAsync({ connector, chainId: Chain[USE_NETWORK].chainId });
+      // await connector.activate(Chain[USE_NETWORK]);
     }
+
     if (!seedMgrContract || !seedContract) {
       return;
     }
@@ -284,6 +300,7 @@ export default function SeedCard() {
         const proof_item = whiteList[findIdx].proofs.find(
           (p) => p.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
         );
+
         if (proof_item) {
           res = await seedMgrContract.claimWithWhitelist(
             findIdx,
@@ -477,7 +494,6 @@ export default function SeedCard() {
       const reqs = uris.map((uri) => fetch(uri, { method: "GET" }));
       const resps = await Promise.all(reqs);
       const res = await Promise.all(resps.map((r) => r.json()));
-      console.log("res: ", res);
       const lst: INFT[] = res.map((r, i) => ({
         image: formatImg(r.image),
         tokenId: tokenIds[i].toString(),
@@ -507,9 +523,10 @@ export default function SeedCard() {
 
   // check network
   const checkNetwork = async () => {
-    if (connector && chainId && chainId !== Chain[USE_NETWORK].chainId) {
+    if (chainId && chainId !== Chain[USE_NETWORK].chainId) {
       try {
-        await connector.activate(Chain[USE_NETWORK]);
+        const connector=getConnector()
+        await connectAsync({ connector, chainId: Chain[USE_NETWORK].chainId })
         return true;
       } catch (error) {
         console.error(error);
@@ -520,9 +537,7 @@ export default function SeedCard() {
   };
 
   const onClickUnlockButton = async () => {
-    if (!connector) {
-      return;
-    }
+
     // check network
     const res = await checkNetwork();
     if (!res) {
@@ -533,7 +548,7 @@ export default function SeedCard() {
 
   useEffect(() => {
     checkNetwork();
-  }, [connector, chainId]);
+  }, [chainId]);
   return (
     <Card>
       <CardTop>
@@ -552,55 +567,56 @@ export default function SeedCard() {
           )}
           <CardBottomInnerRight>
             {isOpenMint && (
-              <RightTopBox>
-                {hadMint ? (
-                  <span className="minted">{t("user.hadMint")}</span>
-                ) : checkIfinWhiteList() > -1 ||
+                <RightTopBox>
+                  {hadMint ? (
+                      <span className="minted">{t("user.hadMint")}</span>
+                  ) : checkIfinWhiteList() > -1 ||
                   Number(points) >= MINT_WITH_TOKNE_AMOUNT ? (
-                  <div>
+                      <div>
                     <span
-                      className="btn mint-btn"
-                      onClick={onClickUnlockButton}
+                        className="btn mint-btn"
+                        onClick={onClickUnlockButton}
                     >
                       <span>{t("user.unlockMint")}</span>
                     </span>
-                    <p className="tip">{t("user.unlockTip")}</p>
-                  </div>
-                ) : (
-                  <div>
+                        <p className="tip">{t("user.unlockTip")}</p>
+                      </div>
+                  ) : (
+                      <div>
                     <span className="btn lock-btn">
                       <span>{t("user.lockMint")}</span>
                     </span>
-                    <p className="tip">
-                      {t("user.lockTip", {
-                        amount: formatNumber(MINT_WITH_TOKNE_AMOUNT),
-                      })}
-                    </p>
-                  </div>
-                )}
-              </RightTopBox>
+                        <p className="tip">
+                          {t("user.lockTip", {
+                            amount: formatNumber(MINT_WITH_TOKNE_AMOUNT),
+                          })}
+                        </p>
+                      </div>
+                  )}
+                </RightTopBox>
             )}
+
             {(nfts.length > 1 || isOpenMint) && (
-              <SeedList
-                list={nfts}
-                selectedIdx={selectSeedIdx}
-                onSelect={(idx) => setSelectSeedIdx(idx)}
-              />
+                <SeedList
+                    list={nfts}
+                    selectedIdx={selectSeedIdx}
+                    onSelect={(idx) => setSelectSeedIdx(idx)}
+                />
             )}
           </CardBottomInnerRight>
         </CardBottomInner>
       </CardBottom>
       {/* before mint -- congrats */}
       {showMintModal && (
-        <MintModal
-          handleMint={goMint}
-          handleClose={() => setShowMintModal(false)}
-          show={showMintModal}
-        />
+          <MintModal
+              handleMint={goMint}
+              handleClose={() => setShowMintModal(false)}
+              show={showMintModal}
+          />
       )}
       {/* mint success */}
       {showSeedModal && newNft && (
-        <SeedModal
+          <SeedModal
           isShare
           handleClose={() => setShowSeedModal(false)}
           handleClickShare={handleClickShare}

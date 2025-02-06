@@ -14,9 +14,9 @@ import RowDynamicIcon05 from "assets/images/home/dynamic/row_dynamic_5.svg";
 import { useTranslation, Trans } from "react-i18next";
 import { CenterBox } from "style";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useWeb3React } from "@web3-react/core";
 import { useAppContext, AppActionType } from "providers/appProvider";
 import { useNavigate } from "react-router-dom";
+import {useAccount} from "wagmi";
 
 const DynamicNFTs = [
   {
@@ -99,7 +99,7 @@ const DynamicNFTs = [
 export default function DynamicNFT({ color }: { color: string }) {
   const { t } = useTranslation();
   const matches = useMediaQuery("(max-width:680px)");
-  const { account } = useWeb3React();
+  const { address:account } = useAccount();
   const { dispatch } = useAppContext();
   const navigate = useNavigate();
   const openLevel = () => {

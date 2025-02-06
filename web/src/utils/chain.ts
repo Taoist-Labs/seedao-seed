@@ -1,5 +1,4 @@
-import { AddEthereumChainParameter } from "@web3-react/types";
-const CHAIN: { [key: string]: AddEthereumChainParameter } = {
+const CHAIN: any = {
   BSC_TESTNET: {
     chainId: 97,
     chainName: "BNB Smart Chain Testnet",

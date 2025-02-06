@@ -11,10 +11,10 @@ import LoginModal from "components/modals/loginModal";
 import Button from "@mui/material/Button";
 import { addressToShow } from "utils/index";
 import { css } from "@emotion/react";
+import { useDisconnect } from 'wagmi';
 
 export default function MenuLogin({
-  account,
-  connector,
+  account
 }: {
   account?: string;
   connector?: any;
@@ -24,15 +24,16 @@ export default function MenuLogin({
   const { dispatch } = useAppContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openSelect = Boolean(anchorEl);
+  const { disconnect } = useDisconnect();
 
   const handleDisconnect = () => {
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: "" });
     localStorage.removeItem(SELECT_WALLET);
     try {
-      console.log("connector:", connector);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      connector?.deactivate();
+      // connector?.deactivate();
+      disconnect()
     } catch (error) {
       console.error("disconnect", error);
     }
@@ -91,10 +92,8 @@ export default function MenuLogin({
 
 export const SmMenuLogin = ({
   account,
-  connector,
 }: {
   account?: string;
-  connector?: any;
 }) => {
   const { t } = useTranslation();
   // const navigate = useNavigate();
@@ -110,10 +109,11 @@ export const SmMenuLogin = ({
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: "" });
     localStorage.removeItem(SELECT_WALLET);
     try {
-      console.log("connector:", connector);
+      // console.log("connector:", connector);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      connector?.deactivate();
+      // connector?.deactivate();
+      disconnect()
     } catch (error) {
       console.error("disconnect", error);
     }
