@@ -27,7 +27,7 @@ const CHAIN: any = {
       symbol: "MATIC",
       decimals: 18,
     },
-    rpcUrls: ["https://rpc-mainnet.maticvigil.com"],
+    rpcUrls: ['https://polygon-mainnet.g.alchemy.com/v2/YuNeXto27ejHnOIGOwxl2N_cHCfyLyLE',"https://polygon.llamarpc.com","https://rpc-mainnet.maticvigil.com"],
   },
   ETHEREUM: {
     chainId: 1,
@@ -37,7 +37,7 @@ const CHAIN: any = {
       symbol: "ETH",
       decimals: 18,
     },
-    rpcUrls: ["https://cloudflare-eth.com", "https://rpc.flashbots.net/"],
+    rpcUrls: ["https://uk.rpc.blxrbdn.com","https://cloudflare-eth.com", "https://rpc.flashbots.net/"],
   },
 };
 export default CHAIN;

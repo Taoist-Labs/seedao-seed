@@ -200,12 +200,12 @@ export default function SeedCard() {
   };
 
   const getSCR = async () => {
-    if (!provider) {
-      return;
-    }
+
+    const provider = new ethers.providers.StaticJsonRpcProvider(Chain["POLYGON"].rpcUrls[0]);
     try {
       const contract = new ethers.Contract(
-        SCR_CONTRACTS[USE_NETWORK],
+        // SCR_CONTRACTS[USE_NETWORK],
+        SCR_CONTRACTS["POLYGON"],
         ScrABI,
         provider,
       );
@@ -221,8 +221,9 @@ export default function SeedCard() {
   }, [seedContract]);
 
   useEffect(() => {
-    chainId === Chain[USE_NETWORK].chainId && account && getSCR();
-  }, [account, provider, chainId]);
+    // chainId === Chain[USE_NETWORK].chainId && account && getSCR();
+    account && getSCR();
+  }, [account]);
 
   useEffect(() => {
     chainId === Chain[USE_NETWORK].chainId && getSeedContract();
@@ -417,11 +418,12 @@ export default function SeedCard() {
       hideLoad();
       return;
     }
-    console.log("[my] balance:", balance);
+    console.log("[my] balance:", balance.toString());
 
     const indexList: number[] = new Array(balance.toNumber()).fill(1);
     // 2. get token id
     const tokenIds: ethers.BigNumber[] = [];
+    console.log(indexList,SEED_CONTRACTS[USE_NETWORK]);
     try {
       const result = await caller.call(
         indexList.map((_, i) => ({
