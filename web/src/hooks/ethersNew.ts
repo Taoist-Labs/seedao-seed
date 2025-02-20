@@ -2,6 +2,8 @@ import * as React from 'react';
 import { usePublicClient, useWalletClient, PublicClient, WalletClient } from 'wagmi';
 import { ethers } from 'ethers';
 import { HttpTransport } from 'viem';
+import Chain from "../utils/chain";
+import {USE_NETWORK} from "../utils/constant";
 
 export function publicClientToProvider(publicClient: PublicClient) {
   const { chain, transport } = publicClient;
@@ -10,11 +12,17 @@ export function publicClientToProvider(publicClient: PublicClient) {
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   };
-  if (transport.type === 'fallback')
+  if (transport.type === "fallback")
     return new ethers.providers.FallbackProvider(
-      (transport.transports as ReturnType<HttpTransport>[]).map(
-        ({ value }) => new ethers.providers.JsonRpcProvider(value?.url, network),
-      ),
+      (transport.transports as ReturnType<HttpTransport>[]).map(({ value }) => {
+
+        // return new ethers.providers.JsonRpcProvider(value?.url, network);
+        let url = value?.url;
+        if(value?.url === "https://cloudflare-eth.com"){
+          url = Chain[USE_NETWORK].rpcUrls[0]
+        }
+        return new ethers.providers.JsonRpcProvider(url, network);
+      }),
     );
   return new ethers.providers.JsonRpcProvider(transport.url, network);
 }
