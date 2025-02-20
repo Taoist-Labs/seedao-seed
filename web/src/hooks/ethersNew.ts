@@ -16,8 +16,12 @@ export function publicClientToProvider(publicClient: PublicClient) {
     return new ethers.providers.FallbackProvider(
       (transport.transports as ReturnType<HttpTransport>[]).map(({ value }) => {
 
-        return new ethers.providers.JsonRpcProvider(value?.url, network);
-
+        // return new ethers.providers.JsonRpcProvider(value?.url, network);
+        let url = value?.url;
+        if(value?.url === "https://cloudflare-eth.com"){
+          url = Chain[USE_NETWORK].rpcUrls[0]
+        }
+        return new ethers.providers.JsonRpcProvider(url, network);
       }),
     );
   return new ethers.providers.JsonRpcProvider(transport.url, network);
