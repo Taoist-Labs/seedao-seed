@@ -1,0 +1,33 @@
+{
+  "rootHash": "0x4e837ef7818f2febc26541cbfb4626dd109a664be8b0ffe793f970db32462755",
+  "proofs": [
+    {
+      "address": "0x018615b3E5f30944DC769Ce8882d61b66F31DDa3",
+      "proof": [
+        "0xebe3b7b71ff1ca2c8f2618d9e4277366064869db63a4b6f2cebb758fd91c063f",
+        "0x412e0000c043bfe0f1333039c8f46a0a0590d80a0d1a081f1843a5cff05166d1"
+      ]
+    },
+    {
+      "address": "0x39FDF6F2f57BF028cCB8BdAe8Bbb2294f2cFdCf6",
+      "proof": [
+        "0x299cbfaebd681d8eee5c36ccfc3a5a255ecccc7522dbb2063dc98514a36ba716",
+        "0xe89e47c46a3808896deb74b878805aacf0e1bd44aeb6fc2a968442aa9810eed5"
+      ]
+    },
+    {
+      "address": "0x183F09C3cE99C02118c570e03808476b22d63191",
+      "proof": [
+        "0xce021812e83f5daf81855c517d8be568d9ea3fb44a4559d9a245268bdc84a3e0",
+        "0x412e0000c043bfe0f1333039c8f46a0a0590d80a0d1a081f1843a5cff05166d1"
+      ]
+    },
+    {
+      "address": "0x2Bd140Bb0D04263eaa611006a8681af55DC8e051",
+      "proof": [
+        "0xc77b80c9046f190953c4856e7279fdb5d9f0dba8786c69d53d73e30e12ed777b",
+        "0xe89e47c46a3808896deb74b878805aacf0e1bd44aeb6fc2a968442aa9810eed5"
+      ]
+    }
+  ]
+}
