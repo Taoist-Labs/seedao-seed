@@ -37,7 +37,7 @@ const CHAIN: any = {
       symbol: "ETH",
       decimals: 18,
     },
-    rpcUrls: ["https://uk.rpc.blxrbdn.com","https://cloudflare-eth.com", "https://rpc.flashbots.net/"],
+    rpcUrls: ["https://cloudflare-eth.com", "https://rpc.flashbots.net/"],
   },
 };
 export default CHAIN;
